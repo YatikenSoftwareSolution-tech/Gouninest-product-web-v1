@@ -1,0 +1,31 @@
+import "./globals.css";
+import { GlobalProvider } from "@/context/GlobalContext";
+import type { Metadata } from "next";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Go UniNest | Verified Student Accommodation in Australia",
+  description: "Search student housing across Australia with Go UniNest. Affordable, secure, and fully verified rentals near major universities. Book your perfect stay today.",
+  authors: [{
+      name: "Ram Chandel",
+      url: "https://ramchandel.netlify.app/"
+    }],
+  icons: {
+    icon: "/Logo.png"
+  },
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <GlobalProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </GlobalProvider>
+      </body>
+    </html>
+  );
+}
