@@ -1,0 +1,9 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/yatiken/gouninest-web-image:latest", "."]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/yatiken/gouninest-web-image:latest"]
+
+images:
+  - "gcr.io/yatiken/gouninest-web-image:latest"
