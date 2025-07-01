@@ -32,21 +32,29 @@ const LocationTabs = () => {
           </div>
           <Tabs defaultValue="GB" className="w-full flex flex-col gap-6">
             <TabsList className="mb-6 flex justify-center gap-6 ">
-              {countries.map((country) => (
-              <TabsTrigger
+              {["GB", "AU", "US"].map((code) => {
+              const country = countries.find((c) => c.country === code);
+              if (!country) return null;
+              return (
+                <TabsTrigger
                 key={country.country}
                 value={country.country}
                 className="flex justify-center gap-3 cursor-pointer bg-gradient-to-r from-[var(--color-electric-500)] to-lime-500 hover:from-electric-600 hover:to-amber-600 text-white text-lg font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-electric-500/30 data-[state=active]:scale-120"
-              >
+                >
                 <Image
-                src={`/${country.country}/flag.jpg`}
-                alt={country.country}
-                height={40}
-                width={40}
+                  src={`/${country.country}/flag.jpg`}
+                  alt={country.country}
+                  height={40}
+                  width={40}
                 />
-                {country.country === "GB" ? "UK": country.country === "AU" ? "Australia" : "USA"}
-              </TabsTrigger>
-              ))}
+                {country.country === "GB"
+                  ? "UK"
+                  : country.country === "AU"
+                  ? "AUS"
+                  : "USA"}
+                </TabsTrigger>
+              );
+              })}
             </TabsList>
             {countries.map((country) => (
               <TabsContent key={country.country} value={country.country}>

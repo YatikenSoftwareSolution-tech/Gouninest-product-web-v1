@@ -1,17 +1,28 @@
+"use client"
+import { useGlobal } from "@/context/GlobalContext";
 import {
   MapPin,
   Phone,
   Mail,
   Facebook,
   Instagram,
-  Twitter,
+  Linkedin,
+  Youtube
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Footer = () => {
+const { fetchProperties, setFilterData } = useGlobal();
+const router = useRouter();
 
-
+  // Function to handle click on city links
+ const handleClick = async (city: string, country: string) => {
+    setFilterData({ city, country, keyword: "" });
+    fetchProperties(`/properties/city-properties?country=${country}&city=${city}`);
+    router.push( `/properties?city=${city}&country=${country}`);
+  };
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
@@ -55,12 +66,20 @@ const Footer = () => {
                   <Instagram className="w-6 h-6" />
                 </Link>
                 <Link
-                  href="https://twitter.com/gouninest"
+                  href="https://linkedin.com/gouninest"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
                 >
-                  <Twitter className="w-6 h-6" />
+                  <Linkedin className="w-6 h-6" />
+                </Link>
+                <Link
+                  href="https://youtube.com/gouninest"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                >
+                  <Youtube className="w-6 h-6" />
                 </Link>
                 </div>
             </div>
@@ -129,7 +148,7 @@ const Footer = () => {
                 Services
               </h4>
               <ul className="space-y-3">
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li  className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
                   Property Search
                 </li>
                 <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
@@ -155,13 +174,13 @@ const Footer = () => {
                 Explore
               </h4>
               <ul className="space-y-3">
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li onClick={() => handleClick("London", "GB")} className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300">
                   United Kingdom &gt;
                 </li>
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li onClick={() => handleClick("Sydney", "AU")} className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300">
                   Australia &gt;
                 </li>
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li onClick={() => handleClick("Boston", "US")} className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300">
                   United State of America &gt;
                 </li>
               </ul>
