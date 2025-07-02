@@ -9,7 +9,7 @@ const Journey = forwardRef<HTMLElement>((props, ref) => {
     {
       year: '2020',
       title: 'The Beginning',
-      description: 'Founded with a mission to simplify student accommodation search for international students.',
+      description: 'Founded with the mission to simplify accommodation search for international students.',
       image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop',
       stats: '500+ Students Helped'
     },
@@ -23,14 +23,14 @@ const Journey = forwardRef<HTMLElement>((props, ref) => {
     {
       year: '2022',
       title: 'Innovation Focus',
-      description: 'Launched virtual tours and instant booking features, revolutionizing the industry.',
+      description: 'Introduced virtual tours and instant booking features, setting a new industry standard.',
       image: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=300&fit=crop',
       stats: '15,000+ Bookings'
     },
     {
       year: '2023',
       title: 'National Presence',
-      description: 'Became the UK\'s leading student accommodation platform with nationwide coverage.',
+      description: 'Established a nationwide presence across the UK with unparalleled student satisfaction.',
       image: 'https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400&h=300&fit=crop',
       stats: '25,000+ Happy Students'
     }
@@ -45,7 +45,7 @@ const Journey = forwardRef<HTMLElement>((props, ref) => {
     },
     {
       icon: Building,
-      number: "500+",
+      number: "4300+",
       label: "Partner Properties",
       color: "text-[var(--color-coral-600)]",
     },
@@ -57,7 +57,7 @@ const Journey = forwardRef<HTMLElement>((props, ref) => {
     },
     {
       icon: Globe,
-      number: "15+",
+      number: "260+",
       label: "Cities Covered",
       color: "text-[var(--color-electric-600)]",
     },
@@ -68,13 +68,13 @@ const Journey = forwardRef<HTMLElement>((props, ref) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
             Our
             <span className="text-gradient"> Journey</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            From a small startup to the UK&apos;s leading student accommodation platform, 
-            here&apos;s how we&apos;ve grown to serve thousands of students.
+          <p>From Startup to Global Presence</p>
+          <p className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto">
+            From a humble beginning to becoming a leading student accommodation platform—here&apos;s how we&apos;ve grown:
           </p>
         </div>
 

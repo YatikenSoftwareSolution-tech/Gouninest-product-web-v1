@@ -8,7 +8,6 @@ import { useGlobal } from "@/context/GlobalContext";
 
 const PropertyTabs = () => {
   const { countryProperty } = useGlobal();
-  console.log(countryProperty);
 
   return (
     <section

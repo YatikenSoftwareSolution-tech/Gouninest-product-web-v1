@@ -18,7 +18,7 @@ interface Bubble {
 
 const PropertiesHero = () => {
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
-  const { searchQuery, setSearchQuery, fetchProperties, location, setLocation } = useGlobal();
+  const { searchQuery, setSearchQuery, fetchProperties, location, setLocation, fetchTopProperties } = useGlobal();
 
   useEffect(() => {
     const colors = [
@@ -149,6 +149,10 @@ const PropertiesHero = () => {
     }
   };
 
+  useEffect(() => {
+    fetchTopProperties();
+  }, []);
+
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-[var(--color-electric-100)] to-lime-100 overflow-hidden flex items-center justify-center">
       {/* Animated Background Elements */}
@@ -161,18 +165,19 @@ const PropertiesHero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Find Your Perfect
-            <br />
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 ">
+            Find 
+            <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent"> Your </span> 
+            Perfect
             <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
               {" "}
               Nest
             </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Browse through our extensive collection of verified student
-            accommodations with advanced search filters.
+          <p className=" mb-6 max-w-4xl mx-auto">
+            Browse through our extensive collection of verified student accommodations with advanced search filters.
           </p>
+          <p className=" text-xl text-gray-600 mb-6 max-w-3xl mx-auto">Search for housing options in the UK, Australia, and the USA, designed for convenience, safety, and flexibility.</p>
         </div>
 
         {/* Search Form */}

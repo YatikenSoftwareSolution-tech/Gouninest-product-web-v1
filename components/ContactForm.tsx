@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send, User, Mail, Phone, MessageSquare } from 'lucide-react';
+import { fetchApi } from '@/utils/fetchApi';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -13,11 +14,26 @@ const ContactForm = () => {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Contact form submitted:', formData);
-    // Handle form submission here
-  };
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const response = await fetchApi("/contact", {
+      method: "POST",
+      data: formData,
+    });
+
+    // Narrow the type of response
+    if (response && typeof response === "object" && "referenceId" in response) {
+      setSubmitted(true);
+    }
+    // Optionally, show a success message or reset the form here
+  } catch (error) {
+    console.error("Failed to submit contact form:", error);
+    // Optionally, show an error message here
+  }
+};
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -28,7 +44,7 @@ const ContactForm = () => {
 
   return (
     <section className="py-16 bg-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {!submitted && <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             We are pleased to help
@@ -118,7 +134,17 @@ const ContactForm = () => {
             </div>
           </form>
         </div>
-      </div>
+      </div>}
+      {submitted && <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 animate-fade-in">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Thank you for reaching out {formData.name}.
+          </h2>
+          <p className="text-lg text-gray-600">
+            Our team will get back to you within 24 hours
+          </p>
+        </div>
+      </div>}
     </section>
   );
 };

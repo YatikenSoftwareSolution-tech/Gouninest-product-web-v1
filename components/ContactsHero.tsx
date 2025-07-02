@@ -122,8 +122,7 @@ const ContactsHero = () => {
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We&apos;re here to help you find your perfect student accommodation.
-            Reach out to our friendly team today.
+            We&apos;re here to help you find your ideal student accommodation in the UK, Australia, or the US. Whether you&apos;re an incoming international student or relocating to a new city, our dedicated team is here to support you every step of the way.
           </p>
         </div>
 
@@ -132,29 +131,43 @@ const ContactsHero = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-scale-in"
           style={{ animationDelay: "0.2s" }}
         >
-          <div className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-2xl p-6 text-center hover-scale">
+            <a
+            href="tel:+442071234567"
+            className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-2xl p-6 text-center hover-scale transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-electric-500)]"
+            aria-label="Call Us"
+            >
             <Phone className="w-8 h-8 text-[var(--color-electric-500)] mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Call Us
             </h3>
             <p className="text-gray-600">+44 20 7123 4567</p>
-          </div>
+            </a>
 
-          <div className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-2xl p-6 text-center hover-scale">
+            <a
+            href="mailto:info@gouninest.com"
+            className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-2xl p-6 text-center hover-scale transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-lime-500"
+            aria-label="Email Us"
+            >
             <Mail className="w-8 h-8 text-lime-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Email Us
             </h3>
-            <p className="text-gray-600">hello@studystay.com</p>
-          </div>
+            <p className="text-gray-600">info@gouninest.com</p>
+            </a>
 
-          <div className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-2xl p-6 text-center hover-scale">
+            <a
+            href="https://www.google.com/maps/search/?api=1&query=123+Student+Street,+London"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-2xl p-6 text-center hover-scale transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-coral-500)]"
+            aria-label="Visit Us"
+            >
             <MapPin className="w-8 h-8 text-[var(--color-coral-500)] mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Visit Us
             </h3>
             <p className="text-gray-600">123 Student Street, London</p>
-          </div>
+            </a>
 
           <div className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-2xl p-6 text-center hover-scale">
             <Clock className="w-8 h-8 text-[var(--color-electric-400)] mx-auto mb-4" />

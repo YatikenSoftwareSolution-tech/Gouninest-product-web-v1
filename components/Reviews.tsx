@@ -112,16 +112,18 @@ const ReviewsHero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 ">
             Student
             <span className="text-gradient bg-gradient-to-r from-[var(--color-coral-500)] to-[var(--color-electric-500)] bg-clip-text text-transparent">
               {" "}
               Reviews
             </span>
           </h1>
+          <p className="mb-6 max-w-4xl mx-auto">
+            Real voices. Real experiences. Discover what students from around the world have to say about booking with GoUninest.
+          </p>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Hear what our students have to say about their StudyStay experience.
-            Real reviews from real students.
+            Our platform is built on trust and satisfaction. With thousands of verified reviews, we continue to deliver reliable housing solutions for students across the UK, Australia, and the US.
           </p>
         </div>
 

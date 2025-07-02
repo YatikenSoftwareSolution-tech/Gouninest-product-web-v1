@@ -36,13 +36,13 @@ const HowItWorks = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 ">
             How
             <span className="text-gradient"> It Works</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Finding your perfect student accommodation has never been easier. 
-            Follow these simple steps to secure your ideal home.
+          <p>From Search to Settlement, A Seamless Process</p>
+          <p className="text-xl text-gray-600 max-w-3xl mt-6 mx-auto">
+            Finding your ideal student accommodation has never been this easy. Follow these four simple steps to secure your future home.
           </p>
         </div>
 

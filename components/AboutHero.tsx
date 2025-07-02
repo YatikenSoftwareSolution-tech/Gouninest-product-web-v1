@@ -125,13 +125,13 @@ const AboutHero = ({ journeyRef }: AboutHeroProps) => {
 
       {/* Hero Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
+        <h1 className="text-5xl md:text-7xl font-bold text-gray-900 ">
           About
-          <span className="text-gradient"> Go UniNest</span>
+          <span className="text-gradient"> GoUniNest</span>
         </h1>
-        <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
-          We&apos;re simplifying student accommodation in Australia, making it easier than ever 
-          to find your perfect home away from home.
+        <p className='mb-6'>Your Trusted Partner for Student Housing Abroad</p>
+        <p className="text-xl md:text-xl text-gray-700 mb-8 leading-relaxed">
+          We&apos;re simplifying student accommodation across the UK, Australia, and the US, making it easier than ever for students to find their perfect home away from home.
         </p>
         <div className="flex  md:flex-row gap-4 justify-center">
           <button

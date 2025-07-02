@@ -90,7 +90,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     //   router.push("/login");
     // }
   };
-  console.log(selectedProperty);
+  // console.log(selectedProperty);
   const handlePrevImage = () => {
     setCurrentImage((prev) => Math.max(prev - 1, 0));
   };
