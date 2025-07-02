@@ -50,7 +50,7 @@ const router = useRouter();
               </p>
                 <div className="flex space-x-4">
                 <Link
-                  href="https://facebook.com/gouninest"
+                  href="https://www.facebook.com/profile.php?id=61577828576999#"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
@@ -58,7 +58,7 @@ const router = useRouter();
                   <Facebook className="w-6 h-6" />
                 </Link>
                 <Link
-                  href="https://instagram.com/gouninest"
+                  href="https://www.instagram.com/gouninest/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
@@ -66,7 +66,7 @@ const router = useRouter();
                   <Instagram className="w-6 h-6" />
                 </Link>
                 <Link
-                  href="https://linkedin.com/gouninest"
+                  href="https://www.linkedin.com/company/gouninest/about/?viewAsMember=true"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-electric-400 transition-colors duration-300"

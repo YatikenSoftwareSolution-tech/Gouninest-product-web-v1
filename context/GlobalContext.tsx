@@ -1,23 +1,8 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  PropsWithChildren,
-  useEffect,
-} from "react";
+import { createContext, useContext, useState, PropsWithChildren } from "react";
 import { fetchApi } from "@/utils/fetchApi";
-import {Countries, Property} from "@/types/types"
-
-// Replace this with your actual User type if available
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  // Add any other fields returned by /user/profile
-}
+import { Countries, CountryPropertyCount, Locations, Property, User } from "@/types/types";
 
 interface GlobalContextType {
   user: User | null;
@@ -29,10 +14,12 @@ interface GlobalContextType {
   fetchUserProfile: () => Promise<void>;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  location: {lat: string, lon: string};
-  setLocation: (query:  {lat: string, lon: string}) => void;
+  location: { lat: string; lon: string };
+  setLocation: (query: { lat: string; lon: string }) => void;
   fetchProperties: (url: string) => void;
-  fetchCountries: () => void;
+  fetchLocationCountInCountries: () => void;
+  fetchPropertiesCountInLocations: () => void;
+  fetchTopProperties: () => void;
   properties: Property[];
   bookProperty: Property | null;
   setBookProperty: (property: Property | null) => void;
@@ -41,9 +28,11 @@ interface GlobalContextType {
   setFilterData: (data: FilterData | null) => void;
   selectedBlog: number | null;
   setSelectedBlog: (blogId: number | null) => void;
+  locations: Locations;
+  countryProperty: CountryPropertyCount[];
 }
 
-interface FilterData{
+interface FilterData {
   country: string;
   city: string;
   keyword: string;
@@ -57,66 +46,76 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [location, setLocation] = useState({lat: '', lon: ''});
+  const [location, setLocation] = useState({ lat: "", lon: "" });
   const [properties, setProperties] = useState<Property[]>([]);
-  const [bookProperty, setBookProperty] = useState<Property|null>(null);
+  const [bookProperty, setBookProperty] = useState<Property | null>(null);
   const [countries, setCountries] = useState<Countries>([]);
+  const [locations, setLocations] = useState<Locations>([]);
   const [filterData, setFilterData] = useState<FilterData | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<number | null>(null);
-  
-  // useEffect(() => {
-  //   fetchUserProfile();
-  // }, []);
+  const [countryProperty, setCountryProperty] = useState<CountryPropertyCount[]>([]);
 
-  useEffect(() => {
-    const fetchTopProperties = async () => {
-      try {
-        const response = await fetchApi("properties/top-by-country");
-        if (response && typeof response === 'object' && 'properties' in response) {
-          setProperties(response.properties as Property[]);
-        } else {
-          console.error("Invalid properties data received");
-        }
-      } catch (err) {
-        console.error("Error in GlobalProvider useEffect:", err);
-      }
-    };
-    fetchTopProperties();
-  }, []);
-
-
-  const fetchUserProfile = async () => {
-  try {
-    const response = await fetchApi("/user/profile");
-    // Type guard to ensure response matches User type
-    if (response && 
-        typeof response === 'object' && 
-        'id' in response) { // adjust properties based on your User type
-      setUser(response as User);
-    } else {
-      setUser(null);
-      console.error("Invalid user data received");
-    }
-  } catch (err) {
-    console.error("Failed to fetch user profile:", err);
-    setUser(null);
-  }
-};
-
-  const fetchCountries = async () => {
+  const fetchLocationCountInCountries = async () => {
     try {
-      const response = await fetchApi('/properties/all-cities');
-      setCountries(response as Countries);
+      const response = await fetchApi("/properties/countries");
+      if (response) {
+        setCountries(response as Countries);
+      } else {
+        console.error("Invalid countries data received");
+      }
+    } catch (err) {
+      console.error("Failed to fetch location count in countries:", err);
+    }
+  };
+
+  const fetchPropertiesCountInLocations = async () => {
+    try {
+      const response = await fetchApi("/properties/all-cities");
+      setLocations(response as Locations);
     } catch (err) {
       console.error("Failed to fetch cities:", err);
     }
   };
 
-   const fetchProperties = async (url:string) => {
+  const fetchTopProperties = async () => {
+    try {
+      const response = await fetchApi("/properties/top-by-country");
+      if (response) {
+        setCountryProperty(response as CountryPropertyCount[]);
+      } else {
+        console.error("Invalid properties data received");
+      }
+    } catch (err) {
+      console.error("Error in GlobalProvider useEffect:", err);
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetchApi("/user/profile");
+      // Type guard to ensure response matches User type
+      if (response && typeof response === "object" && "id" in response) {
+        // adjust properties based on your User type
+        setUser(response as User);
+      } else {
+        setUser(null);
+        console.error("Invalid user data received");
+      }
+    } catch (err) {
+      console.error("Failed to fetch user profile:", err);
+      setUser(null);
+    }
+  };
+
+  const fetchProperties = async (url: string) => {
     try {
       const response = await fetchApi(url);
-      if(response && typeof response === 'object' && 'properties' in response){
-        setProperties(response.properties as Property[])
+      if (
+        response &&
+        typeof response === "object" &&
+        "properties" in response
+      ) {
+        setProperties(response.properties as Property[]);
       }
     } catch (err) {
       console.error("Failed to fetch user profile:", err);
@@ -224,16 +223,24 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
         error,
         setError,
         fetchUserProfile,
-        bookProperty, setBookProperty,
+        bookProperty,
+        setBookProperty,
         searchQuery,
-        location, setLocation,
+        location,
+        setLocation,
         setSearchQuery,
         fetchProperties,
         properties,
-        fetchCountries,
+        fetchLocationCountInCountries,
+        fetchPropertiesCountInLocations,
+        fetchTopProperties,
         countries,
-        filterData, setFilterData,
-        selectedBlog, setSelectedBlog
+        locations,
+        filterData,
+        setFilterData,
+        selectedBlog,
+        setSelectedBlog,
+        countryProperty
       }}
     >
       {children}

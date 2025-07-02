@@ -106,9 +106,8 @@ const Testimonials = () => {
             Say
             <span className="text-gradient">  About Us </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Don&apos;t just take our word for it. Hear from thousands of satisfied
-            students who found their perfect home away from home with StudyStay.
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+           Our platform is built on trust and satisfaction. With thousands of verified reviews, we continue to deliver reliable housing solutions for students across the UK, Australia, and the US.
           </p>
         </div>
 

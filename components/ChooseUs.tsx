@@ -1,20 +1,20 @@
-import { Search, Clock, BadgeDollarSign } from "lucide-react";
+import { Home, Users, Zap } from "lucide-react";
 
 const features = [
   {
-    icon: <Search className="w-8 h-8 text-gradient" />,
-    title: "Search - Compare - Relax",
-    desc: "Choose from 2 Mn 100% verified student rooms near the university & compare between the best options.",
+    icon: <Home className="w-8 h-8 text-gradient" />,
+    title: "Your Space, Your Rules",
+    desc: "Personalised stays designed for how you live. Enjoy private or shared options with 24/7 support, full amenities, and flexible lease terms — ready when you are.",
   },
   {
-    icon: <Clock className="w-8 h-8 text-electric-500" />,
-    title: "Easy Peasy",
-    desc: "Instantly book the room in a matter of minutes. Save your time for more important things (Netflix).",
+    icon: <Users className="w-8 h-8 text-electric-500" />,
+    title: "Join a Global Community",
+    desc: "Live with students from over 50 countries. Build connections, make lifelong friends, and be part of a diverse, welcoming student network worldwide.",
   },
   {
-    icon: <BadgeDollarSign className="w-8 h-8 text-electric-500" />,
-    title: "Best Price",
-    desc: "We keep our promises. Grab the best offers along with the lowest price promise.",
+    icon: <Zap className="w-8 h-8 text-electric-500" />,
+    title: "Fast, Flexible, Stress-Free",
+    desc: "Get a no-obligation quote within minutes. Our multilingual team negotiates the best deals for you — no extra fees, no hidden conditions.",
   },
 ];
 
@@ -27,8 +27,11 @@ const ChooseUs = () => (
           <span className="text-gradient"> Choose Us</span>?
         </h2>
         <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-          Discover why students choose us for their perfect stay, with features
-          that set us apart in the most popular cities
+          Book with Confidence. Move In with Ease.
+        </p>
+        <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+          Verified listings. Real student reviews. Total support from booking to
+          move-in day.
         </p>
       </div>
 

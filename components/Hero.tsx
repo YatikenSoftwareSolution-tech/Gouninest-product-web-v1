@@ -8,19 +8,33 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const Hero = () => {
-  const { searchQuery, fetchCountries ,setSearchQuery, fetchProperties, location, setLocation } = useGlobal();
+  const {
+    searchQuery,
+    fetchLocationCountInCountries,
+    fetchPropertiesCountInLocations,
+    setSearchQuery,
+    fetchProperties,
+    fetchTopProperties,
+    location,
+    setLocation,
+  } = useGlobal();
   const router = useRouter();
 
   useEffect(() => {
-    fetchCountries();
+    fetchLocationCountInCountries();
+    fetchPropertiesCountInLocations();
+    fetchTopProperties();
   }, []);
 
   const handleSearch = async () => {
-    if(searchQuery !== ''){
-
-      await fetchProperties(`/properties/searchproperties?keyword=${searchQuery}`);
-    }else{
-      await fetchProperties(`/properties/searchproperties?latitude=${location.lat}&longitude=${location.lon}`);
+    if (searchQuery !== "") {
+      await fetchProperties(
+        `/properties/searchproperties?keyword=${searchQuery}`
+      );
+    } else {
+      await fetchProperties(
+        `/properties/searchproperties?latitude=${location.lat}&longitude=${location.lon}`
+      );
     }
     router.push("/properties");
   };
@@ -85,18 +99,16 @@ const Hero = () => {
         <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 animate-fade-in drop-shadow-lg">
           {/* Verified Student Accommodation */}
           <span className="block text-gradient bg-gradient-to-r from-[var(--color-electric-200)] via-amber-200 to-[var(--color-coral-200)] bg-clip-text text-transparent drop-shadow-lg">
-            Find Your Perfect Nest
+            Find Your Perfect Student Home
           </span>
         </h1>
-
-        <p
-          className="text-lg md:text-xl text-white mb-12 max-w-3xl mx-auto animate-fade-in drop-shadow-md"
-          style={{ animationDelay: "0.2s" }}
-        >
-          Verified listings of student accommodations across top UK
-          cities. Use advanced filters to find the right space near your
-          university — fast, simple, and secure.
+        
+          <p className="text-white max-w-3xl mx-auto animate-fade-in drop-shadow-md ">Live near campus, pay less.</p>
+        <p className="text-white mb-12 max-w-3xl mx-auto animate-fade-in drop-shadow-md">
+          We cut costs, not comfort — your budget-friendly upgrade.
         </p>
+
+        
 
         {/* Search Form */}
         <div
@@ -111,16 +123,16 @@ const Hero = () => {
             <Input
               type="text"
               placeholder={
-          searchQuery === "" && location.lat === "" && location.lon === ""
-            ? "Search by location or university"
-            : undefined
+                searchQuery === "" && location.lat === "" && location.lon === ""
+                  ? "Search by location or university"
+                  : undefined
               }
               value={
-          searchQuery !== ""
-            ? searchQuery
-            : location.lat !== "" && location.lon !== ""
-            ? location.lat + " " + location.lon
-            : ""
+                searchQuery !== ""
+                  ? searchQuery
+                  : location.lat !== "" && location.lon !== ""
+                  ? location.lat + " " + location.lon
+                  : ""
               }
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-14 pr-4 h-12 text-lg bg-white/70 glass-effect border-white/40 text-dark placeholder-dark focus:border-[var(--color-electric-400)] focus:bg-white/80 rounded-xl shadow-md"

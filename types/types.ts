@@ -62,9 +62,27 @@ export interface City {
   count: number;
 }
 
-export interface CountryWithCities {
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export interface CountryCityPropertyCount {
   country: string;
   cities: City[];
 }
 
-export type Countries = CountryWithCities[];
+export interface CountryPropertyCount {
+  country: string;
+  properties: Property[];
+}
+
+export interface CountryLocationCount {
+  country: string;
+  count: number;
+}
+
+export type Countries = CountryLocationCount[];
+export type Locations = CountryCityPropertyCount[];

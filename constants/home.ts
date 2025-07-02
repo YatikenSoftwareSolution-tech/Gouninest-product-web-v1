@@ -1208,7 +1208,7 @@ export const featuredBlogs = [
   {
     id:4,
     date: "17/6/25",
-    image:"/uk/uni4.jpg",
+    image:"/GB/loc9.jpg",
     meta_description:
       "Looking for the best suburbs in Australia for student living? Discover 7 affordable, safe, and well-connected neighborhoods near major universities, with insights on rent, transport, and lifestyle.",
     title: "Top 7 Student-Friendly Suburbs in Australia for Affordable Living",
@@ -1322,7 +1322,7 @@ export const featuredBlogs = [
   {
     id:5,
     date: "17/6/25",
-    image:"/uk/uni5.jpg",
+    image:"/GB/loc5.jpg",
     meta_description:
       "Renting in Australia as an international student? Learn key rental tips, legal rights, how to avoid scams, and what to inspect before signing a lease. A must-read guide for overseas students in 2025.",
     title:
@@ -1424,7 +1424,7 @@ export const featuredBlogs = [
   {
     id:1,
     date: "17/6/25",
-    image:"/uk/uni7.jpg",
+    image:"/AU/loc14.jpg",
     meta_description:
       "Setting up your student room in Australia? Use this essential checklist for bedding, kitchen items, electronics, and décor tips. Perfect for international and first-year students in 2025.",
     title:
