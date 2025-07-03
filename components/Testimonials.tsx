@@ -20,25 +20,25 @@ const testimonials: Testimonial[] = [
     name: "Sarah Johnson",
     university: "King's College London",
     image:
-      "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop&crop=face",
+      "/avatars/Avatar4.avif",
     rating: 5,
-    text: "StudyStay made finding the perfect accommodation so easy! The property was exactly as described, and the location was perfect for getting to university. The staff were incredibly helpful throughout the entire process.",
+    text: "Go Uninest made finding the perfect accommodation so easy! The property was exactly as described, and the location was perfect for getting to university. The staff were incredibly helpful throughout the entire process.",
   },
   {
     id: 2,
     name: "Michael Chen",
     university: "University of Manchester",
     image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+      "/avatars/Avatar1.avif",
     rating: 5,
-    text: "I was worried about finding good student housing, but StudyStay exceeded all my expectations. The amenities are top-notch, and I've made so many friends in the community. Highly recommend!",
+    text: "I was worried about finding good student housing, but Go Uninest exceeded all my expectations. The amenities are top-notch, and I've made so many friends in the community. Highly recommend!",
   },
   {
     id: 3,
     name: "Emma Thompson",
     university: "University of Birmingham",
     image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+      "/avatars/Avatar5.avif",
     rating: 5,
     text: "The booking process was seamless, and the property management team is always responsive. My studio apartment is modern, clean, and perfectly located. Couldn't be happier with my choice!",
   },
@@ -47,18 +47,18 @@ const testimonials: Testimonial[] = [
     name: "James Wilson",
     university: "Imperial College London",
     image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+      "/avatars/Avatar2.webp",
     rating: 5,
-    text: "Great value for money and excellent facilities. The gym and study areas are fantastic, and the location is unbeatable. StudyStay really understands what students need.",
+    text: "Great value for money and excellent facilities. The gym and study areas are fantastic, and the location is unbeatable. Go Uninest really understands what students need.",
   },
   {
     id: 5,
     name: "Priya Patel",
     university: "University of Edinburgh",
     image:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
+      "/avatars/Avatar3.avif",
     rating: 5,
-    text: "Moving to a new city was stressful, but StudyStay made the accommodation part worry-free. The virtual tours were accurate, and the move-in process was smooth. Five stars!",
+    text: "Moving to a new city was stressful, but Go Uninest made the accommodation part worry-free. The virtual tours were accurate, and the move-in process was smooth. Five stars!",
   },
 ];
 
