@@ -17,10 +17,12 @@ const Hero = () => {
     fetchTopProperties,
     location,
     setLocation,
+    fetchUserProfile,
   } = useGlobal();
   const router = useRouter();
 
   useEffect(() => {
+    fetchUserProfile();
     fetchLocationCountInCountries();
     fetchPropertiesCountInLocations();
     fetchTopProperties();
@@ -102,13 +104,13 @@ const Hero = () => {
             Find Your Perfect Student Home
           </span>
         </h1>
-        
-          <p className="text-white max-w-3xl mx-auto animate-fade-in drop-shadow-md ">Live near campus, pay less.</p>
+
+        <p className="text-white max-w-3xl mx-auto animate-fade-in drop-shadow-md ">
+          Live near campus, pay less.
+        </p>
         <p className="text-white mb-12 max-w-3xl mx-auto animate-fade-in drop-shadow-md">
           We cut costs, not comfort — your budget-friendly upgrade.
         </p>
-
-        
 
         {/* Search Form */}
         <div

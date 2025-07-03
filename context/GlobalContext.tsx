@@ -92,9 +92,9 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetchApi("/user/profile");
+      const response = await fetchApi("/user");
       // Type guard to ensure response matches User type
-      if (response && typeof response === "object" && "id" in response) {
+      if (response && typeof response === "object" && "_id" in response) {
         // adjust properties based on your User type
         setUser(response as User);
       } else {

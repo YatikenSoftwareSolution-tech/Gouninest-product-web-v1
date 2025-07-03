@@ -1,4 +1,9 @@
-import { getAuthToken } from './getToken';
+function getAuthToken(): string | null {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('gouninest-token');
+  }
+  return null;
+}
 
 interface FetchApiOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD';
@@ -11,7 +16,10 @@ interface ApiError extends Error {
   payload?: unknown;
 }
 
-export async function fetchApi(url: string, { method = 'GET', headers = {}, data = null }: FetchApiOptions = {}): Promise<unknown> {
+export async function fetchApi(
+  url: string,
+  { method = 'GET', headers = {}, data = null }: FetchApiOptions = {}
+): Promise<unknown> {
   const token = getAuthToken();
   const config: RequestInit & { headers: Record<string, string> } = {
     method: method.toUpperCase(),
@@ -26,7 +34,6 @@ export async function fetchApi(url: string, { method = 'GET', headers = {}, data
   // Attach body only if method allows and data is provided
   if (data != null && !['GET', 'HEAD'].includes(config.method!)) {
     if (data instanceof FormData) {
-      // Let browser set the correct multipart boundary
       config.body = data;
     } else {
       config.headers['Content-Type'] = 'application/json';
@@ -36,12 +43,10 @@ export async function fetchApi(url: string, { method = 'GET', headers = {}, data
 
   const res = await fetch(process.env.NEXT_PUBLIC_API_BASE + url, config);
 
-  // Try to parse JSON, fallback to text
   const contentType = res.headers.get('Content-Type') || '';
   if (contentType.includes('application/json')) {
     const json = await res.json();
     if (!res.ok) {
-      // Attach status and URL for easier debugging
       const err = new Error(json.message || 'Request failed') as ApiError;
       err.status = res.status;
       err.payload = json;
