@@ -1,3 +1,14 @@
+export interface LoginCred extends Record<string, unknown> {
+  identifier: string;
+  password: string;
+}
+
+export interface LoginRes{
+  message: string;
+  token: string;
+  user: User;
+}
+
 export interface BlogPost {
   id: number;
   title: string;
@@ -66,6 +77,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  phoneNumber: string;
   role: string;
 }
 

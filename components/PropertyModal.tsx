@@ -47,7 +47,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
   setIsModalOpen,
   selectedProperty,
 }) => {
-  const { setBookProperty } = useGlobal();
+  const { setBookProperty, user } = useGlobal();
 
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -84,11 +84,11 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
 
   const handleBookProperty = () => {
     setBookProperty(selectedProperty);
-    router.push(`/booking`);
-    // if (user) {
-    // } else {
-    //   router.push("/login");
-    // }
+    if (user) {
+      router.push(`/booking`);
+    } else {
+      router.push("/login?booking=true");
+    }
   };
   // console.log(selectedProperty);
   const handlePrevImage = () => {

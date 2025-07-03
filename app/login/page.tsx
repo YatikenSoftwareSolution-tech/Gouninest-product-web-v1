@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,10 @@ import {
 } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-
+import { useGlobal } from "@/context/GlobalContext";
+import { LoginCred, User } from "@/types/types";
+import { fetchApi } from "@/utils/fetchApi";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Bubble {
   id: number;
@@ -23,122 +26,186 @@ interface Bubble {
   color: string;
   speedX: number;
   speedY: number;
-  shape: 'circle' | 'square' | 'triangle' | 'pentagon';
+  shape: "circle" | "square" | "triangle" | "pentagon";
 }
-
 
 const Login = () => {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { setUser } = useGlobal();
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
+    setError(null);
+    console.log({
+      emailOrPhone,
+      password,
+    });
+    const loginCred: LoginCred = {
+      identifier: emailOrPhone,
+      password,
+    };
+    try {
+      const response = await fetchApi("/auth/login", {
+        method: "POST",
+        data: loginCred,
+      });
+      // Type guard for user
+      if (
+        response &&
+        typeof response === "object" &&
+        "user" in response &&
+        response.user
+      ) {
+        console.log(response);
+        setUser(response.user as User);
+        if ("token" in response && typeof response.token === "string") {
+          localStorage.setItem("gouninest-token", response.token);
+        }
+        if (searchParams.get("booking") === "true") {
+          router.push("/booking");
+        } else {
+          router.push("/");
+        }
+      } else {
+        setError("Invalid credentials. Please try again.");
+      }
+    } catch (err) {
+      setError(
+        `Login failed. Please check your credentials and try again. ${err}`
+      );
+    } finally {
       setIsLoading(false);
-      console.log("Login attempt:", { emailOrPhone, password });
-    }, 1000);
+    }
   };
 
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
-  
-    useEffect(() => {
-      const colors = ['#ef4444', '#3b82f6', '#fbbf24', '#10b981', '#8b5cf6', '#f97316'];
-      const shapes: ('circle' | 'square' | 'triangle' | 'pentagon')[] = ['circle', 'square', 'triangle', 'pentagon'];
-      
-      const initialBubbles: Bubble[] = Array.from({ length: 15 }, (_, i) => ({
-        id: i,
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        size: Math.random() * 60 + 20,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        speedX: (Math.random() - 0.5) * 5,
-        speedY: (Math.random() - 0.5) * 5,
-        shape: shapes[Math.floor(Math.random() * shapes.length)]
-      }));
-  
-      setBubbles(initialBubbles);
-  
-      const animateBubbles = () => {
-        setBubbles(prevBubbles => 
-          prevBubbles.map(bubble => {
-            let newX = bubble.x + bubble.speedX;
-            let newY = bubble.y + bubble.speedY;
-            let newSpeedX = bubble.speedX;
-            let newSpeedY = bubble.speedY;
-  
-            // Bounce off walls
-            if (newX <= 0 || newX >= window.innerWidth - bubble.size) {
-              newSpeedX = -newSpeedX;
-              newX = Math.max(0, Math.min(newX, window.innerWidth - bubble.size));
-            }
-            if (newY <= 0 || newY >= window.innerHeight - bubble.size) {
-              newSpeedY = -newSpeedY;
-              newY = Math.max(0, Math.min(newY, window.innerHeight - bubble.size));
-            }
-  
-            return {
-              ...bubble,
-              x: newX,
-              y: newY,
-              speedX: newSpeedX,
-              speedY: newSpeedY
-            };
-          })
-        );
-      };
-  
-      const interval = setInterval(animateBubbles, 16);
-      return () => clearInterval(interval);
-    }, []);
-  
-    const getShapeStyle = (bubble: Bubble) => {
-      const baseStyle = {
-        position: 'absolute' as const,
-        left: bubble.x,
-        top: bubble.y,
-        width: bubble.size,
-        height: bubble.size,
-        backgroundColor: bubble.color,
-        opacity: 0.7,
-        transition: 'all 0.016s linear'
-      };
-  
-      switch (bubble.shape) {
-        case 'circle':
-          return { ...baseStyle, borderRadius: '50%' };
-        case 'square':
-          return { ...baseStyle, borderRadius: '0' };
-        case 'triangle':
+
+  useEffect(() => {
+    const colors = [
+      "#ef4444",
+      "#3b82f6",
+      "#fbbf24",
+      "#10b981",
+      "#8b5cf6",
+      "#f97316",
+    ];
+    const shapes: ("circle" | "square" | "triangle" | "pentagon")[] = [
+      "circle",
+      "square",
+      "triangle",
+      "pentagon",
+    ];
+
+    const initialBubbles: Bubble[] = Array.from({ length: 15 }, (_, i) => ({
+      id: i,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      size: Math.random() * 60 + 20,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speedX: (Math.random() - 0.5) * 5,
+      speedY: (Math.random() - 0.5) * 5,
+      shape: shapes[Math.floor(Math.random() * shapes.length)],
+    }));
+
+    setBubbles(initialBubbles);
+
+    const animateBubbles = () => {
+      setBubbles((prevBubbles) =>
+        prevBubbles.map((bubble) => {
+          let newX = bubble.x + bubble.speedX;
+          let newY = bubble.y + bubble.speedY;
+          let newSpeedX = bubble.speedX;
+          let newSpeedY = bubble.speedY;
+
+          // Bounce off walls
+          if (newX <= 0 || newX >= window.innerWidth - bubble.size) {
+            newSpeedX = -newSpeedX;
+            newX = Math.max(0, Math.min(newX, window.innerWidth - bubble.size));
+          }
+          if (newY <= 0 || newY >= window.innerHeight - bubble.size) {
+            newSpeedY = -newSpeedY;
+            newY = Math.max(
+              0,
+              Math.min(newY, window.innerHeight - bubble.size)
+            );
+          }
+
           return {
-            ...baseStyle,
-            backgroundColor: 'transparent',
-            width: 0,
-            height: 0,
-            borderLeft: `${bubble.size / 2}px solid transparent`,
-            borderRight: `${bubble.size / 2}px solid transparent`,
-            borderBottom: `${bubble.size}px solid ${bubble.color}`
+            ...bubble,
+            x: newX,
+            y: newY,
+            speedX: newSpeedX,
+            speedY: newSpeedY,
           };
-        case 'pentagon':
-          return { ...baseStyle, borderRadius: '20%', transform: 'rotate(45deg)' };
-        default:
-          return { ...baseStyle, borderRadius: '50%' };
-      }
+        })
+      );
     };
+
+    const interval = setInterval(animateBubbles, 16);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getShapeStyle = (bubble: Bubble) => {
+    const baseStyle = {
+      position: "absolute" as const,
+      left: bubble.x,
+      top: bubble.y,
+      width: bubble.size,
+      height: bubble.size,
+      backgroundColor: bubble.color,
+      opacity: 0.7,
+      transition: "all 0.016s linear",
+    };
+
+    switch (bubble.shape) {
+      case "circle":
+        return { ...baseStyle, borderRadius: "50%" };
+      case "square":
+        return { ...baseStyle, borderRadius: "0" };
+      case "triangle":
+        return {
+          ...baseStyle,
+          backgroundColor: "transparent",
+          width: 0,
+          height: 0,
+          borderLeft: `${bubble.size / 2}px solid transparent`,
+          borderRight: `${bubble.size / 2}px solid transparent`,
+          borderBottom: `${bubble.size}px solid ${bubble.color}`,
+        };
+      case "pentagon":
+        return {
+          ...baseStyle,
+          borderRadius: "20%",
+          transform: "rotate(45deg)",
+        };
+      default:
+        return { ...baseStyle, borderRadius: "50%" };
+    }
+  };
+
+  const handleSignup = () => {
+    if (searchParams.get("booking") === "true") {
+      router.push("/signup?booking=true");
+    } else {
+      router.push("/signup");
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-electric-100 to-lime-100 overflow-hidden flex items-center justify-center">
       {/* Animated Bubbles */}
       <div className="absolute inset-0 pointer-events-none">
-        {bubbles.map(bubble => (
-          <div
-            key={bubble.id}
-            style={getShapeStyle(bubble)}
-          />
+        {bubbles.map((bubble) => (
+          <div key={bubble.id} style={getShapeStyle(bubble)} />
         ))}
       </div>
       <div className="w-full max-w-md">
@@ -147,17 +214,22 @@ const Login = () => {
             <CardTitle className="text-2xl font-semibold text-gradient">
               Sign In
             </CardTitle>
-            <CardDescription >
+            <CardDescription>
               Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <div className="mb-4 text-red-600 text-sm text-center font-semibold">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Input
                   id="emailOrPhone"
                   type="text"
-                  placeholder="Enter email or phone number"
+                  placeholder="Enter phone number with country code"
                   value={emailOrPhone}
                   onChange={(e) => setEmailOrPhone(e.target.value)}
                   required
@@ -223,12 +295,12 @@ const Login = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Don&apos;t have an account?{" "}
-                <Link
-                  href="/auth/signup"
+                <span
+                  onClick={handleSignup}
                   className="text-gradient hover:font-bold font-medium"
                 >
                   Sign up
-                </Link>
+                </span>
               </p>
             </div>
           </CardContent>
