@@ -235,13 +235,13 @@ const router = useRouter();
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
                 <Link
-                href="/privacy-policy"
+                href="/policies"
                 className="text-gray-400 hover:text-electric-400 text-sm transition-colors duration-300"
                 >
                 Privacy Policy
                 </Link>
                 <Link
-                href="/terms-of-service"
+                href="/terms"
                 className="text-gray-400 hover:text-electric-400 text-sm transition-colors duration-300"
                 >
                 Terms of Service
