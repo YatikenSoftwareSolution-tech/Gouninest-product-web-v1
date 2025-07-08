@@ -31,10 +31,7 @@ const router = useRouter();
           <div className="flex flex-col md:flex-row flex-wrap gap-4 justify-between">
             {/* Company Info */}
             <div className="animate-fade-in w-[80%] md:w-1/5">
-              <Link
-                href="/"
-                className="flex-shrink-0"
-              >
+              <Link href="/" className="flex-shrink-0">
                 <Image
                   src={"/Logo.png"}
                   alt="Go Uninest"
@@ -43,12 +40,12 @@ const router = useRouter();
                 />
               </Link>
               <p className="text-gray-400 mb-6 leading-relaxed">
-                GoUniNest helps students across UK, Australia and USA find quality, verified
-                housing near universities. With secure listings, flexible
-                leases, and real-time support, GoUniNest makes it simple to
-                settle into student life with confidence.
+                GoUniNest helps students across UK, Australia and USA find
+                quality, verified housing near universities. With secure
+                listings, flexible leases, and real-time support, GoUniNest
+                makes it simple to settle into student life with confidence.
               </p>
-                <div className="flex space-x-4">
+              <div className="flex space-x-4">
                 <Link
                   href="https://www.facebook.com/profile.php?id=61577828576999#"
                   target="_blank"
@@ -81,74 +78,80 @@ const router = useRouter();
                 >
                   <Youtube className="w-6 h-6" />
                 </Link>
-                </div>
+              </div>
             </div>
 
             {/* Quick Links */}
-            <div className="animate-fade-in " style={{ animationDelay: "0.1s" }}>
+            <div
+              className="animate-fade-in "
+              style={{ animationDelay: "0.1s" }}
+            >
               <h4 className="text-lg font-semibold text-white mb-6">
                 Quick Links
               </h4>
-                <ul className="space-y-3">
+              <ul className="space-y-3">
                 <li>
                   <Link
-                  href="/"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    href="/"
+                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
                   >
-                  Home
+                    Home
                   </Link>
                 </li>
                 <li>
                   <Link
-                  href="/about"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    href="/about"
+                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
                   >
-                  About Us
+                    About Us
                   </Link>
                 </li>
                 <li>
                   <Link
-                  href="/properties"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    href="/properties"
+                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
                   >
-                  Properties
+                    Properties
                   </Link>
                 </li>
                 <li>
                   <Link
-                  href="/reviews"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    href="/reviews"
+                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
                   >
-                  Reviews
+                    Reviews
                   </Link>
                 </li>
-                
+
                 <li>
                   <Link
-                  href="/blogs"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    href="/blogs"
+                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
                   >
-                  Blogs
+                    Blogs
                   </Link>
                 </li>
                 <li>
                   <Link
-                  href="/contacts"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    href="/contacts"
+                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
                   >
-                  Contact
+                    Contact
                   </Link>
                 </li>
-                </ul>
+              </ul>
             </div>
 
             {/* Services */}
-            <div className="animate-fade-in " style={{ animationDelay: "0.2s" }}>
+            <div
+              className="animate-fade-in "
+              style={{ animationDelay: "0.2s" }}
+            >
               <h4 className="text-lg font-semibold text-white mb-6">
                 Services
               </h4>
               <ul className="space-y-3">
-                <li  className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
                   Property Search
                 </li>
                 <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
@@ -169,25 +172,38 @@ const router = useRouter();
               </ul>
             </div>
 
-            <div className="animate-fade-in " style={{ animationDelay: "0.2s" }}>
-              <h4 className="text-lg font-semibold text-white mb-6">
-                Explore
-              </h4>
+            <div
+              className="animate-fade-in "
+              style={{ animationDelay: "0.2s" }}
+            >
+              <h4 className="text-lg font-semibold text-white mb-6">Explore</h4>
               <ul className="space-y-3">
-                <li onClick={() => handleClick("London", "GB")} className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li
+                  onClick={() => handleClick("London", "GB")}
+                  className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                >
                   United Kingdom &gt;
                 </li>
-                <li onClick={() => handleClick("Sydney", "AU")} className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li
+                  onClick={() => handleClick("Sydney", "AU")}
+                  className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                >
                   Australia &gt;
                 </li>
-                <li onClick={() => handleClick("Boston", "US")} className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li
+                  onClick={() => handleClick("Boston", "US")}
+                  className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                >
                   United State of America &gt;
                 </li>
               </ul>
             </div>
 
             {/* Contact Info */}
-            <div className="animate-fade-in w-1/5" style={{ animationDelay: "0.3s" }}>
+            <div
+              className="animate-fade-in w-1/5"
+              style={{ animationDelay: "0.3s" }}
+            >
               <h4 className="text-lg font-semibold text-white mb-6">
                 Contact Us
               </h4>
@@ -195,14 +211,17 @@ const router = useRouter();
                 <div className="flex items-start">
                   <MapPin className="w-5 h-5 text-electric-400 mt-1 mr-3 flex-shrink-0" />
                   <p className="text-gray-400">
-                    123 Student Street
+                    First Floor 85 Great Portland Street
                     <br />
-                    London, UK EC1A 1BB
+                    London W1W 7LT United Kingdom
                   </p>
                 </div>
                 <div className="flex items-center">
                   <Phone className="w-5 h-5 text-lime-400 mr-3" />
-                  <p className="text-gray-400">+44 20 7123 4567</p>
+                  <div className="flex flex-col gap-2">
+                    <p className="text-gray-400">+44 2079933000</p>
+                    <p className="text-gray-400">+91 9870468034</p>
+                  </div>
                 </div>
                 <div className="flex items-center">
                   <Mail className="w-5 h-5 text-coral-400 mr-3" />
@@ -214,9 +233,9 @@ const router = useRouter();
               <div className="mt-6">
                 <h5 className="text-white font-semibold mb-2">Office Hours</h5>
                 <p className="text-gray-400 text-sm">
-                  Monday - Friday: 9:00 AM - 6:00 PM
+                  Monday - Saturday: 9:00 AM - 6:00 PM
                   <br />
-                  Saturday: 10:00 AM - 4:00 PM
+                  {/* Saturday: 10:00 AM - 4:00 PM */}
                   <br />
                   Sunday: Closed
                 </p>
@@ -234,24 +253,24 @@ const router = useRouter();
               © 2025 Go Uninest. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-                <Link
+              <Link
                 href="/policies"
                 className="text-gray-400 hover:text-electric-400 text-sm transition-colors duration-300"
-                >
+              >
                 Privacy Policy
-                </Link>
-                <Link
+              </Link>
+              <Link
                 href="/terms"
                 className="text-gray-400 hover:text-electric-400 text-sm transition-colors duration-300"
-                >
+              >
                 Terms of Service
-                </Link>
-                <Link
+              </Link>
+              <Link
                 href="/cookie-policy"
                 className="text-gray-400 hover:text-electric-400 text-sm transition-colors duration-300"
-                >
+              >
                 Cookie Policy
-                </Link>
+              </Link>
             </div>
           </div>
         </div>

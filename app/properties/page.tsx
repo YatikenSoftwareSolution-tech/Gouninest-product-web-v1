@@ -1,3 +1,4 @@
+
 import PropertiesHero from '@/components/PropertiesHero'
 import PropertiesLocationTabs from '@/components/PropertiesLocationTabs'
 import ScrollTransition from '@/components/ScrollTransition'

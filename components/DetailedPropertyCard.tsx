@@ -25,6 +25,7 @@ import {
   Thermometer,
   ChevronDown,
   ChevronUp,
+  
 } from "lucide-react";
 import Image from "next/image";
 import { Property } from "@/types/types";
@@ -39,6 +40,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
   const [currentImage, setCurrentImage] = useState(0);
 
   const handleCardClick = () => {
+    // router.push(`/properties/${property.id}`);
     setIsModalOpen(true);
   };
 

@@ -33,6 +33,7 @@ export interface Property {
   bedrooms: number;
   bathrooms: number;
   countryCode: string;
+  address: string;
   city: string;
   leaseDuration: string;
   amenities: string[];
@@ -43,6 +44,7 @@ export interface Property {
   securityDeposit: number;
   utilitiesIncluded: boolean;
   petPolicy: string;
+  advanceRent: number;
   area: number;
   leaseTerm: number;
   externalSource: string;
@@ -51,10 +53,10 @@ export interface Property {
   createdBy: string;
   isDeleted: boolean;
   isFeatured: boolean;
-  isVerified: boolean;
+  verified: boolean;
   views: number;
   ratings: number;
-  reviewCount: number;
+  reviews: number;
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string
   __v: number;
