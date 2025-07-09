@@ -3,7 +3,6 @@ import { GlobalProvider } from "@/context/GlobalContext";
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import FloatingHelpButton from "@/components/FloatingHelpButton";
 
 export const metadata: Metadata = {
   title: "Go UniNest | Verified Student Accommodation in Australia",
@@ -25,7 +24,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GlobalProvider>
           <Navbar />
           {children}
-          <FloatingHelpButton />
           <Footer />
         </GlobalProvider>
       </body>

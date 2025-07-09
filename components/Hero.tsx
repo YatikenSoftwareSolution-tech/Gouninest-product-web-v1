@@ -26,7 +26,7 @@ const Hero = () => {
     fetchLocationCountInCountries();
     fetchPropertiesCountInLocations();
     fetchTopProperties();
-  });
+  }, []);
 
   const handleSearch = async () => {
     if (searchQuery !== "") {
@@ -173,8 +173,8 @@ const Hero = () => {
             <div className="text-white/90 drop-shadow-sm">Happy Students</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl md:text-3xl flex justify-center items-center font-bold text-white mb-2 drop-shadow-md">
-              4.8 <span className="text-[20px]">⭐</span>
+            <div className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-md">
+              4.8★
             </div>
             <div className="text-white/90 drop-shadow-sm">Average Rating</div>
           </div>

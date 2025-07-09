@@ -29,7 +29,7 @@ const FeaturedBlogs = () => {
   };
 
   const post = featuredBlogs[currentIndex];
-  // console.log(post);
+  console.log(post);
   return (
     <section
       id="featuredBlogs"
