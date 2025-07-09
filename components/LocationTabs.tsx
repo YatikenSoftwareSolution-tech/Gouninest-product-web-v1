@@ -86,13 +86,13 @@ const LocationTabs = () => {
                         className="object-cover w-full h-40 transition-transform duration-300 group-hover:scale-105"
                       />
                       {/* Overlay for hover on md+ screens */}
-                      <div className="hidden sm:flex cursor-pointer absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center">
+                      {/* <div className="hidden cursor-pointer absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center">
                         <span className="text-white text-lg font-semibold">
                           {loc.name} ({loc.count})
                         </span>
-                      </div>
+                      </div> */}
                       {/* Name in bottom left on small screens */}
-                      <div className="sm:hidden absolute left-2 bottom-2 bg-black/60 rounded px-2 py-1">
+                      <div className=" absolute left-2 bottom-2 bg-black/60 rounded px-2 py-1">
                         <span className="text-white text-base font-medium">
                           {loc.name} ({loc.count})
                         </span>

@@ -1,17 +1,35 @@
-import PropertiesHero from '@/components/PropertiesHero'
-import PropertiesLocationTabs from '@/components/PropertiesLocationTabs'
-import ScrollTransition from '@/components/ScrollTransition'
-import React from 'react'
+"use client";
 
-const Properties = () => {
-  
+import PropertiesHero from "@/components/PropertiesHero";
+import PropertiesLocationTabs from "@/components/PropertiesLocationTabs";
+import ScrollTransition from "@/components/ScrollTransition";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+
+const PropertiesContent = () => {
+  const searchParams = useSearchParams();
+  const country = searchParams.get("country");
+  const city = searchParams.get("city");
+
+  const hasFilters = country !== null && city !== null;
+
   return (
-     <div className="min-h-screen">
-      <PropertiesHero />
+    <>
+      {!hasFilters && <PropertiesHero />}
       <ScrollTransition />
       <PropertiesLocationTabs />
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default Properties
+const Properties = () => {
+  return (
+    <div className="min-h-screen">
+      <Suspense fallback={null}>
+        <PropertiesContent />
+      </Suspense>
+    </div>
+  );
+};
+
+export default Properties;

@@ -2,7 +2,13 @@
 
 import { createContext, useContext, useState, PropsWithChildren } from "react";
 import { fetchApi } from "@/utils/fetchApi";
-import { Countries, CountryPropertyCount, Locations, Property, User } from "@/types/types";
+import {
+  Countries,
+  CountryPropertyCount,
+  Locations,
+  Property,
+  User,
+} from "@/types/types";
 
 interface GlobalContextType {
   user: User | null;
@@ -20,6 +26,7 @@ interface GlobalContextType {
   fetchLocationCountInCountries: () => void;
   fetchPropertiesCountInLocations: () => void;
   fetchTopProperties: () => void;
+  getSearchSuggestions: (keyword: string) => SuggestionItem[];
   properties: Property[];
   bookProperty: Property | null;
   setBookProperty: (property: Property | null) => void;
@@ -38,7 +45,14 @@ interface FilterData {
   keyword: string;
 }
 
-// Create context with undefined as initial value
+interface SuggestionItem {
+  name: string;
+  city?: string;
+  country?: string;
+  propertyCount?: number;
+  _id?: string;
+}
+
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
 export const GlobalProvider = ({ children }: PropsWithChildren) => {
@@ -53,7 +67,53 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
   const [locations, setLocations] = useState<Locations>([]);
   const [filterData, setFilterData] = useState<FilterData | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<number | null>(null);
-  const [countryProperty, setCountryProperty] = useState<CountryPropertyCount[]>([]);
+  const [countryProperty, setCountryProperty] = useState<
+    CountryPropertyCount[]
+  >([]);
+  const [hasFetchedUser, setHasFetchedUser] = useState(false);
+
+  const fetchUserProfile = async () => {
+    if (hasFetchedUser) return;
+    setHasFetchedUser(true);
+
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("gouninest-token")
+        : null;
+
+    if (!token) {
+      console.warn("No token found, skipping user fetch.");
+      return;
+    }
+
+    try {
+      const response = await fetchApi("/user");
+      if (response && typeof response === "object" && "_id" in response) {
+        setUser(response as User);
+      } else {
+        setUser(null);
+        console.error("Invalid user data received");
+      }
+    } catch (err) {
+      console.error("Failed to fetch user profile:", err);
+      setUser(null);
+    }
+  };
+
+  const fetchProperties = async (url: string) => {
+    try {
+      const response = await fetchApi(url);
+      if (
+        response &&
+        typeof response === "object" &&
+        "properties" in response
+      ) {
+        setProperties(response.properties as Property[]);
+      }
+    } catch (err) {
+      console.error("Failed to fetch properties:", err);
+    }
+  };
 
   const fetchLocationCountInCountries = async () => {
     try {
@@ -80,47 +140,56 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
   const fetchTopProperties = async () => {
     try {
       const response = await fetchApi("/properties/top-by-country");
-      if (response) {
-        setCountryProperty(response as CountryPropertyCount[]);
-      } else {
-        console.error("Invalid properties data received");
-      }
-    } catch (err) {
-      console.error("Error in GlobalProvider useEffect:", err);
-    }
-  };
 
-  const fetchUserProfile = async () => {
-    try {
-      const response = await fetchApi("/user");
-      // Type guard to ensure response matches User type
-      if (response && typeof response === "object" && "_id" in response) {
-        // adjust properties based on your User type
-        setUser(response as User);
-      } else {
-        setUser(null);
-        console.error("Invalid user data received");
-      }
-    } catch (err) {
-      console.error("Failed to fetch user profile:", err);
-      setUser(null);
-    }
-  };
-
-  const fetchProperties = async (url: string) => {
-    try {
-      const response = await fetchApi(url);
       if (
         response &&
-        typeof response === "object" &&
-        "properties" in response
+        JSON.stringify(response) !== JSON.stringify(countryProperty)
       ) {
-        setProperties(response.properties as Property[]);
+        setCountryProperty(response as CountryPropertyCount[]);
       }
     } catch (err) {
-      console.error("Failed to fetch user profile:", err);
-      setUser(null);
+      console.error("Error in fetchTopProperties:", err);
     }
+  };
+
+  const getSearchSuggestions = (keyword: string): SuggestionItem[] => {
+    if (!keyword.trim()) return [];
+
+    const lowerKeyword = keyword.toLowerCase();
+    console.log("Searching for:", lowerKeyword); // Debug log
+
+    // Debug logs to check data
+    // console.log("countryProperty data:", countryProperty);
+    // console.log("locations data:", locations);
+
+    const matchedCountries = (countryProperty || [])
+      .filter((item) => {
+        const name = item?.name?.toLowerCase() || "";
+        return name.includes(lowerKeyword);
+      })
+      .map((item) => ({
+        name: item.name,
+        country: item.name,
+        propertyCount: item.propertyCount,
+        _id: item._id,
+      }));
+
+    const matchedLocations = (locations || [])
+      .filter((item) => {
+        const name = item?.name?.toLowerCase() || "";
+        return name.includes(lowerKeyword);
+      })
+      .map((item) => ({
+        name: item.name,
+        city: item.city,
+        country: item.country,
+        propertyCount: item.propertyCount,
+        _id: item._id,
+      }));
+
+    const results = [...matchedCountries, ...matchedLocations].slice(0, 10);
+    console.log("Search results:", results); // Debug log
+    return results;
   };
 
   return (
@@ -136,9 +205,9 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
         bookProperty,
         setBookProperty,
         searchQuery,
+        setSearchQuery,
         location,
         setLocation,
-        setSearchQuery,
         fetchProperties,
         properties,
         fetchLocationCountInCountries,
@@ -150,7 +219,8 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
         setFilterData,
         selectedBlog,
         setSelectedBlog,
-        countryProperty
+        countryProperty,
+        getSearchSuggestions,
       }}
     >
       {children}

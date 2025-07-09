@@ -1,5 +1,6 @@
 import ChooseUs from '@/components/ChooseUs'
 import FeaturedBlogs from '@/components/FeaturedBlogs'
+import GetInTouch from '@/components/GetInTouch'
 import Hero from '@/components/Hero'
 import LocationTabs from '@/components/LocationTabs'
 import PropertyTabs from '@/components/PropertyTabs'
@@ -18,7 +19,7 @@ const Home = () => {
       <FeaturedBlogs/>
       <ScrollTransition />
       <Testimonials />
-
+    <GetInTouch />
     </div>
   )
 }
