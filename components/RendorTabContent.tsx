@@ -216,8 +216,7 @@ export const RenderTabContent: React.FC<RenderTabContentProps> = ({
   // );
 
   if (mapError) return <div>Error: {mapError}</div>;
-
-  if (!mapLoaded) return <div>Loading map...</div>;
+  console.log(mapLoaded);
 
   const renderBasicInfo = () => (
     <div className="space-y-6">
