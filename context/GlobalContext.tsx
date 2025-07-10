@@ -132,6 +132,7 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
     try {
       const response = await fetchApi("/properties/all-cities");
       setLocations(response as Locations);
+      // console.log("22: ",response)
     } catch (err) {
       console.error("Failed to fetch cities:", err);
     }

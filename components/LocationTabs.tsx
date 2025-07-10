@@ -11,6 +11,7 @@ const MAX_CITIES = 12;
 const LocationTabs = () => {
   const router = useRouter();
   const { countries, locations, fetchProperties, setFilterData } = useGlobal();
+  // console.log("111: ",locations)
 
   const handleClick = async (city: string, country: string) => {
     setFilterData({ city, country, keyword: "" });
@@ -18,7 +19,9 @@ const LocationTabs = () => {
       `/properties/city-properties?country=${country}&city=${city}`
     );
     router.push(`/properties?city=${city}&country=${country}`);
+    // console.log("aa: ",city, country)
   };
+
 
   const handleViewAll = (country: string) => {
     router.push(`/properties?country=${country}`);
@@ -45,9 +48,9 @@ const LocationTabs = () => {
           </div>
           <Tabs defaultValue="GB" className="w-full flex flex-col gap-6">
             <TabsList className="mb-6 flex justify-center gap-6 ">
-              {["GB", "AU", "US"].map((code) => {
-                const country = countries.find((c) => c.country === code);
-                if (!country) return null;
+              {countries.map((country) => {
+                // const country = countries.find((c) => c.country === code);
+                // if (!country) return null;
                 return (
                   <TabsTrigger
                     key={country.country}
@@ -55,16 +58,13 @@ const LocationTabs = () => {
                     className="flex justify-center gap-3 cursor-pointer bg-gradient-to-r from-[var(--color-electric-500)] to-lime-500 hover:from-electric-600 hover:to-amber-600 text-white text-lg font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-electric-500/30 data-[state=active]:scale-120"
                   >
                     <Image
-                      src={`/${country.country}/flag.jpg`}
+                      src={`/${country.country}/flag.png`}
                       alt={country.country}
                       height={40}
                       width={40}
                     />
-                    {country.country === "GB"
-                      ? `UK (${country.count})`
-                      : country.country === "AU"
-                      ? `AUS (${country.count})`
-                      : `USA (${country.count})`}
+                    {country.country}
+                    ({country.count})
                   </TabsTrigger>
                 );
               })}
