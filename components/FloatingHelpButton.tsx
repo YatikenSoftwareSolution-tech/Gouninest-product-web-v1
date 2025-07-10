@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { Phone, Mail } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +10,7 @@ const FloatingHelpButton = () => {
   >(null);
 
   return (
-    <div className="fixed left-3 bottom-20 z-50 flex flex-col items-end gap-3">
+    <div className="fixed left-3 bottom-20 z-40 flex flex-col items-end gap-3">
       {/* Email Help Button */}
       <div
         className="relative transition-all duration-300 ease-in-out"
@@ -19,10 +18,11 @@ const FloatingHelpButton = () => {
         onMouseLeave={() => setHoveredButton(null)}
       >
         <button
-          className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-all duration-300"
+          className=" rounded-full p-1.5 shadow-sm transition-all duration-300
+                     border border-red-400 text-red-500 bg-white hover:text-red-100 hover:bg-red-500"
           aria-label="Get help via email"
         >
-          <Mail size={25} />
+          <Mail size={30} />
         </button>
         {hoveredButton === "email" && (
           <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-10">
@@ -40,10 +40,11 @@ const FloatingHelpButton = () => {
       >
         <Link
           href="/contacts"
-          className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 shadow-lg transition-all duration-300 hover:scale-110"
+          className="flex items-center justify-center bg-white text-blue-500 rounded-full p-2 shadow-sm
+                     transition-all duration-300 border border-blue-500 hover:border-blue-400 hover:text-blue-100 hover:bg-blue-500"
           aria-label="Contact Us"
         >
-          <Phone size={25} />
+          <Phone size={28}  />
         </Link>
         {hoveredButton === "contact" && (
           <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-10">
@@ -63,16 +64,18 @@ const FloatingHelpButton = () => {
           href="https://wa.me/919870468034"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+          className="flex items-center justify-center rounded-full transition-all duration-300 hover:border-green-400"
           aria-label="Chat on WhatsApp"
         >
-          <Image
-            src="/whatsapp-logo.png"
-            alt="WhatsApp Icon"
-            width={45}
-            height={45}
-            priority
-          />
+          <div className="rounded-full p-1.5 bg-white border border-green-600">
+            <Image
+              src="/whatsapp-color.png"
+              alt="WhatsApp Icon"
+              width={30}
+              height={25}
+              priority
+            />
+          </div>
         </Link>
         {hoveredButton === "whatsapp" && (
           <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-10">

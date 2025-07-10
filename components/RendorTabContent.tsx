@@ -1,5 +1,5 @@
-'use client';
-import React, { useMemo, useState } from "react";
+"use client";
+import React, { useState } from "react";
 import {
   MapPin,
   Users,
@@ -20,7 +20,6 @@ import {
   CalendarDays,
   Sun,
 } from "lucide-react";
-import { GoogleMap, Marker } from "@react-google-maps/api";
 import { Property } from "@/types/types";
 
 const amenities = [
@@ -172,22 +171,22 @@ const houseRules = [
   },
 ];
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "400px",
-  borderRadius: "0.5rem",
-};
+// const mapContainerStyle = {
+//   width: "100%",
+//   height: "400px",
+//   borderRadius: "0.5rem",
+// };
 
-const defaultCenter = {
-  lat: 28.6139,
-  lng: 77.209,
-};
+// const defaultCenter = {
+//   lat: 28.6139,
+//   lng: 77.209,
+// };
 
-const getCoordinates = (address: string): google.maps.LatLngLiteral => {
-  return address.includes("London")
-    ? { lat: 51.505, lng: -0.09 }
-    : defaultCenter;
-};
+// const getCoordinates = (address: string): google.maps.LatLngLiteral => {
+//   return address.includes("London")
+//     ? { lat: 51.505, lng: -0.09 }
+//     : defaultCenter;
+// };
 
 interface RenderTabContentProps {
   activeTab: string;
@@ -211,53 +210,62 @@ export const RenderTabContent: React.FC<RenderTabContentProps> = ({
 
   console.log(handleMapError, handleMapLoad);
 
-  const position = useMemo(
-    () => getCoordinates(selectedProperty.address || "Delhi, India"),
-    [selectedProperty.address]
-  );
+  // const position = useMemo(
+  //   () => getCoordinates(selectedProperty.address || "Delhi, India"),
+  //   [selectedProperty.address]
+  // );
+
+  if (mapError) return <div>Error: {mapError}</div>;
+
+  if (!mapLoaded) return <div>Loading map...</div>;
 
   const renderBasicInfo = () => (
-      <div className="space-y-6">
-        <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
-          Property Details
-        </h3>
+    <div className="space-y-6">
+      <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
+        Property Details
+      </h3>
 
-        <div className="grid grid-cols-3 gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex flex-col items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
-            <Users className="w-7 h-7 text-blue-600 mb-2" />
-            <span className="text-2xl font-bold text-gray-800">
-              {selectedProperty.capacity || "N/A"}
-            </span>
-            <p className="text-sm text-gray-500 mt-1">Guests</p>
-          </div>
-          <div className="flex flex-col items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
-            <Bed className="w-7 h-7 text-blue-600 mb-2" />
-            <span className="text-2xl font-bold text-gray-800">
-              {selectedProperty.bedrooms || "N/A"}
-            </span>
-            <p className="text-sm text-gray-500 mt-1">Bedrooms</p>
-          </div>
-          <div className="flex flex-col items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
-            <Bath className="w-7 h-7 text-blue-600 mb-2" />
-            <span className="text-2xl font-bold text-gray-800">
-              {selectedProperty.bathrooms || "N/A"}
-            </span>
-            <p className="text-sm text-gray-500 mt-1">Bathrooms</p>
-          </div>
+      <div className="grid grid-cols-3 gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <div className="flex flex-col items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
+          <Users className="w-7 h-7 text-blue-600 mb-2" />
+          <span className="text-2xl font-bold text-gray-800">
+            {selectedProperty.capacity || "N/A"}
+          </span>
+          <p className="text-sm text-gray-500 mt-1">Guests</p>
         </div>
-
-        <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-          <h4 className="font-semibold text-gray-800 mb-3">Description</h4>
-          <p className="text-gray-600 leading-relaxed">
-            {selectedProperty.description || (
-              <span className="text-gray-400">No description available</span>
-            )}
-          </p>
+        <div className="flex flex-col items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
+          <Bed className="w-7 h-7 text-blue-600 mb-2" />
+          <span className="text-2xl font-bold text-gray-800">
+            {selectedProperty.bedrooms || "N/A"}
+          </span>
+          <p className="text-sm text-gray-500 mt-1">Bedrooms</p>
+        </div>
+        <div className="flex flex-col items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
+          <Bath className="w-7 h-7 text-blue-600 mb-2" />
+          <span className="text-2xl font-bold text-gray-800">
+            {selectedProperty.bathrooms || "N/A"}
+          </span>
+          <p className="text-sm text-gray-500 mt-1">Bathrooms</p>
         </div>
       </div>
+
+      <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+        <h4 className="font-semibold text-gray-800 mb-3">Description</h4>
+        <p className="text-gray-600 leading-relaxed">
+          {selectedProperty.description || (
+            <span className="text-gray-400">No description available</span>
+          )}
+        </p>
+      </div>
+    </div>
+  );
+
+  const renderLocation = () => {
+    const encodedAddress = encodeURIComponent(
+      selectedProperty?.location?.address || "New Delhi, India"
     );
 
-  const renderLocation = () => (
+    return (
       <div className="space-y-6">
         <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
           Location
@@ -271,7 +279,7 @@ export const RenderTabContent: React.FC<RenderTabContentProps> = ({
             <div>
               <h4 className="font-semibold text-gray-800 mb-1">Address</h4>
               <p className="text-gray-600">
-                {selectedProperty.location.address || (
+                {selectedProperty?.location?.address || (
                   <span className="text-gray-400">Address not available</span>
                 )}
               </p>
@@ -280,127 +288,73 @@ export const RenderTabContent: React.FC<RenderTabContentProps> = ({
         </div>
 
         <div className="h-96 rounded-xl overflow-hidden shadow-sm border border-gray-200 relative">
-          {mapError ? (
-            <div className="bg-red-50 text-red-700 p-4 rounded-xl h-full flex items-center justify-center">
-              <div className="text-center">
-                <svg
-                  className="w-10 h-10 mx-auto mb-2 text-red-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
-                </svg>
-                <p>{mapError}</p>
-              </div>
-            </div>
-          ) : mapLoaded ? (
-            <GoogleMap
-              mapContainerStyle={{ ...mapContainerStyle, borderRadius: "12px" }}
-              center={position}
-              zoom={15}
-              options={{
-                streetViewControl: false,
-                mapTypeControl: false,
-                fullscreenControl: false,
-                styles: [
-                  {
-                    featureType: "poi",
-                    elementType: "labels",
-                    stylers: [{ visibility: "off" }],
-                  },
-                ],
-              }}
-            >
-              <Marker
-                position={position}
-                icon={{
-                  url: "/images/marker-icon.png",
-                  scaledSize: new google.maps.Size(40, 40),
-                }}
-              />
-            </GoogleMap>
-          ) : (
-            <div className="bg-gray-50 h-full flex items-center justify-center">
-              <div className="flex flex-col items-center">
-                <svg
-                  className="w-10 h-10 text-gray-400 animate-pulse mb-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                  />
-                </svg>
-                <p className="text-gray-500">Loading map...</p>
-              </div>
-            </div>
-          )}
+          <iframe
+            width="100%"
+            height="100%"
+            className="rounded-xl"
+            frameBorder="0"
+            style={{ border: 0 }}
+            referrerPolicy="no-referrer-when-downgrade"
+            src={`https://www.google.com/maps?q=${encodedAddress}&output=embed`}
+            allowFullScreen
+          ></iframe>
         </div>
       </div>
     );
+  };
 
   const renderCommunityAmenities = () => (
-      <div className="space-y-6">
-        <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
-          Community Features
-        </h3>
+    <div className="space-y-6">
+      <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
+        Community Features
+      </h3>
 
-        {amenities.map((section) => (
-          <section key={section.category} className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="font-semibold text-gray-800">
-                {section.category}{" "}
-                <span className="text-blue-600">({section.count})</span>
-              </h4>
-            </div>
+      {amenities.map((section) => (
+        <section key={section.category} className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="font-semibold text-gray-800">
+              {section.category}{" "}
+              <span className="text-blue-600">({section.count})</span>
+            </h4>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {section.items.map((item) => (
-                <div
-                  key={item.name}
-                  className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:shadow-sm transition-all"
-                >
-                  <div className="bg-blue-50 p-2 rounded-lg">
-                    {React.cloneElement(item.icon, {
-                      className: "w-5 h-5 text-blue-600",
-                    })}
-                  </div>
-                  <span className="text-gray-700">{item.name}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {section.items.map((item) => (
+              <div
+                key={item.name}
+                className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:shadow-sm transition-all"
+              >
+                <div className="bg-blue-50 p-2 rounded-lg">
+                  {React.cloneElement(item.icon, {
+                    className: "w-5 h-5 text-blue-600",
+                  })}
                 </div>
-              ))}
-            </div>
-          </section>
-        ))}
+                <span className="text-gray-700">{item.name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
 
-        <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors">
-          View all amenities
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-      </div>
-    );
+      <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors">
+        View all amenities
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+    </div>
+  );
 
   const renderHouseRules = () => (
     <div className="space-y-6">
@@ -475,92 +429,92 @@ export const RenderTabContent: React.FC<RenderTabContentProps> = ({
     </div>
   );
 
- const renderReviews = () => (
-     <div className="space-y-6">
-       <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
-         Tenant Reviews
-       </h3>
+  const renderReviews = () => (
+    <div className="space-y-6">
+      <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
+        Tenant Reviews
+      </h3>
 
-       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-           <div className="flex items-center gap-3">
-             <div className="flex items-center">
-               {[...Array(5)].map((_, i) => (
-                 <Star
-                   key={i}
-                   className={`w-5 h-5 ${
-                     i < Math.floor(selectedProperty.ratings || 0)
-                       ? "fill-yellow-400 text-yellow-400"
-                       : "fill-gray-200 text-gray-200"
-                   }`}
-                 />
-               ))}
-             </div>
-             <div>
-               <span className="text-2xl font-bold text-gray-800">
-                 {selectedProperty.ratings || "0.0"}
-               </span>
-               <span className="text-gray-500 text-sm ml-1">/ 5</span>
-             </div>
-           </div>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`w-5 h-5 ${
+                    i < Math.floor(selectedProperty.ratings || 0)
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "fill-gray-200 text-gray-200"
+                  }`}
+                />
+              ))}
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-gray-800">
+                {selectedProperty.ratings || "0.0"}
+              </span>
+              <span className="text-gray-500 text-sm ml-1">/ 5</span>
+            </div>
+          </div>
 
-           <div className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
-             {selectedProperty.reviews || 0}{" "}
-             {selectedProperty.reviews === 1 ? "review" : "reviews"}
-           </div>
-         </div>
+          <div className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+            {selectedProperty.reviewCount || 0}{" "}
+            {selectedProperty.reviews === 1 ? "review" : "reviews"}
+          </div>
+        </div>
 
-         <div className="space-y-4">
-           {selectedProperty.reviews ? (
-             <>
-               <p className="text-gray-600 leading-relaxed">
-                 &ldquo;Recent tenants have shared their experiences living
-                 here...&rdquo;
-               </p>
+        <div className="space-y-4">
+          {selectedProperty.reviews ? (
+            <>
+              <p className="text-gray-600 leading-relaxed">
+                &ldquo;Recent tenants have shared their experiences living
+                here...&rdquo;
+              </p>
 
-               <button className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 transition-colors">
-                 Read all reviews
-                 <svg
-                   xmlns="http://www.w3.org/2000/svg"
-                   className="h-4 w-4"
-                   fill="none"
-                   viewBox="0 0 24 24"
-                   stroke="currentColor"
-                 >
-                   <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     strokeWidth={2}
-                     d="M9 5l7 7-7 7"
-                   />
-                 </svg>
-               </button>
-             </>
-           ) : (
-             <div className="text-center py-6">
-               <svg
-                 className="w-12 h-12 mx-auto text-gray-300 mb-3"
-                 fill="none"
-                 stroke="currentColor"
-                 viewBox="0 0 24 24"
-               >
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={1}
-                   d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                 />
-               </svg>
-               <p className="text-gray-500">No reviews yet</p>
-               <p className="text-gray-400 text-sm mt-1">
-                 Be the first to share your experience
-               </p>
-             </div>
-           )}
-         </div>
-       </div>
-     </div>
-   );
+              <button className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 transition-colors">
+                Read all reviews
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </>
+          ) : (
+            <div className="text-center py-6">
+              <svg
+                className="w-12 h-12 mx-auto text-gray-300 mb-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1}
+                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                />
+              </svg>
+              <p className="text-gray-500">No reviews yet</p>
+              <p className="text-gray-400 text-sm mt-1">
+                Be the first to share your experience
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 
   switch (activeTab) {
     case "community-amenities":

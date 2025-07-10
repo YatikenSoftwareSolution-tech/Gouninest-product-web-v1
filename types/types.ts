@@ -3,7 +3,7 @@ export interface LoginCred extends Record<string, unknown> {
   password: string;
 }
 
-export interface LoginRes{
+export interface LoginRes {
   message: string;
   token: string;
   user: User;
@@ -28,6 +28,7 @@ export interface Property {
   images: string[];
   price: number;
   originalPrice: number;
+  name: string;
   noOfRooms: number;
   capacity: number;
   bedrooms: number;
@@ -39,6 +40,7 @@ export interface Property {
   amenities: string[];
   features: string[];
   propertyType: string;
+  propertyCount: number;
   roomType: string;
   available: boolean;
   securityDeposit: number;
@@ -50,6 +52,10 @@ export interface Property {
   externalSource: string;
   moveInDate: string; // ISO date string
   moveOutDate: string; // ISO date string
+  university?: {
+    name?: string;
+    acronym?: string;
+  };
   createdBy: string;
   isDeleted: boolean;
   isFeatured: boolean;
@@ -57,6 +63,7 @@ export interface Property {
   views: number;
   ratings: number;
   reviews: number;
+  reviewCount: number;
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string
   __v: number;
@@ -98,6 +105,9 @@ export interface CountryPropertyCount {
   propertyCount: number;
   name: string;
   _id: string;
+  city: string;
+  value: string;
+  label: string;
 }
 
 export interface CountryLocationCount {
