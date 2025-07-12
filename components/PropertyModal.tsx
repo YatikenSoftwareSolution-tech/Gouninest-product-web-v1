@@ -16,7 +16,6 @@ import {
   Shield,
 } from "lucide-react";
 import Image from "next/image";
-// import Script from "next/script";
 import { Property } from "@/types/types";
 import { RenderTabContent } from "./RendorTabContent";
 import RightFormSection from "./RightFormSection";
@@ -55,8 +54,6 @@ const PropertyModal = ({
     agreeTerms: false,
     agreePrivacy: false,
   });
-
-  // console.log("selectedProperty: ", selectedProperty);
 
   const handleCopy = () => {
     const textToCopy = selectedProperty._id || "32912";
@@ -166,7 +163,8 @@ const PropertyModal = ({
             </button>
           </div>
         </div>
-        {/* Property badges and info */}
+
+        {/* Property Badges */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs sm:text-sm">
@@ -177,6 +175,7 @@ const PropertyModal = ({
             </span>
           </div>
         </div>
+
         {/* Address and Property ID */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 text-gray-600 text-sm sm:text-base">
@@ -200,7 +199,8 @@ const PropertyModal = ({
             </button>
           </span>
         </div>
-        {/* Property Images Section */}
+
+        {/* Image Section */}
         <div className="mb-6 relative">
           {!gridMode ? (
             <div className="grid grid-cols-3 gap-2">
@@ -213,7 +213,6 @@ const PropertyModal = ({
                   className="rounded-lg object-cover w-full h-[500px] cursor-pointer"
                   onClick={() => openImageModal(selectedImageIndex)}
                 />
-                {/* Navigation arrows */}
                 {selectedProperty.images?.length > 1 && (
                   <>
                     <button
@@ -290,7 +289,6 @@ const PropertyModal = ({
 
         <div className="flex w-full gap-6">
           <div>
-            {/* Property Tabs */}
             <div className="border-b border-gray-200 mb-4">
               <nav className="flex overflow-x-auto scrollbar-hide -mb-px">
                 {tabs.map((tab) => (
@@ -310,7 +308,6 @@ const PropertyModal = ({
               </nav>
             </div>
 
-            {/* Tab Content */}
             <div className="min-h-96 w-[760px]">
               {activeTab === "location" ? (
                 <div className="space-y-4">
@@ -359,9 +356,7 @@ const PropertyModal = ({
         </div>
       </div>
 
-      {/* Fullscreen Image Modal */}
       {imageModalOpen && (
-        // Fix when passing selectedProperty to ImageGalleryModal
         <ImageGalleryModal
           images={selectedProperty.images || []}
           initialIndex={selectedImageIndex}
@@ -370,7 +365,6 @@ const PropertyModal = ({
           selectedProperty={{
             ratings: selectedProperty.ratings ?? 0,
             reviewCount: selectedProperty.reviewCount ?? 0,
-            // reviews: selectedProperty.reviews ?? [],
           }}
         />
       )}

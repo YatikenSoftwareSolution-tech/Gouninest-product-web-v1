@@ -11,7 +11,7 @@ import {
   Wifi,
   Car,
   Dumbbell,
-  ChevronDownSquare, // This is the correct import for the elevator icon
+  ChevronDownSquare,
   Clock,
   ShieldCheck,
   Camera,
@@ -25,7 +25,6 @@ import {
   Thermometer,
   ChevronDown,
   ChevronUp,
-  
 } from "lucide-react";
 import Image from "next/image";
 import { Property } from "@/types/types";
@@ -35,12 +34,28 @@ interface DetailedPropertyCardProps {
   property: Property;
 }
 
+// Currency symbols mapping
+const CURRENCY_SYMBOLS = {
+  GB: "£",
+  AU: "A$",
+  US: "$",
+  IE: "€",
+  NZ: "NZ$",
+  CA: "C$",
+  DE: "€",
+  FR: "€",
+  NL: "€",
+} as const;
+
 const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
+  const symbol =
+    CURRENCY_SYMBOLS[property.countryCode as keyof typeof CURRENCY_SYMBOLS] ||
+    "£";
+
   const handleCardClick = () => {
-    // router.push(`/properties/${property.id}`);
     setIsModalOpen(true);
   };
 
@@ -73,9 +88,11 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
       )
     );
   };
+
   const handlePrevImage = () => {
     setCurrentImage((prev) => Math.max(prev - 1, 0));
   };
+
   const handleNextImage = () => {
     setCurrentImage((prev) => (prev + 1) % property.images.length);
   };
@@ -88,53 +105,55 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
       >
         {/* Image */}
         <div className="relative overflow-hidden h-52">
-          <div>
-            {/* ArrowLeft icon for navigation or carousel */}
-            <div
-              onClick={handlePrevImage}
-              className="absolute top-1/2 left-3 transform -translate-y-1/2 z-10 bg-white/80 rounded-full p-1 shadow hover:bg-electric-100 transition-colors duration-200 cursor-pointer"
-            >
-              <ChevronDown className="w-5 h-5 rotate-90 text-electric-600" />
-            </div>
-            <Image
-              src={property.images[currentImage] || "/placeholder.jpg"}
-              alt={property.title}
-              height={208}
-              width={400}
-              className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-              priority
-            />
-            <div
-              onClick={handleNextImage}
-              className="absolute top-1/2 right-3 transform -translate-y-1/2 z-10 bg-white/80 rounded-full p-1 shadow hover:bg-electric-100 transition-colors duration-200 cursor-pointer"
-            >
-              <ChevronUp className="w-5 h-5 rotate-90 text-electric-600" />
-            </div>
+          {/* Navigation arrows */}
+          <div
+            onClick={handlePrevImage}
+            className="absolute top-1/2 left-3 transform -translate-y-1/2 z-10 bg-white/80 rounded-full p-1 shadow hover:bg-electric-100 transition-colors duration-200 cursor-pointer"
+          >
+            <ChevronDown className="w-5 h-5 rotate-90 text-electric-600" />
+          </div>
+          <Image
+            src={property.images[currentImage] || "/placeholder.jpg"}
+            alt={property.title}
+            height={208}
+            width={400}
+            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+            priority
+          />
+          <div
+            onClick={handleNextImage}
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 z-10 bg-white/80 rounded-full p-1 shadow hover:bg-electric-100 transition-colors duration-200 cursor-pointer"
+          >
+            <ChevronUp className="w-5 h-5 rotate-90 text-electric-600" />
           </div>
 
-          <div className="flex gap-2">
-            {property.price < property.originalPrice ? (
-              <Badge className="absolute top-3 left-3 bg-red-500 text-white animate-pulse shadow-lg shadow-electric-500/30">
-                Discount $
-                {((property.originalPrice - property.price) /
+          {property.price < property.originalPrice && (
+            <Badge className="absolute top-3 left-3 bg-red-500 text-white animate-pulse shadow-lg shadow-electric-500/30">
+              Discount{" "}
+              {Math.round(
+                ((property.originalPrice - property.price) /
                   property.originalPrice) *
-                  100}
-                %
-              </Badge>
-            ) : null}
-          </div>
+                  100
+              )}
+              %
+            </Badge>
+          )}
 
           <div className="absolute bottom-3 left-3 flex gap-2">
-            {property.propertyType && <Badge className=" bg-blue-500 text-white shadow-lg shadow-electric-500/30">
-              {property.propertyType}
-            </Badge>}
-            {property.roomType && <Badge className="bg-green-500 text-white shadow-lg shadow-electric-500/30">
-              {property.roomType} Rooms
-            </Badge>}
+            {property.propertyType && (
+              <Badge className=" bg-blue-500 text-white shadow-lg shadow-electric-500/30">
+                {property.propertyType}
+              </Badge>
+            )}
+            {property.roomType && (
+              <Badge className="bg-green-500 text-white shadow-lg shadow-electric-500/30">
+                {property.roomType} Rooms
+              </Badge>
+            )}
           </div>
           <div className="absolute top-3 right-3 bg-black/70 text-white px-3 py-1 rounded-lg text-sm font-semibold flex items-center gap-1 shadow">
             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            {property.ratings}{" "}
+            {property.ratings}
             <span className="opacity-70">({property.views})</span>
           </div>
         </div>
@@ -172,38 +191,43 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
             </div>
           </div>
 
-          {/* Price */}
+          {/* Price Section (Updated with symbol) */}
           <div className="flex gap-2 mb-2">
             <div>
               <span className="text-2xl font-bold text-electric-600">
-                ${property.price}
+                {symbol}
+                {property.price}
               </span>
-              <span className="text-xs text-gray-500 ml-1">/{property.leaseDuration}</span>
+              <span className="text-xs text-gray-500 ml-1">
+                /{property.leaseDuration}
+              </span>
               {property.price < property.originalPrice && (
-                <span className="ml-3 text-sm line-through text-gray-400">
-                  ${property.originalPrice}
-                </span>
-              )}
-              {property.price < property.originalPrice && (
-                <span className="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-semibold">
-                  -
-                  {Math.round(
-                    ((property.originalPrice - property.price) /
-                      property.originalPrice) *
-                      100
-                  )}
-                  %
-                </span>
+                <>
+                  <span className="ml-3 text-sm line-through text-gray-400">
+                    {symbol}
+                    {property.originalPrice}
+                  </span>
+                  <span className="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-semibold">
+                    -
+                    {Math.round(
+                      ((property.originalPrice - property.price) /
+                        property.originalPrice) *
+                        100
+                    )}
+                    %
+                  </span>
+                </>
               )}
             </div>
             <div className="flex items-center gap-1 bg-emerald-50 px-3 py-1 rounded-full">
               <MapPin className="w-4 h-4 text-emerald-500" />
               <span className="text-sm text-gray-700 font-medium">
-                Move-in: {new Date(property.moveInDate).toLocaleDateString()}
+                Move-in:{" "}
+                {new Date(property.moveInDate).toLocaleDateString("en-GB")}
               </span>
             </div>
           </div>
-          
+
           {/* Amenities */}
           <div className="flex flex-wrap gap-2">
             {property.amenities.slice(0, 4).map((amenity, index) => (
@@ -230,6 +254,8 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
           </div>
         </div>
       </Card>
+
+      {/* Property modal preview */}
       <PropertyModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}

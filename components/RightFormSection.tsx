@@ -1,3 +1,5 @@
+"use client";
+import React from "react";
 import { Property } from "@/types/types";
 
 interface RightFormSectionProps {
@@ -15,19 +17,53 @@ interface FormData {
   agreePrivacy: boolean;
 }
 
+// Static currency symbols by country
+const CURRENCY_SYMBOLS = {
+  GB: "£",
+  AU: "A$",
+  US: "$",
+  IE: "€",
+  NZ: "NZ$",
+  CA: "C$",
+  DE: "€",
+  FR: "€",
+  NL: "€",
+} as const;
+
 const RightFormSection: React.FC<RightFormSectionProps> = ({
   selectedProperty,
   formData,
   handleChange,
 }) => {
+  // Read countryCode directly from selectedProperty
+  const countryCode =
+    selectedProperty.countryCode as keyof typeof CURRENCY_SYMBOLS;
+  const symbol = CURRENCY_SYMBOLS[countryCode] || "£";
+
+  const weeklyPrice = selectedProperty.price ?? 313;
+  const advanceRent = selectedProperty.advanceRent ?? 185;
+  const monthlyPrice = weeklyPrice * 4;
+
+  const format = (value: number) =>
+    value.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
   return (
     <div className="w-full bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200 lg:sticky lg:top-4 h-fit">
       <div className="mb-4 sm:mb-6">
         <div className="text-xl sm:text-2xl font-bold">
-          £{selectedProperty.price || "313"} /week
+          {symbol}
+          {format(weeklyPrice)} /week
         </div>
-        <div className="text-xs sm:text-sm text-gray-600">
-          Advance rent £{selectedProperty.advanceRent || "185"}
+        <div className="text-lg font-semibold mt-1">
+          {symbol}
+          {format(monthlyPrice)} /month
+        </div>
+        <div className="text-xs sm:text-sm text-gray-600 mt-1">
+          Advance rent {symbol}
+          {format(advanceRent)}
         </div>
       </div>
 

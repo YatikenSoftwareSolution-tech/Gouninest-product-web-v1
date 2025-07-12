@@ -17,7 +17,6 @@ const PropertyTabs = () => {
       .filter(Boolean); // Remove undefined
   }, [countryProperty]);
 
-  console.log("aa: ",filteredTabs);
 
   return (
     <section
