@@ -152,9 +152,9 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
         {/* Menu Dropdown */}
         {isOpen && (
           <div
-            className={`absolute top-16 left-0 right-0 px-4 z-50 ${
+            className={`absolute top-16 left-0 right-0 px-4 z-[999] ${
               !isScrolled
-                ? "bg-black/40 backdrop-blur-md pb-2"
+                ? "bg-black/50 backdrop-blur-xl pb-2"
                 : "bg-white pb-2"
             }`}
           >

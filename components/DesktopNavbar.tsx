@@ -53,11 +53,12 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
   };
 
   return (
-    <div className="w-full fixed top-0 z-50 ">
-      <div className="max-w-7xl mx-auto px-5 h-20 flex items-center justify-between pb-4">
+    <div className="w-full">
+      <div className="max-w-7xl mx-auto px-5 flex items-center justify-between py-1 relative">
+        {/* Logo */}
         <div
           className={`flex-shrink-0 hidden md:flex ${
-            isScrolled ? "hidden" : "md:flex"
+            isScrolled ? "hidden" : ""
           }`}
         >
           <Link href="/" className="flex-shrink-0">
@@ -65,6 +66,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
           </Link>
         </div>
 
+        {/* Search bar */}
         {showSearch && (
           <div className="hidden md:flex flex-1 max-w-2xl mx-8">
             <form onSubmit={handleSearch} className="relative w-full">
@@ -85,7 +87,9 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
           </div>
         )}
 
+        {/* Right side */}
         <div className="flex items-center space-x-4">
+          {/* Refer to Earn */}
           <div className="hidden md:flex items-center space-x-6">
             <button
               className={`flex items-center space-x-1 bg-gray-200/20 py-2 px-4 rounded-full ${
@@ -105,6 +109,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
             </button>
           </div>
 
+          {/* Contact Icons */}
           <div
             className={`hidden md:flex gap-1 items-center rounded-full bg-white/20 ${
               isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
@@ -112,10 +117,8 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
           >
             <button
               className={`rounded-l-full py-2 pr-1 pl-3 ${
-                !isScrolled
-                  ? "hover:bg-green-600 transition-colors duration-200"
-                  : "hover:bg-green-200"
-              }`}
+                isScrolled ? "hover:bg-green-200" : "hover:bg-green-600"
+              } transition-colors duration-200`}
             >
               <Image
                 src={isScrolled ? "/whatsapp-color.png" : "/whatsapp-white.png"}
@@ -126,10 +129,8 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
             </button>
             <button
               className={`rounded-r-full py-2 pl-1 pr-3 ${
-                !isScrolled
-                  ? "hover:bg-red-400 transition-colors duration-200"
-                  : "hover:bg-red-200"
-              }`}
+                isScrolled ? "hover:bg-red-200" : "hover:bg-red-400"
+              } transition-colors duration-200`}
             >
               <Image
                 src={isScrolled ? "/telephone-red.png" : "/telephone-white.png"}
@@ -140,15 +141,15 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
             </button>
           </div>
 
+          {/* Get in Touch */}
           <button
             onClick={() => setShowModal(true)}
-            className={`hidden md:flex px-6 py-2 rounded-full font-medium ${
-              isScrolled ? "bg-gradient text-white" : "bg-gradient text-white"
-            }`}
+            className="hidden md:flex px-6 py-2 rounded-full font-medium bg-gradient text-white"
           >
             Get in Touch
           </button>
 
+          {/* Account Dropdown */}
           <div
             className="relative dropdown-container hidden md:flex"
             ref={accountDropdownRef}
@@ -172,7 +173,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
             </button>
 
             {showAccountDropdown && (
-              <div className="absolute right-0 mt-14 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                 <Link
                   href="/login"
                   className="block px-4 py-2 text-gray-800 hover:bg-red-100"

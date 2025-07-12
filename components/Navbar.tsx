@@ -53,28 +53,34 @@ const Navbar = () => {
             : "bg-black/40 backdrop-blur-md border-b border-white/20"
         }`}
       >
-        <DesktopNavbar
-          isScrolled={isScrolled}
-          showSearch={showSearch}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          handleSearch={handleSearch}
-          showAccountDropdown={showAccountDropdown}
-          setShowAccountDropdown={setShowAccountDropdown}
-          setShowModal={setShowModal}
-        />
-        <MobileNavbar
-          isScrolled={isScrolled}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          handleSearch={handleSearch}
-          showAccountDropdown={showAccountDropdown}
-          setShowAccountDropdown={setShowAccountDropdown}
-          setShowModal={setShowModal}
-          handleLinkClick={handleLinkClick}
-        />
+        <div>
+          <div className="hidden md:flex">
+            <DesktopNavbar
+              isScrolled={isScrolled}
+              showSearch={showSearch}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              handleSearch={handleSearch}
+              showAccountDropdown={showAccountDropdown}
+              setShowAccountDropdown={setShowAccountDropdown}
+              setShowModal={setShowModal}
+            />
+          </div>
+          <div className="md:hidden">
+            <MobileNavbar
+              isScrolled={isScrolled}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              handleSearch={handleSearch}
+              showAccountDropdown={showAccountDropdown}
+              setShowAccountDropdown={setShowAccountDropdown}
+              setShowModal={setShowModal}
+              handleLinkClick={handleLinkClick}
+            />
+          </div>
+        </div>
       </nav>
       <GetInTouchModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </>
