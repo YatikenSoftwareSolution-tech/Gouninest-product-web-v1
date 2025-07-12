@@ -12,10 +12,12 @@ const PropertyTabs = () => {
 
   // Memoize the tab data to prevent unnecessary render changes
   const filteredTabs = useMemo(() => {
-    return ["GB", "AU", "US"]
+    return ["GB", "AU", "US", "IE", "NZ", "CA", "DE", "FR", "NL"]
       .map((code) => countryProperty.find((c) => c.country === code))
       .filter(Boolean); // Remove undefined
   }, [countryProperty]);
+
+  console.log("aa: ",filteredTabs);
 
   return (
     <section
@@ -44,7 +46,7 @@ const PropertyTabs = () => {
                 className="flex justify-center gap-3 cursor-pointer bg-gradient-to-r from-[var(--color-electric-500)] to-lime-500 hover:from-electric-600 hover:to-amber-600 text-white text-lg font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-electric-500/30 data-[state=active]:scale-120"
               >
                 <Image
-                  src={`/${country!.country}/flag.jpg`}
+                  src={`/${country!.country}/flag.png`}
                   alt={country!.country}
                   height={40}
                   width={40}
@@ -53,7 +55,21 @@ const PropertyTabs = () => {
                   ? "UK"
                   : country!.country === "AU"
                   ? "AUS"
-                  : "USA"}
+                  : country!.country === "US"
+                  ? "USA"
+                  : country!.country === "IE"
+                  ? "IRE"
+                  : country!.country === "NZ"
+                  ? "NZL"
+                  : country!.country === "CA"
+                  ? "CAN"
+                  : country!.country === "DE"
+                  ? "DEU"
+                  : country!.country === "FR"
+                  ? "FRA"
+                  : country!.country === "NL"
+                  ? "NLD"
+                  : country!.country}
               </TabsTrigger>
             ))}
           </TabsList>

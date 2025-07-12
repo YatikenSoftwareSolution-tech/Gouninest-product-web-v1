@@ -171,23 +171,6 @@ const houseRules = [
   },
 ];
 
-// const mapContainerStyle = {
-//   width: "100%",
-//   height: "400px",
-//   borderRadius: "0.5rem",
-// };
-
-// const defaultCenter = {
-//   lat: 28.6139,
-//   lng: 77.209,
-// };
-
-// const getCoordinates = (address: string): google.maps.LatLngLiteral => {
-//   return address.includes("London")
-//     ? { lat: 51.505, lng: -0.09 }
-//     : defaultCenter;
-// };
-
 interface RenderTabContentProps {
   activeTab: string;
   selectedProperty: Property;
@@ -209,11 +192,6 @@ export const RenderTabContent: React.FC<RenderTabContentProps> = ({
   };
 
   console.log(handleMapError, handleMapLoad);
-
-  // const position = useMemo(
-  //   () => getCoordinates(selectedProperty.address || "Delhi, India"),
-  //   [selectedProperty.address]
-  // );
 
   if (mapError) return <div>Error: {mapError}</div>;
   console.log(mapLoaded);

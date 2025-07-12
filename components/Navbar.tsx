@@ -8,7 +8,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import GetInTouchModal from "./modals/GetInTouchModal";
 
@@ -21,7 +21,7 @@ const Navbar = () => {
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   const accountDropdownRef = useRef<HTMLDivElement>(null);
   const languageDropdownRef = useRef<HTMLDivElement>(null);
@@ -132,7 +132,7 @@ const Navbar = () => {
             : "bg-black/40 backdrop-blur-md border-b border-white/20"
         }`}
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto px-5">
           <div className="flex justify-between items-center h-16">
             <div
               className={`flex-shrink-0 hidden md:flex ${
@@ -210,7 +210,7 @@ const Navbar = () => {
 
             <div className="flex items-center space-x-4">
               <div className="hidden md:flex items-center space-x-6">
-                <Link
+                {/* <Link
                   href="/about"
                   className={`hover:text-red-400 font-medium ${
                     isScrolled ? "text-gray-800" : "text-white"
@@ -225,7 +225,7 @@ const Navbar = () => {
                   }`}
                 >
                   Blogs
-                </Link>
+                </Link> */}
 
                 <button
                   className={`flex items-center space-x-1 bg-gray-200/20 py-2 px-4 rounded-full ${
@@ -241,8 +241,8 @@ const Navbar = () => {
                   >
                     Refer to Earn
                   </span>
-                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                    £5
+                  <span className="bg-[#0279d4] text-white text-xs px-2 py-1 rounded-full">
+                    £50
                   </span>
                 </button>
               </div>
@@ -351,8 +351,8 @@ const Navbar = () => {
                 onClick={() => setShowModal(true)}
                 className={`hidden md:flex px-6 py-2 rounded-full font-medium ${
                   isScrolled
-                    ? "bg-gradient text-white border border-red-500"
-                    : "bg-gradient text-white border border-red-500/30"
+                    ? "bg-gradient text-white"
+                    : "bg-gradient text-white"
                 }`}
               >
                 Get in Touch
@@ -408,31 +408,10 @@ const Navbar = () => {
                 className="bg-black/80 backdrop-blur-md border-t border-white/20 py-5 space-y-5 rounded-2xl shadow-lg"
                 role="menu"
               >
-                {/* Navigation Links */}
-                <div className="space-y-2">
-                  {[
-                    { href: "/about", label: "About" },
-                    { href: "/blogs", label: "Blogs" },
-                  ].map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={handleLinkClick}
-                      className={`block text-white text-base font-medium py-2 px-4 rounded-lg transition-colors hover:bg-white/10 ${
-                        pathname === item.href ? "text-red-400" : ""
-                      }`}
-                      role="menuitem"
-                      aria-current={pathname === item.href ? "page" : undefined}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-
                 {/* Refer to Earn */}
                 <div className="flex items-center justify-between px-4">
                   <span className="text-white font-medium">Refer to Earn</span>
-                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                  <span className="bg-[#0279d4] text-white text-xs px-2 py-1 rounded-full">
                     £50
                   </span>
                 </div>

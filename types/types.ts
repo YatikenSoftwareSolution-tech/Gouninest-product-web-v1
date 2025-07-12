@@ -68,6 +68,7 @@ export interface Property {
   updatedAt: string; // ISO date string
   __v: number;
   location: {
+    region: string | undefined;
     latitude: number;
     longitude: number;
     address: string;
