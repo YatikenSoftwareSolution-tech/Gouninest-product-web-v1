@@ -279,7 +279,12 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
             <div className="w-full">
               {activeTab === "location" ? (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Location</h3>
+                  <div className="mb-8">
+                    <h3 className="text-[20px] font-bold text-gray-900 mb-2">
+                      Location
+                    </h3>
+                    <div className="w-12 h-1 bg-blue-600 rounded-full"></div>
+                  </div>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <MapPin className="w-5 h-5 text-blue-500" />
