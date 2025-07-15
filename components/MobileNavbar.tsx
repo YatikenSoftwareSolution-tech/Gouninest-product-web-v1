@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, Menu, X, ChevronDown } from "lucide-react";
@@ -66,9 +66,43 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
     setIsOpen((prev) => !prev);
   };
 
+  // 📞 Phone dropdown state and behavior
+  const [showPhoneDropdown, setShowPhoneDropdown] = useState(false);
+
+  const phoneNumbers = [
+    {
+      code: "IN",
+      dial: "+91 9876543210",
+      flag: "in",
+    },
+    {
+      code: "US",
+      dial: "+1 4081234567",
+      flag: "us",
+    },
+    {
+      code: "GB",
+      dial: "+44 2071234567",
+      flag: "gb",
+    },
+  ];
+
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      !(e.target as HTMLElement).closest("#phone-dropdown") &&
+      !(e.target as HTMLElement).closest("#phone-btn")
+    ) {
+      setShowPhoneDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
   return (
     <>
-      {/* Top Navbar (fixed height) */}
       <div className="flex justify-between items-center h-16 px-5 z-50 relative bg-transparent">
         {!isScrolled && (
           <div className="flex-shrink-0 md:hidden">
@@ -111,7 +145,11 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
               isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
             }`}
           >
-            <button
+            {/* WhatsApp */}
+            <a
+              href="https://wa.me/919876543210"
+              target="_blank"
+              rel="noopener noreferrer"
               className={`rounded-l-full py-2 pr-1 pl-3 ${
                 !isScrolled
                   ? "hover:bg-green-600 transition-colors duration-200"
@@ -124,9 +162,13 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
                 width={23}
                 height={25}
               />
-            </button>
+            </a>
+
+            {/* Phone Dropdown */}
             <button
-              className={`rounded-r-full py-2 pl-1 pr-3 ${
+              id="phone-btn"
+              onClick={() => setShowPhoneDropdown(!showPhoneDropdown)}
+              className={`relative rounded-r-full py-2 pl-1 pr-3 ${
                 !isScrolled
                   ? "hover:bg-red-400 transition-colors duration-200"
                   : "hover:bg-red-200"
@@ -138,6 +180,30 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
                 width={23}
                 height={25}
               />
+
+              {showPhoneDropdown && (
+                <div
+                  id="phone-dropdown"
+                  className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
+                >
+                  {phoneNumbers.map((item) => (
+                    <a
+                      key={item.code}
+                      href={`tel:${item.dial.replace(/\s/g, "")}`}
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                    >
+                      <Image
+                        src={`https://flagcdn.com/w40/${item.code.toLowerCase()}.jpg`}
+                        alt={item.code}
+                        width={24}
+                        height={16}
+                        className="rounded-sm"
+                      />
+                      <span className="text-sm text-gray-800">{item.dial}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
             </button>
           </div>
 

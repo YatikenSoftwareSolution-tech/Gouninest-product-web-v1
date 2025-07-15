@@ -1,8 +1,14 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, User, ChevronDown } from "lucide-react";
+
+interface Contact {
+  code: string;
+  dial: string;
+  flag: string;
+}
 
 interface DesktopNavbarProps {
   isScrolled: boolean;
@@ -26,7 +32,29 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
   setShowModal,
 }) => {
   const accountDropdownRef = useRef<HTMLDivElement>(null);
+  const phoneDropdownRef = useRef<HTMLDivElement>(null);
   const accountDropdownTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [showPhoneDropdown, setShowPhoneDropdown] = useState(false);
+
+  // Handle clicks outside phone dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        phoneDropdownRef.current &&
+        !phoneDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowPhoneDropdown(false);
+      }
+    };
+
+    if (showPhoneDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPhoneDropdown]);
 
   const setDropdownTimeout = (
     ref: React.MutableRefObject<NodeJS.Timeout | null>,
@@ -51,6 +79,24 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
       setShowAccountDropdown(false)
     );
   };
+
+  const contacts: Contact[] = [
+    {
+      code: "IN",
+      dial: "+91 9876543210",
+      flag: "in",
+    },
+    {
+      code: "US",
+      dial: "+1 4081234567",
+      flag: "us",
+    },
+    {
+      code: "GB",
+      dial: "+44 2071234567",
+      flag: "gb",
+    },
+  ];
 
   return (
     <div className="w-full">
@@ -115,7 +161,11 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
               isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
             }`}
           >
-            <button
+            {/* WhatsApp Button */}
+            <a
+              href="https://wa.me/919876543210"
+              target="_blank"
+              rel="noopener noreferrer"
               className={`rounded-l-full py-2 pr-1 pl-3 ${
                 isScrolled ? "hover:bg-green-200" : "hover:bg-green-600"
               } transition-colors duration-200`}
@@ -126,19 +176,52 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
                 width={23}
                 height={25}
               />
-            </button>
-            <button
-              className={`rounded-r-full py-2 pl-1 pr-3 ${
-                isScrolled ? "hover:bg-red-200" : "hover:bg-red-400"
-              } transition-colors duration-200`}
-            >
-              <Image
-                src={isScrolled ? "/telephone-red.png" : "/telephone-white.png"}
-                alt="telephone"
-                width={23}
-                height={25}
-              />
-            </button>
+            </a>
+
+            {/* Phone Dropdown */}
+            <div className="relative" ref={phoneDropdownRef}>
+              <button
+                onClick={() => setShowPhoneDropdown(!showPhoneDropdown)}
+                className={`rounded-r-full py-2 pl-1 pr-3 ${
+                  isScrolled ? "hover:bg-red-200" : "hover:bg-red-400"
+                } transition-colors duration-200`}
+              >
+                <Image
+                  src={
+                    isScrolled ? "/telephone-red.png" : "/telephone-white.png"
+                  }
+                  alt="telephone"
+                  width={23}
+                  height={25}
+                />
+              </button>
+
+              {showPhoneDropdown && (
+                <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <div className="max-h-60 overflow-y-auto">
+                    {contacts.map((contact, index) => (
+                      <a
+                        key={index}
+                        href={`tel:${contact.dial.replace(/\s/g, "")}`}
+                        onClick={() => setShowPhoneDropdown(false)}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors"
+                      >
+                        <Image
+                          src={`https://flagcdn.com/w40/${contact.flag}.jpg`}
+                          alt={contact.code}
+                          width={20}
+                          height={15}
+                          className="h-4 w-6 object-cover rounded-sm"
+                        />
+                        <span className="text-sm text-gray-800 font-medium">
+                          {contact.dial}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Get in Touch */}
