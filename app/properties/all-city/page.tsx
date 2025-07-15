@@ -3,8 +3,9 @@
 import { useGlobal } from "@/context/GlobalContext";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import DetailedPropertyCard from "@/components/DetailedPropertyCard";
+import { Suspense } from "react"; 
 
 // Supported countries list
 const countryNameMap: Record<string, string> = {
@@ -21,15 +22,14 @@ const countryNameMap: Record<string, string> = {
 
 const Page = () => {
   const router = useRouter();
-  // const searchParams = useSearchParams();
-  // const country = get("country");
-  const { locations, countryProperty } = useGlobal();
-  const country = "GB";
+  const searchParams = useSearchParams();
+  const country = searchParams.get("country");
+  const { locations, countryProperty, fetchProperties } = useGlobal();
 
-  // Get selected country metadata
+  console.log("aaa: ", country);
+
   const countryData = locations.find((loc) => loc.country === country);
 
-  // Get properties for the selected country
   const selectedCountryProperties =
     countryProperty.find((entry) => entry.country === country)?.properties ||
     [];
@@ -41,6 +41,13 @@ const Page = () => {
       </div>
     );
   }
+
+  const handleCities = (city: string, country: string) => {
+    fetchProperties(
+      `/properties/city-properties?country=${country}&city=${city}`
+    );
+    router.push(`/properties?city=${city}&country=${country}`);
+  };
 
   return (
     <section className="py-20 bg-white">
@@ -76,11 +83,7 @@ const Page = () => {
             <div
               className="relative rounded-lg overflow-hidden shadow group cursor-pointer"
               key={idx}
-              onClick={() =>
-                router.push(
-                  `/properties?city=${city.name}&country=${countryData.country}`
-                )
-              }
+              onClick={() => handleCities(city.name, countryData.country)}
             >
               <Image
                 src={`/${countryData.country}/loc${(idx % 16) + 1}.jpg`}
@@ -121,4 +124,15 @@ const Page = () => {
   );
 };
 
-export default Page;
+// ✅ Wrap and export with Suspense
+export default function SuspendedPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="py-20 text-center text-gray-500">Loading...</div>
+      }
+    >
+      <Page />
+    </Suspense>
+  );
+}
