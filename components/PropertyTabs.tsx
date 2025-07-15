@@ -18,6 +18,7 @@ const PropertyTabs = () => {
   }, [countryProperty]);
 
 
+
   return (
     <section
       id="properties"
@@ -37,19 +38,19 @@ const PropertyTabs = () => {
           </p>
         </div>
         <Tabs defaultValue="GB" className="w-full flex flex-col gap-6">
-          <TabsList className="mb-6 flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-6">
+          <TabsList className="mb-12 xl:mb-6 flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-6">
             {filteredTabs.map((country) => (
               <TabsTrigger
                 key={country!.country}
                 value={country!.country}
-                className="flex items-center justify-center gap-1 sm:gap-2 md:gap-3 cursor-pointer bg-gradient-to-r from-[var(--color-electric-500)] to-lime-500 hover:from-electric-600 hover:to-amber-600 text-white text-sm sm:text-base md:text-lg font-semibold rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-electric-500/30 data-[state=active]:scale-105 sm:data-[state=active]:scale-110 px-2 py-1 sm:px-3 sm:py-2"
+                className="flex items-center justify-center gap-1 sm:gap-1 md:gap-2 cursor-pointer bg-gradient-to-r from-[var(--color-electric-500)] to-lime-500 hover:from-electric-600 hover:to-amber-600 text-white text-sm sm:text-base md:text-lg font-semibold rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-electric-500/30 data-[state=active]:scale-105 sm:data-[state=active]:scale-110 px-2 py-1 sm:px-3 sm:py-2"
               >
                 <Image
                   src={`/${country!.country}/flag.png`}
                   alt={country!.country}
-                  height={24}
+                  height={20}
                   width={24}
-                  className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8"
+                  className="h-5 w-8"
                 />
                 <span className="">
                   {country!.country === "GB"

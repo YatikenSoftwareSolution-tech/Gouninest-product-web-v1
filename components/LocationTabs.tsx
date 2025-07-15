@@ -52,14 +52,14 @@ const LocationTabs = () => {
                 <TabsTrigger
                   key={country.country}
                   value={country.country}
-                  className="flex items-center justify-center gap-1 sm:gap-2 md:gap-3 cursor-pointer bg-gradient-to-r from-[var(--color-electric-500)] to-lime-500 hover:from-electric-600 hover:to-amber-600 text-white text-xs sm:text-sm md:text-base font-medium rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md hover:shadow-electric-500/30 data-[state=active]:scale-105 sm:data-[state=active]:scale-110 px-2 py-1 sm:px-3 sm:py-2"
+                  className="flex items-center justify-center gap-1 sm:gap-2 md:gap-2 cursor-pointer bg-gradient-to-r from-[var(--color-electric-500)] to-lime-500 hover:from-electric-600 hover:to-amber-600 text-white text-xs sm:text-sm md:text-base font-medium rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md hover:shadow-electric-500/30 data-[state=active]:scale-105 sm:data-[state=active]:scale-110 px-2 py-1 sm:px-3 sm:py-2"
                 >
                   <Image
                     src={`/${country.country}/flag.png`}
                     alt={country.country}
                     height={24}
                     width={24}
-                    className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8"
+                    className="h-5 w-8"
                   />
                   <div className="flex flex-col xs:flex-row items-center gap-0 xs:gap-1">
                     <span className="text-xs sm:text-sm md:text-base">

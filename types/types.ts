@@ -21,7 +21,9 @@ export interface BlogPost {
 }
 
 export interface Property {
+  key: string;
   _id: string;
+  id: string;
   externalId: string;
   title: string;
   description: string;

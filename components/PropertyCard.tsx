@@ -5,7 +5,7 @@ import { MapPin, Users, Wifi, Car } from 'lucide-react';
 import Image from 'next/image';
 
 interface PropertyCardProps {
-  id: number;
+  id: string;
   title: string;
   location: string;
   price: number;
@@ -17,7 +17,7 @@ interface PropertyCardProps {
 }
 
 const PropertyCard = ({ 
-  id, 
+   id, 
   title, 
   location, 
   price, 

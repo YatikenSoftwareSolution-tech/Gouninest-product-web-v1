@@ -31,7 +31,16 @@ import { Property } from "@/types/types";
 import PropertyModal from "./PropertyModal";
 
 interface DetailedPropertyCardProps {
+  // key: string;
   property: Property;
+  // id: string;
+  // title: string;
+  // location: string;
+  // price: number;
+  // image: string;
+  // rating: number;
+  // capacity: number;
+  // amenities: string[];
 }
 
 // Currency symbols mapping
@@ -47,7 +56,7 @@ const CURRENCY_SYMBOLS = {
   NL: "€",
 } as const;
 
-const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
+const DetailedPropertyCard = ({ property}: DetailedPropertyCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 

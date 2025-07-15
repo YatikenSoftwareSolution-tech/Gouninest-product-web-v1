@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import SearchTabs from "./SearchTabs";
 
 interface SuggestionItem {
+  id?: string;
   name: string;
   city: string;
   country: string;
@@ -207,25 +208,16 @@ const HeroSearch = ({
     setShowSuggestions(false);
   };
 
-  const handleSuggestionClick = (item: SuggestionItem) => {
-    setSearchQuery(item.name);
-    setShowSuggestions(false);
+ const handleSuggestionClick = (item: SuggestionItem) => {
+  const { country, city, id: propertyId } = item;
+  const query = new URLSearchParams();
 
-    const params = new URLSearchParams();
+  if (country) query.set("country", country);
+  if (city) query.set("city", city);
+  if (propertyId) query.set("propertyId", propertyId);
 
-    if (item.type === "property") {
-      if (item.propertyId) params.append("propertyId", item.propertyId);
-      if (item.country) params.append("country", item.country);
-      if (item.city) params.append("city", item.city);
-      params.append("searchType", "property");
-    } else {
-      if (item.country) params.append("country", item.country);
-      if (item.city) params.append("city", item.city);
-    }
-
-    router.push(`/properties?${params.toString()}`);
-  };
-
+  router.push(`/properties?${query.toString()}`);
+};
   const getLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
