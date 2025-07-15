@@ -5,7 +5,6 @@ import PropertiesLocationTabs from "@/components/PropertiesLocationTabs";
 import ScrollTransition from "@/components/ScrollTransition";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import Page from "./all-city/page";
 
 const PropertiesContent = () => {
   const searchParams = useSearchParams();
@@ -28,7 +27,6 @@ const Properties = () => {
     <div className="min-h-screen">
       <Suspense fallback={null}>
         <PropertiesContent />
-        <Page />
       </Suspense>
     </div>
   );

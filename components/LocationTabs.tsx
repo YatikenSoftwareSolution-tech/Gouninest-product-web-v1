@@ -24,7 +24,7 @@ const LocationTabs = () => {
 
 
   const handleViewAll = (country: string) => {
-    router.push(`/properties?country=${country}`);
+    router.push(`/properties/all-city?country=${country}`);
   };
 
   return (
