@@ -375,9 +375,12 @@ export const HouseRulesSection = () => {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
-        House Rules
-      </h3>
+      <div className="mb-8">
+        <h3 className="text-[20px] font-bold text-gray-900 mb-2">
+          House Rules
+        </h3>
+        <div className="w-12 h-1 bg-blue-600 rounded-full"></div>
+      </div>
       <div className="grid gap-4">
         {houseRules.map((rule) => (
           <div
