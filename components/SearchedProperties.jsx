@@ -1,7 +1,7 @@
-// SearchedProperties.js
 import React, { useState, useEffect } from "react";
 import DetailedPropertyCard from "./DetailedPropertyCard";
 import FilterSidebar from "./FilterSidebar";
+import { ChevronDown } from "lucide-react";
 
 const SearchedProperties = ({ properties: initialProperties, filterData }) => {
   // State for filtered properties
@@ -18,10 +18,23 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
     amenities: [],
     locationFeatures: [],
   });
+  // State for sorting
+  const [sortOption, setSortOption] = useState("");
+  const [isSortOpen, setIsSortOpen] = useState(false);
 
-  // Filter properties whenever filters change
+  // Sort options
+  const sortOptions = [
+    { value: "lowest", label: "Lowest price" },
+    { value: "highest", label: "Highest price" },
+    { value: "most-reviewed", label: "Most reviewed" },
+  ];
+
+  // Filter and sort properties whenever filters or sort option changes
   useEffect(() => {
-    const filtered = initialProperties.filter((property) => {
+    let filtered = [...initialProperties];
+
+    // Apply filters
+    filtered = filtered.filter((property) => {
       // Price range filter
       if (
         property.price < filters.priceRange.min ||
@@ -95,8 +108,35 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
       return true;
     });
 
+    // Apply sorting
+    filtered = sortProperties(filtered, sortOption);
+
     setFilteredProperties(filtered);
-  }, [filters, initialProperties]);
+  }, [filters, initialProperties, sortOption]);
+
+  // Sort properties based on selected option
+  const sortProperties = (properties, option) => {
+    const sorted = [...properties];
+
+    switch (option) {
+      case "lowest":
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+      case "highest":
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+      case "most-reviewed":
+        sorted.sort(
+          (a, b) => (b.reviews?.length || 0) - (a.reviews?.length || 0)
+        );
+        break;
+      default:
+        // Default sorting (no change)
+        break;
+    }
+
+    return sorted;
+  };
 
   // Handle price range change
   const handlePriceRangeChange = (newPriceRange) => {
@@ -114,7 +154,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
     });
   };
 
-  // Clear all filters
+  // Clear all filters and sorting
   const clearFilters = () => {
     setFilters({
       priceRange: { min: 0, max: 15000 },
@@ -126,6 +166,13 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
       amenities: [],
       locationFeatures: [],
     });
+    setSortOption("");
+  };
+
+  // Handle sort option change
+  const handleSortChange = (option) => {
+    setSortOption(option);
+    setIsSortOpen(false);
   };
 
   return (
@@ -166,19 +213,57 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
           </p>
         </div>
 
-        {/* <div className=""> */}
-          {/* Filter Sidebar - Left Side */}
-          <div className="absolute top-1/3 left-40 ">
-            <FilterSidebar
-              filters={filters}
-              onPriceRangeChange={handlePriceRangeChange}
-              onCheckboxChange={handleCheckboxChange}
-              onClearFilters={clearFilters}
-            />
+        <div className="flex flex-col ">
+          <div className="flex justify-between md:mb-0 mb-6">
+            {/* Left Sidebar */}
+            <div className="">
+              <FilterSidebar
+                filters={filters}
+                onPriceRangeChange={handlePriceRangeChange}
+                onCheckboxChange={handleCheckboxChange}
+                onClearFilters={clearFilters}
+              />
+            </div>
+            {/* Sort Bar */}
+            <div className="flex justify-end">
+              <div className="relative w-full">
+                <button
+                  onClick={() => setIsSortOpen(!isSortOpen)}
+                  className="w-full flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {sortOption
+                    ? sortOptions.find((opt) => opt.value === sortOption)?.label
+                    : "Sort by"}
+                  <ChevronDown
+                    className={`w-4 h-4 ml-2 transition-transform ${
+                      isSortOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {isSortOpen && (
+                  <div className="absolute z-40 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+                    {sortOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => handleSortChange(option.value)}
+                        className={`block w-full px-4 py-2 text-sm text-left ${
+                          sortOption === option.value
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Property Cards - Right Side */}
-          <div className="w-full ">
+          <div className="w-full space-y-3">
+            {/* Property Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProperties.length > 0 ? (
                 filteredProperties.map((property) => (
@@ -188,7 +273,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
                   />
                 ))
               ) : (
-                <div className="col-span-2 text-center py-10">
+                <div className="col-span-3 text-center py-10">
                   <h3 className="text-xl font-semibold text-gray-700">
                     No properties match your filters
                   </h3>
@@ -199,7 +284,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
               )}
             </div>
           </div>
-        {/* </div> */}
+        </div>
       </div>
     </section>
   );

@@ -133,7 +133,7 @@ const FilterSidebar = ({
       <button
         onClick={toggleSidebar}
         className="bg-gradient text-white px-6 py-1.5 rounded-xl mb-4 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 
-  sm:sticky absolute sm:mb-4 top-28 -left-36 z-50"
+  sm:sticky absolute sm:mb-4  left-[3%] z-50"
       >
         <Filter className="w-5 h-5 mr-2" />
         <span className="font-medium">Filters</span>
