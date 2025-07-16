@@ -83,17 +83,17 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
   const contacts: Contact[] = [
     {
       code: "IN",
-      dial: "+91 9876543210",
+      dial: "+91 9870468034",
       flag: "in",
     },
     {
       code: "US",
-      dial: "+1 4081234567",
+      dial: "+1 3153410000",
       flag: "us",
     },
     {
       code: "GB",
-      dial: "+44 2071234567",
+      dial: "+44 2079933000",
       flag: "gb",
     },
   ];
@@ -163,7 +163,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
           >
             {/* WhatsApp Button */}
             <a
-              href="https://wa.me/919876543210"
+              href="https://wa.me/2079933000"
               target="_blank"
               rel="noopener noreferrer"
               className={`rounded-l-full py-2 pr-1 pl-3 ${

@@ -15,17 +15,17 @@ const FloatingHelpButton = () => {
   const phoneNumbers = [
     {
       code: "IN",
-      dial: "+91 9876543210",
+      dial: "+91 9870468034",
       flag: "in",
     },
     {
       code: "US",
-      dial: "+1 4081234567",
+      dial: "+1 3153410000",
       flag: "us",
     },
     {
       code: "GB",
-      dial: "+44 2071234567",
+      dial: "+44 2079933000",
       flag: "gb",
     },
   ];
@@ -121,7 +121,7 @@ const FloatingHelpButton = () => {
         onMouseLeave={() => setHoveredButton(null)}
       >
         <Link
-          href="https://wa.me/919870468034"
+          href="https://wa.me/2079933000"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center rounded-full transition-all duration-300 hover:border-green-400"

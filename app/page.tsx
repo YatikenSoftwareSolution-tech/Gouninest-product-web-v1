@@ -1,12 +1,12 @@
-import ChooseUs from '@/components/ChooseUs'
-import FeaturedBlogs from '@/components/FeaturedBlogs'
-import GetInTouch from '@/components/GetInTouch'
-import Hero from '@/components/Hero'
-import LocationTabs from '@/components/LocationTabs'
-import PropertyTabs from '@/components/PropertyTabs'
-import ScrollTransition from '@/components/ScrollTransition'
-import Testimonials from '@/components/Testimonials'
-import React from 'react'
+import ChooseUs from "@/components/ChooseUs";
+import FeaturedBlogs from "@/components/FeaturedBlogs";
+import GetInTouch from "@/components/GetInTouch";
+import Hero from "@/components/Hero";
+import LocationTabs from "@/components/LocationTabs";
+import PropertyTabs from "@/components/PropertyTabs";
+import ScrollTransition from "@/components/ScrollTransition";
+import Testimonials from "@/components/Testimonials";
+import React from "react";
 
 const Home = () => {
   return (
@@ -16,12 +16,12 @@ const Home = () => {
       <LocationTabs />
       <PropertyTabs />
       <ChooseUs />
-      <FeaturedBlogs/>
+      <FeaturedBlogs />
       <ScrollTransition />
       <Testimonials />
-    <GetInTouch />
+      <GetInTouch />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
