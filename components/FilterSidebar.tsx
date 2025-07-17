@@ -2,7 +2,23 @@
 
 import { useGlobal } from "@/context/GlobalContext";
 import { X, Filter, RotateCcw } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import "rc-slider/assets/index.css";
+import { PriceRangeSlider } from "./PriceRangeSlider";
+import { Property } from "@/types/types";
+
+// Add the same currency symbols constant at the top
+const CURRENCY_SYMBOLS = {
+  GB: "£",
+  AU: "A$",
+  US: "$",
+  IE: "€",
+  NZ: "NZ$",
+  CA: "C$",
+  DE: "€",
+  FR: "€",
+  NL: "€",
+} as const;
 
 interface FilterSidebarProps {
   filters: {
@@ -16,106 +32,62 @@ interface FilterSidebarProps {
   onPriceRangeChange: (range: { min: number; max: number }) => void;
   onCheckboxChange: (category: string, value: string, checked: boolean) => void;
   onClearFilters: () => void;
+  initialProperties: Property[];
 }
 
 const FilterSidebar = ({
   filters,
+  initialProperties,
   onPriceRangeChange,
   onCheckboxChange,
   onClearFilters,
 }: FilterSidebarProps) => {
   const { countryProperty } = useGlobal();
   const [isOpen, setIsOpen] = useState(false);
-  const [localPriceRange, setLocalPriceRange] = useState({
-    min: 0,
-    max: 20000,
-  });
   const [maxPrice, setMaxPrice] = useState(20000);
   const [countryAmenities, setCountryAmenities] = useState<string[]>([]);
 
-  // Get the active country (first in array)
-  const activeCountry = countryProperty?.[0];
+  // const activeCountry = countryProperty?.[0];
 
-  // Get currency symbol
-  // const countryCode = activeCountry?.country || "GB";
-  const currencySymbol = "£";
+  // Get the currency symbol based on country code
+  const countryCode = initialProperties?.[0]
+    ?.countryCode as keyof typeof CURRENCY_SYMBOLS;
 
-  // Update max price and amenities when country properties change
+  const currencySymbol = countryCode
+    ? CURRENCY_SYMBOLS[countryCode] || "£"
+    : "£";
+
+  const toggleSidebar = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+
+  const onClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  // Calculate max price and amenities from countryProperty[0]
   useEffect(() => {
-    if (!activeCountry?.properties || activeCountry.properties.length === 0) {
-      return;
-    }
+    const countryData = countryProperty?.[0];
 
-    const prices = activeCountry.properties.map((p) => p.price || 0);
+    if (!countryData?.properties || countryData.properties.length === 0) return;
+
+    const prices = countryData.properties.map((p) => p.price || 0);
     const max = Math.max(...prices);
-    setMaxPrice(max || 20000); // fallback
+    setMaxPrice(max || 20000);
 
-    const allAmenities = activeCountry.properties.flatMap(
+    const allAmenities = countryData.properties.flatMap(
       (p) => p.amenities || []
     );
     const uniqueAmenities = [...new Set(allAmenities)].sort();
     setCountryAmenities(uniqueAmenities);
-  }, [activeCountry]);
+  }, [countryProperty]);
 
-  // Sync local state with props
-  useEffect(() => {
-    setLocalPriceRange({
-      min: filters.priceRange.min,
-      max: filters.priceRange.max,
-    });
-  }, [filters.priceRange]);
-
-  // Update local max price when maxPrice changes
-  useEffect(() => {
-    setLocalPriceRange((prev) => ({
-      min: Math.min(prev.min, maxPrice),
-      max: Math.min(prev.max, maxPrice),
-    }));
-  }, [maxPrice]);
-
-  const onClose = () => setIsOpen(false);
-  const toggleSidebar = () => setIsOpen(!isOpen);
-
-  const handlePriceInputChange = (type: "min" | "max", value: string) => {
-    const numValue = value === "" ? 0 : parseInt(value.replace(/\D/g, "")) || 0;
-    const clampedValue = Math.min(Math.max(numValue, 0), maxPrice);
-
-    const updatedPriceRange = {
-      ...localPriceRange,
-      [type]: clampedValue,
-    };
-
-    // Ensure min doesn't exceed max and vice versa
-    if (type === "min" && clampedValue > updatedPriceRange.max) {
-      updatedPriceRange.max = clampedValue;
-    } else if (type === "max" && clampedValue < updatedPriceRange.min) {
-      updatedPriceRange.min = clampedValue;
-    }
-
-    setLocalPriceRange(updatedPriceRange);
-    onPriceRangeChange(updatedPriceRange);
-  };
-
-  const handleSliderChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "min" | "max"
-  ) => {
-    const value = parseInt(e.target.value);
-    const updatedPriceRange = {
-      ...localPriceRange,
-      [type]: value,
-    };
-
-    // Ensure min doesn't exceed max and vice versa
-    if (type === "min" && value > updatedPriceRange.max) {
-      updatedPriceRange.max = value;
-    } else if (type === "max" && value < updatedPriceRange.min) {
-      updatedPriceRange.min = value;
-    }
-
-    setLocalPriceRange(updatedPriceRange);
-    onPriceRangeChange(updatedPriceRange);
-  };
+  const handlePriceRangeChange = useCallback(
+    (range: { min: number; max: number }) => {
+      onPriceRangeChange(range);
+    },
+    [onPriceRangeChange]
+  );
 
   const handleCheckboxToggle =
     (category: string, value: string) =>
@@ -123,20 +95,16 @@ const FilterSidebar = ({
       onCheckboxChange(category, value, e.target.checked);
     };
 
-  // Calculate the progress for the range slider background
-  const minPercent = (localPriceRange.min / maxPrice) * 100;
-  const maxPercent = (localPriceRange.max / maxPrice) * 100;
-
   return (
     <>
       {/* Toggle button - visible on all screens */}
       <button
         onClick={toggleSidebar}
-        className="bg-gradient text-white px-6 py-1.5 rounded-xl mb-4 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 
-  sm:sticky absolute sm:mb-4  left-[3%] z-50"
+        className="bg-gradient text-white px-3 sm:px-6 py-2 sm:py-1.5 rounded-xl mb-4 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 
+  sm:sticky absolute sm:mb-4  left-[3%] z-30 cursor-pointer"
       >
-        <Filter className="w-5 h-5 mr-2" />
-        <span className="font-medium">Filters</span>
+        <Filter className="w-5 h-5 mr-0 sm:mr-2" />
+        <span className="font-medium hidden sm:inline">Filters</span>
       </button>
 
       {/* Overlay */}
@@ -180,103 +148,25 @@ const FilterSidebar = ({
           </div>
         </div>
 
-        <div className="p-6 space-y-8">
+        <div className="p-5 space-y-4">
           {/* Price Range */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-            <h4 className="font-semibold mb-1 text-gray-800 flex items-center">
+          <div className="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
+            <h4 className="font-semibold mb-4 text-gray-800 flex items-center">
               <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
               Price Range ({currencySymbol})
             </h4>
 
-            <div className="space-y-1">
-              <div className="relative h-10 flex items-center w-[280px]">
-                <div className="relative w-[300px]">
-                  {/* Hidden input sliders for functionality */}
-                  <input
-                    type="range"
-                    min="0"
-                    max={maxPrice}
-                    value={localPriceRange.min}
-                    onChange={(e) => handleSliderChange(e, "min")}
-                    className="absolute w-[300px] pointer-events-none appearance-none h-2 z-20 opacity-0"
-                  />
-                  <input
-                    type="range"
-                    min="0"
-                    max={maxPrice}
-                    value={localPriceRange.max}
-                    onChange={(e) => handleSliderChange(e, "max")}
-                    className="absolute w-[300px] pointer-events-none appearance-none h-2 z-20 opacity-0"
-                  />
-
-                  {/* Visual track */}
-                  <div className="absolute w-full h-2 bg-gray-200 rounded-full z-10 top-1/2 transform -translate-y-1/2"></div>
-
-                  {/* Active range */}
-                  <div
-                    className="w-[300px] absolute h-2 bg-blue-500 rounded-full z-10 top-1/2 transform -translate-y-1/2"
-                    style={{
-                      left: `${minPercent}%`,
-                      width: `${maxPercent - minPercent}%`,
-                    }}
-                  ></div>
-
-                  {/* Thumb handles */}
-                  <div
-                    className="absolute w-4 h-4 bg-blue-600 rounded-full z-20 top-1/2 transform -translate-y-1/2 -translate-x-1/2 cursor-pointer shadow-sm border-2 border-white"
-                    style={{ left: `${minPercent}%` }}
-                  ></div>
-                  <div
-                    className="absolute w-4 h-4 bg-blue-600 rounded-full z-20 top-1/2 transform -translate-y-1/2 -translate-x-1/2 cursor-pointer shadow-sm border-2 border-white"
-                    style={{ left: `${maxPercent}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between gap-4 pt-4">
-                <div className="flex items-center space-x-2 relative">
-                  <label className="absolute top-1 left-2 block text-xs font-medium text-gray-600">
-                    Minimum
-                  </label>
-                  <div className="relative flex items-center justify-center">
-                    <span className="absolute left-2 top-1/2 pt-2.5 transform -translate-y-1/2 text-gray-800">
-                      {currencySymbol}
-                    </span>
-                    <input
-                      type="text"
-                      value={localPriceRange.min.toLocaleString()}
-                      onChange={(e) =>
-                        handlePriceInputChange("min", e.target.value)
-                      }
-                      className="w-24 pl-6 h-[45px] pt-2.5 border border-gray-300 rounded-md outline-none text-gray-800 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2 relative">
-                  <label className="absolute top-1 left-2  block text-xs font-medium text-gray-600">
-                    Maximum
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-2 top-1/2 pt-2.5 transform -translate-y-1/2 text-gray-800">
-                      {currencySymbol}
-                    </span>
-                    <input
-                      type="text"
-                      value={localPriceRange.max.toLocaleString()}
-                      onChange={(e) =>
-                        handlePriceInputChange("max", e.target.value)
-                      }
-                      className="w-24 h-[45px] pl-6 pt-2.5 text-sm border border-gray-300 rounded-md text-gray-800 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <PriceRangeSlider
+              maxPrice={maxPrice}
+              selectedRange={filters.priceRange}
+              onPriceRangeChange={handlePriceRangeChange}
+              currencySymbol={currencySymbol} 
+            />
           </div>
 
-          {/* Rest of your existing components... */}
+          {/* Rest of your filters... */}
           {/* Room Types */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
             <h4 className="font-semibold mb-4 text-gray-800 flex items-center">
               <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
               Room Types
@@ -309,7 +199,7 @@ const FilterSidebar = ({
           </div>
 
           {/* Move In Month */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
             <h4 className="font-semibold mb-4 text-gray-800 flex items-center">
               <span className="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
               Move In Month
@@ -348,7 +238,7 @@ const FilterSidebar = ({
           </div>
 
           {/* Property Types */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
             <h4 className="font-semibold mb-4 text-gray-800 flex items-center">
               <span className="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
               Property Types
@@ -380,7 +270,7 @@ const FilterSidebar = ({
           </div>
 
           {/* Services */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
             <h4 className="font-semibold mb-4 text-gray-800 flex items-center">
               <span className="w-2 h-2 bg-teal-500 rounded-full mr-3"></span>
               Services
@@ -414,7 +304,7 @@ const FilterSidebar = ({
 
           {/* Amenities */}
           {countryAmenities.length > 0 && (
-            <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
               <h4 className="font-semibold mb-4 text-gray-800 flex items-center">
                 <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
                 Amenities

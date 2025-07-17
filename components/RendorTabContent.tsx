@@ -6,6 +6,8 @@ import { BasicInfoSection } from "./BasicInfoSection";
 import { LocationSection } from "./LocationSection";
 import { ReviewsSection } from "./ReviewSection";
 import { HouseRulesSection } from "./HousingRuleSection";
+import FloorPlanSection from "./FloorPlanSection";
+
 interface RenderTabContentProps {
   activeTab: string;
   selectedProperty: Property;
@@ -37,6 +39,8 @@ export const RenderTabContent: React.FC<RenderTabContentProps> = ({
       return <AmenitiesSection selectedProperty={selectedProperty} />;
     case "basic-info":
       return <BasicInfoSection selectedProperty={selectedProperty} />;
+    case "floor-plan":
+      return <FloorPlanSection />;
     case "location":
       return <LocationSection selectedProperty={selectedProperty} />;
     case "reviews":

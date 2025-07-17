@@ -219,6 +219,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
             <div className="">
               <FilterSidebar
                 filters={filters}
+                initialProperties={initialProperties}
                 onPriceRangeChange={handlePriceRangeChange}
                 onCheckboxChange={handleCheckboxChange}
                 onClearFilters={clearFilters}
@@ -226,10 +227,10 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
             </div>
             {/* Sort Bar */}
             <div className="flex justify-end">
-              <div className="relative w-full">
+              <div className="relative w-[150px]">
                 <button
                   onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="w-full flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100  cursor-pointer"
                 >
                   {sortOption
                     ? sortOptions.find((opt) => opt.value === sortOption)?.label
@@ -247,7 +248,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
                       <button
                         key={option.value}
                         onClick={() => handleSortChange(option.value)}
-                        className={`block w-full px-4 py-2 text-sm text-left ${
+                        className={`block w-full px-4 py-2 text-sm text-left cursor-pointer ${
                           sortOption === option.value
                             ? "bg-blue-50 text-blue-700"
                             : "text-gray-700 hover:bg-gray-100"

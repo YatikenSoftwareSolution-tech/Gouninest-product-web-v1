@@ -102,6 +102,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
 
   const tabs = [
     { id: "basic-info", label: "Basic Info", icon: Home },
+    { id: "floor-plan", label: "Floor Plan", icon: Star },
     { id: "location", label: "Location", icon: MapPin },
     { id: "community-amenities", label: "Amenities", icon: Users },
     { id: "house-rules", label: "Rules", icon: Shield },
@@ -161,6 +162,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
           <div className="flex items-center gap-2 text-gray-600 text-sm sm:text-base">
             <MapPin className="w-4 h-4" />
             <span className="line-clamp-1">
+              {selectedProperty.title},{" "}
               {selectedProperty.location?.address || "Address not available"}
             </span>
           </div>
@@ -291,6 +293,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
                       <span className="font-medium">Address</span>
                     </div>
                     <p className="text-gray-600 text-sm">
+                      {selectedProperty.title},{" "}
                       {selectedProperty.location?.address || "Not available"}
                     </p>
                   </div>
@@ -302,7 +305,9 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
                       style={{ border: 0 }}
                       referrerPolicy="no-referrer-when-downgrade"
                       src={`https://www.google.com/maps?q=${encodeURIComponent(
-                        selectedProperty?.location?.address || "New Delhi"
+                        `${selectedProperty.title}, ${
+                          selectedProperty?.location?.address || "New Delhi"
+                        }`
                       )}&output=embed`}
                       allowFullScreen
                     />
