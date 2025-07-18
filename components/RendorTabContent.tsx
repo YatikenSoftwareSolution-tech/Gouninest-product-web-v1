@@ -40,7 +40,7 @@ export const RenderTabContent: React.FC<RenderTabContentProps> = ({
     case "basic-info":
       return <BasicInfoSection selectedProperty={selectedProperty} />;
     case "floor-plan":
-      return <FloorPlanSection />;
+      return <FloorPlanSection selectedProperty={selectedProperty} />;
     case "location":
       return <LocationSection selectedProperty={selectedProperty} />;
     case "reviews":

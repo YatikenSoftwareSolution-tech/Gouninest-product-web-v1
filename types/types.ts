@@ -20,6 +20,32 @@ export interface BlogPost {
   image: string;
 }
 
+export interface RoomType {
+  roomTypeSlug: string;
+  roomName: string;
+  roomClass: string;
+  bathroomType: string;
+  amenities: string[];
+  images: string[];
+  videos: string[];
+  vrs: string[];
+  area: number;
+  bedrooms: number;
+  bathrooms: number;
+  tenancies: {
+    [key: string]: {
+      duration: string;
+      weeks: number;
+      moveIn: string;
+      moveOut: string;
+      originalPrice: number;
+      discountedPrice: number;
+      price: number;
+      isExclusive: boolean;
+    };
+  };
+}
+
 export interface Property {
   key: string;
   _id: string;
@@ -35,7 +61,7 @@ export interface Property {
   capacity: number;
   bedrooms: number;
   bathrooms: number;
-  countryCode: string;
+  countryCode: "US" | "GB" | "AU" | "CA" | "IE" | "NZ" | "DE" | "FR" | "NL";
   address: string;
   city: string;
   leaseDuration: string;
@@ -44,6 +70,7 @@ export interface Property {
   propertyType: string;
   propertyCount: number;
   roomType: string;
+  roomTypes: RoomType[];
   available: boolean;
   securityDeposit: number;
   utilitiesIncluded: boolean;

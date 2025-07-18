@@ -112,7 +112,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
   if (!isModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 overflow-y-auto bg-white mt-16 px-2 sm:px-4 md:px-8 lg:px-36">
+    <div className="fixed inset-0 z-[999] overflow-y-auto bg-white mt-16 px-2 sm:px-4 md:px-8 lg:px-36">
       <div className="px-2 py-2 sm:px-4 sm:py-4">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
@@ -142,7 +142,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
               onClick={() => setIsModalOpen(false)}
               className="p-2 hover:bg-gray-100 rounded-full"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 max-sm:w-4 max-sm:h-4 transition-transform duration-300 hover:rotate-90" />
             </button>
           </div>
         </div>

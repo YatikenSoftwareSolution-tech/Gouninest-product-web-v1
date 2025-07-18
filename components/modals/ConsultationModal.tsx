@@ -95,7 +95,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
               className="absolute top-4 right-4 text-gray-500 hover:text-black transition-colors"
               aria-label="Close"
             >
-              <X size={20} />
+              <X className="w-5 h-5 max-sm:w-4 max-sm:h-4 transition-transform duration-300 hover:rotate-90" />
             </button>
 
             <h2 className="text-2xl font-bold text-center mb-2">

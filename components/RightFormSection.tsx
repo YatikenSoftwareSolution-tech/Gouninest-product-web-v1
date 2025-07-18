@@ -1,6 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Property } from "@/types/types";
+import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 
 interface RightFormSectionProps {
   selectedProperty: Property;
@@ -30,11 +32,31 @@ const CURRENCY_SYMBOLS = {
   NL: "€",
 } as const;
 
+const countries = [
+  { code: "IN", dial_code: "+91", name: "India" },
+  { code: "US", dial_code: "+1", name: "United States" },
+  { code: "GB", dial_code: "+44", name: "United Kingdom" },
+  { code: "AU", dial_code: "+61", name: "Australia" },
+  { code: "CA", dial_code: "+1", name: "Canada" },
+  { code: "IE", dial_code: "+353", name: "Ireland" },
+  { code: "NZ", dial_code: "+64", name: "New Zealand" },
+  { code: "DE", dial_code: "+49", name: "Germany" },
+  { code: "FR", dial_code: "+33", name: "France" },
+  { code: "NL", dial_code: "+31", name: "Netherlands" },
+];
+
+const getFlagUrl = (code: string) =>
+  `https://flagcdn.com/w40/${code.toLowerCase()}.jpg`;
+
 const RightFormSection: React.FC<RightFormSectionProps> = ({
   selectedProperty,
   formData,
   handleChange,
 }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(countries[0]);
+
   // Read countryCode directly from selectedProperty
   const countryCode =
     selectedProperty.countryCode as keyof typeof CURRENCY_SYMBOLS;
@@ -49,6 +71,12 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+
+  const filteredCountries = countries.filter(
+    (country) =>
+      country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      country.dial_code.includes(searchTerm)
+  );
 
   return (
     <div className="w-full bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200 lg:sticky lg:top-4 h-fit">
@@ -129,21 +157,93 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
           >
             Phone Number*
           </label>
-          <div className="flex">
-            <select className="p-2 text-sm border border-gray-300 rounded-l">
-              <option>+91</option>
-              <option>+44</option>
-              <option>+1</option>
-            </select>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="flex-1 p-2 text-sm border-t border-b border-r border-gray-300 rounded-r"
-              required
-            />
+          <div className="relative">
+            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-purple-500 transition-all">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsDropdownOpen(!isDropdownOpen);
+                }}
+                className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 border-r border-gray-300 min-w-[120px]"
+              >
+                <Image
+                  src={getFlagUrl(selectedCountry.code)}
+                  alt={selectedCountry.name}
+                  width={20}
+                  height={15}
+                  className="h-4 w-6 object-cover rounded-sm"
+                />
+                <span className="text-sm text-gray-700">
+                  {selectedCountry.dial_code}
+                </span>
+                <ChevronDown
+                  size={16}
+                  className={`text-gray-500 transition-transform ${
+                    isDropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="flex-1 p-2 text-sm focus:outline-none"
+                required
+              />
+            </div>
+
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 mt-1 w-full z-50">
+                <div className="bg-white border border-gray-200 rounded-md shadow-lg max-h-64 overflow-auto">
+                  <div className="p-2 border-b sticky top-0 bg-white z-10">
+                    <input
+                      type="text"
+                      placeholder="Search countries..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      autoFocus
+                    />
+                  </div>
+                  {filteredCountries.map((country) => (
+                    <button
+                      key={country.code}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedCountry(country);
+                        setIsDropdownOpen(false);
+                        setSearchTerm("");
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50"
+                    >
+                      <Image
+                        src={getFlagUrl(country.code)}
+                        alt={country.name}
+                        width={20}
+                        height={15}
+                        className="h-4 w-6 object-cover rounded-sm"
+                      />
+                      <span className="text-sm font-medium text-gray-900">
+                        {country.name}
+                      </span>
+                      <span className="text-sm text-gray-500 ml-auto">
+                        {country.dial_code}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {isDropdownOpen && (
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setIsDropdownOpen(false)}
+              />
+            )}
           </div>
         </div>
 

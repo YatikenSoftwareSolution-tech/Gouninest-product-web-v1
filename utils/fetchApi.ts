@@ -12,6 +12,7 @@ interface FetchApiOptions {
   headers?: Record<string, string>;
   data?: FormData | Record<string, unknown> | null;
   retryCount?: number; // Number of allowed retries
+  body?: BodyInit | null;
 }
 
 interface ApiError extends Error {

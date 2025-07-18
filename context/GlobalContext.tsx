@@ -37,6 +37,15 @@ interface GlobalContextType {
   setSelectedBlog: (blogId: number | null) => void;
   locations: Locations;
   countryProperty: CountryPropertyCount[];
+  submitEnquiry: (data: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    message: string;
+    propertyId?: string;
+    location?: string;
+  }) => Promise<void>;
 }
 
 interface FilterData {
@@ -192,6 +201,44 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
     return results;
   };
 
+  const submitEnquiry = async (data: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    message: string;
+    propertyId?: string;
+    location?: string;
+  }) => {
+    try {
+      setLoading(true);
+
+      const response = await fetchApi("/enquiry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response && typeof response === "object" && "message" in response) {
+        console.log("Enquiry submitted successfully.");
+      } else {
+        console.error(
+          "Enquiry submission failed:",
+          response || "Unknown error"
+        );
+      }
+    } catch (error) {
+      console.error("Error while submitting enquiry:", error);
+      setError("Failed to submit enquiry.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
   return (
     <GlobalContext.Provider
       value={{
@@ -221,6 +268,7 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
         setSelectedBlog,
         countryProperty,
         getSearchSuggestions,
+        submitEnquiry
       }}
     >
       {children}

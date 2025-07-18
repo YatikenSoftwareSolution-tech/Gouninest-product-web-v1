@@ -9,12 +9,16 @@ import {
   Sparkles,
   ChevronDown,
   CheckCircle,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
+import { useGlobal } from "@/context/GlobalContext";
 
 interface GetInTouchModalProps {
   isOpen: boolean;
   onClose: () => void;
+  propertyId?: string; 
+  isEnquiry?: boolean;
 }
 
 const countries = [
@@ -37,16 +41,41 @@ const getFlagUrl = (countryCode: string) => {
 const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
   isOpen,
   onClose,
+  propertyId,
+  isEnquiry = false,
 }) => {
+  const { submitEnquiry } = useGlobal();
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Form submission logic would go here
-    setIsSubmitted(true);
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const formValues = Object.fromEntries(formData.entries());
+
+    try {
+      const payload = {
+        firstName: formValues.firstName as string,
+        lastName: formValues.lastName as string,
+        phone: `${selectedCountry.dial_code}${formValues.phoneNumber}`,
+        email: formValues.email as string,
+        message: formValues.needs as string,
+        ...(propertyId && { propertyId }),
+        ...(formValues.location && { location: formValues.location as string }),
+      };
+
+      await submitEnquiry(payload);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting enquiry:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -54,7 +83,7 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
     if (isSubmitted) {
       timer = setTimeout(() => {
         setIsSubmitted(false);
-        onClose(); // Close the modal after 5 seconds
+        onClose();
       }, 5000);
     }
     return () => clearTimeout(timer);
@@ -78,10 +107,12 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
               <CheckCircle className="text-green-500 w-12 h-12" />
             </div>
             <h2 className="text-2xl font-bold text-center mb-2">
-              Form Submitted Successfully!
+              {isEnquiry ? "Enquiry Sent!" : "Form Submitted Successfully!"}
             </h2>
             <p className="text-gray-600 mb-6">
-              Thank you for contacting us. We&rsquo;ll get back to you soon.
+              {isEnquiry
+                ? "We'll get back to you with more details soon."
+                : "Thank you for contacting us. We'll get back to you soon."}
             </p>
 
             <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -103,11 +134,13 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
               className="absolute top-4 right-4 text-gray-500 hover:text-black transition-colors"
               aria-label="Close"
             >
-              <X size={20} />
+              <X className="w-5 h-5 max-sm:w-4 max-sm:h-4 transition-transform duration-300 hover:rotate-90" />
             </button>
 
             <h2 className="text-2xl font-bold text-center mb-2">
-              Live in Your Dream Home
+              {isEnquiry
+                ? "Enquire About This Property"
+                : "Live in Your Dream Home"}
             </h2>
 
             <div className="flex justify-center gap-4 text-sm text-gray-600 mb-6 flex-wrap text-center">
@@ -262,13 +295,17 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
                 name="location"
                 placeholder="Location or University"
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                required
+                required={!isEnquiry}
               />
 
               <textarea
                 name="needs"
                 rows={3}
-                placeholder="Tell us your rental needs: budget, commute, amenities, safety."
+                placeholder={
+                  isEnquiry
+                    ? "Tell us what you'd like to know about this property"
+                    : "Tell us your rental needs: budget, commute, amenities, safety."
+                }
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
                 required
               />
@@ -295,9 +332,19 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full bg-gradient text-white font-semibold py-3 rounded-md mt-2 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full bg-gradient text-white font-semibold py-3 rounded-md mt-2 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                disabled={isLoading}
               >
-                Get In Touch
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    {isEnquiry ? "Sending Enquiry..." : "Submitting..."}
+                  </>
+                ) : isEnquiry ? (
+                  "Enquire Now"
+                ) : (
+                  "Get In Touch"
+                )}
               </button>
             </form>
           </div>

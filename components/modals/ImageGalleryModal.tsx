@@ -118,7 +118,7 @@ const ImageGalleryModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-white mt-14 flex flex-col md:flex-row overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-white flex flex-col md:flex-row overflow-hidden mt-32">
       {/* Left Side - Images */}
       <div className="flex-1 flex flex-col md:flex-row">
         {/* Main Content Area */}
