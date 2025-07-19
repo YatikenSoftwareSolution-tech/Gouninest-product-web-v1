@@ -29,7 +29,7 @@ interface SearchTabsProps {
   searchQuery: string;
   suggestions: SuggestionItem[];
   handleSuggestionClick: (item: SuggestionItem) => void;
-  getPopularCitiesFromCountries: () => SuggestionItem[];
+  getPopularCitiesFromCountries: (countryId: string) => SuggestionItem[];
   getPopularUniversitiesFromCountries: () => SuggestionItem[];
   getFilteredSuggestions: (type: string) => SuggestionItem[];
 }
@@ -64,9 +64,7 @@ const SearchTabs = ({
       <div className="border-b border-gray-200 mb-4 mt-3 px-4 bg-white sticky top-0 z-10">
         <nav className="flex overflow-x-auto scrollbar-hide -mb-px">
           {[
-            ...(searchQuery.trim() === ""
-              ? [{ id: "popular", label: "Popular", icon: MapPin }]
-              : [{ id: "all", label: "All", icon: SearchIcon }]),
+            { id: "all", label: "All", icon: SearchIcon },
             { id: "city", label: "City", icon: MapPin },
             { id: "university", label: "University", icon: GraduationCap },
             { id: "properties", label: "Properties", icon: MapPin },
@@ -89,7 +87,7 @@ const SearchTabs = ({
         </nav>
       </div>
 
-      <TabsContent value="popular">
+      {/* <TabsContent value="popular">
         <div className="p-4">
           <div>
             <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
@@ -127,7 +125,7 @@ const SearchTabs = ({
             </div>
           </div>
         </div>
-      </TabsContent>
+      </TabsContent> */}
 
       <TabsContent value="all">
         <div className="max-h-60 overflow-y-auto">
@@ -197,15 +195,19 @@ const SearchTabs = ({
                 Popular Cities ({popularCountries.join(", ")})
               </h4>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-sm text-gray-600">
-                {getPopularCitiesFromCountries().map((city, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSuggestionClick(city)}
-                    className="text-left hover:text-blue-600 hover:underline transition-colors"
-                  >
-                    {city.name}
-                  </button>
-                ))}
+                {popularCountries.map((countryId) =>
+                  getPopularCitiesFromCountries(countryId).map(
+                    (city, index) => (
+                      <button
+                        key={`${countryId}-${index}`}
+                        onClick={() => handleSuggestionClick(city)}
+                        className="text-left hover:text-blue-600 hover:underline transition-colors"
+                      >
+                        {city.name}
+                      </button>
+                    )
+                  )
+                )}
               </div>
             </div>
           ) : getFilteredSuggestions("city").length > 0 ? (

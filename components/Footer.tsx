@@ -2,7 +2,6 @@
 import { useGlobal } from "@/context/GlobalContext";
 import {
   MapPin,
-  Phone,
   Mail,
   Facebook,
   Instagram,
@@ -17,6 +16,12 @@ const Footer = () => {
   const { fetchProperties, setFilterData } = useGlobal();
   const router = useRouter();
 
+  const phoneNumbers = [
+    { code: "+91", number: "9870468034", countryCode: "IN" },
+    { code: "+44", number: "2079933000", countryCode: "GB" },
+    { code: "+1", number: "3153410000", countryCode: "US" },
+  ];
+
   // Function to handle click on city links
   const handleClick = async (city: string, country: string) => {
     setFilterData({ city, country, keyword: "" });
@@ -26,7 +31,7 @@ const Footer = () => {
     router.push(`/properties?city=${city}&country=${country}`);
   };
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-gray-900 text-white px-8">
       {/* Main Footer Content */}
       <div className="py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -203,7 +208,7 @@ const Footer = () => {
 
             {/* Contact Info */}
             <div
-              className="animate-fade-in w-1/5"
+              className="animate-fade-in w-1/2 sm:w-1/5"
               style={{ animationDelay: "0.3s" }}
             >
               <h4 className="text-lg font-semibold text-white mb-6">
@@ -218,12 +223,19 @@ const Footer = () => {
                     London W1W 7LT United Kingdom
                   </p>
                 </div>
-                <div className="flex items-center">
-                  <Phone className="w-5 h-5 text-lime-400 mr-3" />
-                  <div className="flex flex-col gap-2">
-                    <p className="text-gray-400">+44 2079933000</p>
-                    <p className="text-gray-400">+91 9870468034</p>
-                  </div>
+                <div className="flex flex-col space-y-5">
+                  {phoneNumbers.map(({ code, number, countryCode }) => (
+                    <div key={code} className="flex space-x-2">
+                      <Image
+                        src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
+                        alt={`${countryCode} Flag`}
+                        width={40}
+                        height={16}
+                        className="rounded-sm w-6 h-4  sm:w-8 sm:h-6"
+                      />
+                      <p>{`${code} ${number}`}</p>
+                    </div>
+                  ))}
                 </div>
                 <div className="flex items-center">
                   <Mail className="w-5 h-5 text-coral-400 mr-3" />

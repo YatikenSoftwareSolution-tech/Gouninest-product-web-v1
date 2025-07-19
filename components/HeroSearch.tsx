@@ -1,10 +1,10 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { MapPin, X, SearchIcon } from "lucide-react";
+import { MapPin, X, SearchIcon, GraduationCap, Loader2 } from "lucide-react";
 import { useGlobal } from "@/context/GlobalContext";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import SearchTabs from "./SearchTabs";
 
 interface SuggestionItem {
@@ -30,162 +30,210 @@ const HeroSearch = ({
   setShowSuggestions,
 }: HeroSearchProps) => {
   const {
-    searchQuery,
-    setSearchQuery,
-    setLocation,
-    getSearchSuggestions,
+    countries,
+    locations,
+    fetchProperties,
+    setFilterData,
     countryProperty,
+    fetchUniversities,
   } = useGlobal();
 
   const router = useRouter();
+  const suggestionBoxRef = useRef<HTMLDivElement>(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [activeTab, setActiveTab] = useState("popular");
-  const suggestionBoxRef = useRef<HTMLDivElement>(null);
+  const [activeCountryTab, setActiveCountryTab] = useState("US");
+  const [activeSearchTab, setActiveSearchTab] = useState("all");
+  const [universities, setUniversities] = useState<SuggestionItem[]>([]);
+  const [isLoadingUniversities, setIsLoadingUniversities] = useState(false);
 
-  const popularCountries = [
-    "UK",
-    "US",
-    "AU",
-    "IT",
-    "UAE",
-    "CA",
-    "DE",
-    "FR",
-    "ES",
-    "NL",
-  ];
+  const countryTabs =
+    countries?.map((country) => ({
+      id: country.country,
+      label:
+        country.country === "GB"
+          ? "UK"
+          : country.country === "AU"
+          ? "AUS"
+          : country.country === "US"
+          ? "US"
+          : country.country,
+    })) || [];
 
-  const clearSearch = () => {
-    setSearchQuery("");
-    setLocation({ lat: "", lon: "" });
-    setShowSuggestions(false);
-    setSuggestions([]);
-  };
+  const getCitiesForCountry = useCallback(
+    (countryId: string): SuggestionItem[] => {
+      if (!locations || locations.length === 0) return [];
 
-  const getLocalSuggestions = (query: string): SuggestionItem[] => {
-    const normalizedQuery = query.toLowerCase().trim();
-    const localSuggestions: SuggestionItem[] = [];
+      const countryData = locations.find((loc) => loc.country === countryId);
+      if (!countryData?.cities) return [];
 
-    countryProperty?.forEach((country) => {
-      country?.properties?.forEach((property) => {
-        const location = property?.location;
-        const university = property?.university;
+      return countryData.cities.map((city) => ({
+        name: city.name,
+        city: city.name,
+        country: countryId,
+        type: "city",
+        propertyCount: city.count,
+      }));
+    },
+    [locations]
+  );
 
-        if (location?.city?.toLowerCase().includes(normalizedQuery)) {
-          localSuggestions.push({
-            name: location.city,
-            city: location.city,
-            country: location.country || country.label,
-            type: "city",
-            propertyCount: property?.propertyCount,
-          });
+  useEffect(() => {
+   const loadUniversities = async () => {
+     if (!showSuggestions || searchQuery.trim() !== "") return;
+     setUniversities([]);
+
+     setIsLoadingUniversities(true);
+    //  try {
+    //    const uniData = await fetchUniversities();
+    //    const universityList = Array.isArray(uniData) ? uniData : [];
+
+    //    // Flatten all universities with country info
+    //    const flattenedUniversities = universityList.flatMap(
+    //      () =>  []
+    //    );
+
+    //    // Filter by active country
+    //    const filteredUnis = flattenedUniversities
+    //      .filter((uni) => uni.country === activeCountryTab)
+    //      .map((uni) => ({
+    //        name: uni.name,
+    //        city: uni.city,
+    //        country: uni.country,
+    //        type: "university" as const,
+    //        propertyCount: uni.propertyCount,
+    //      }));
+
+    //    setUniversities(filteredUnis);
+    //  } catch (err) {
+    //    console.error("Failed to load universities:", err);
+    //  } finally {
+    //    setIsLoadingUniversities(false);
+    //  }
+   };
+
+    loadUniversities();
+  }, [activeCountryTab, fetchUniversities, showSuggestions, searchQuery]);
+
+  const handleSuggestionClick = useCallback(
+    async (item: SuggestionItem) => {
+      const { country, city, id: propertyId } = item;
+
+      if (propertyId) {
+        router.push(`/properties/${propertyId}`);
+      } else {
+        try {
+          await fetchProperties(
+            `/properties/city-properties?country=${country}&city=${city}`
+          );
+          setFilterData({ city, country, keyword: "" });
+          router.push(`/properties?city=${city}&country=${country}`);
+        } catch (err) {
+          console.error("Failed to fetch properties:", err);
         }
+      }
 
-        if (university?.name?.toLowerCase().includes(normalizedQuery)) {
-          localSuggestions.push({
-            name: university.name,
-            city: location?.city || "",
-            country: location?.country || country.label,
-            type: "university",
-            acronym: university.acronym || "",
-            propertyCount: property?.propertyCount,
-          });
-        }
+      setShowSuggestions(false);
+    },
+    [fetchProperties, router, setFilterData, setShowSuggestions]
+  );
 
-        if (property?.title?.toLowerCase().includes(normalizedQuery)) {
-          localSuggestions.push({
-            name: property.title,
-            city: location?.city || "",
-            country: location?.country || country.label,
-            type: "property",
-            propertyId: property._id,
-            region: location?.region,
-            address: property.address,
-            propertyCount: 1,
-          });
-        }
-      });
-    });
+  const getLocalSuggestions = useCallback(
+    (query: string): SuggestionItem[] => {
+      const normalizedQuery = query.toLowerCase().trim();
+      if (!countryProperty) return [];
 
-    const unique = localSuggestions.filter(
-      (item, index, self) =>
-        index ===
-        self.findIndex((t) => t.name === item.name && t.type === item.type)
-    );
+      const localSuggestions: SuggestionItem[] = [];
 
-    return unique.slice(0, 10);
-  };
+      countryProperty.forEach((country) => {
+        country.properties?.forEach((property) => {
+          const loc = property?.location;
+          const uni = property?.university;
 
-  const getFilteredSuggestions = (type: string): SuggestionItem[] => {
-    return suggestions.filter((item) => item.type === type);
-  };
-
-  const getPopularCitiesFromCountries = (): SuggestionItem[] => {
-    const result: SuggestionItem[] = [];
-
-    countryProperty?.forEach((country) => {
-      if (
-        popularCountries.includes(country.value) ||
-        popularCountries.includes(country.label)
-      ) {
-        country?.properties?.forEach((property) => {
-          const location = property?.location;
-          if (location?.city) {
-            result.push({
-              name: location.city,
-              city: location.city,
-              country: location.country || country.label,
+          if (loc?.city?.toLowerCase().includes(normalizedQuery)) {
+            localSuggestions.push({
+              name: loc.city,
+              city: loc.city,
+              country: loc.country || country.label,
               type: "city",
               propertyCount: property?.propertyCount,
             });
           }
-        });
-      }
-    });
 
-    return result
-      .filter(
-        (item, index, self) =>
-          index ===
-          self.findIndex((t) => t.name === item.name && t.type === item.type)
-      )
-      .slice(0, 20);
-  };
-
-  const getPopularUniversitiesFromCountries = (): SuggestionItem[] => {
-    const result: SuggestionItem[] = [];
-
-    countryProperty?.forEach((country) => {
-      if (
-        popularCountries.includes(country.value) ||
-        popularCountries.includes(country.label)
-      ) {
-        country?.properties?.forEach((property) => {
-          const university = property?.university;
-          const location = property?.location;
-          if (university?.name) {
-            result.push({
-              name: university.name,
-              city: location?.city || "",
-              country: location?.country || country.label,
+          if (uni?.name?.toLowerCase().includes(normalizedQuery)) {
+            localSuggestions.push({
+              name: uni.name,
+              city: loc?.city || "",
+              country: loc?.country || country.label,
               type: "university",
-              acronym: university.acronym || "",
+              acronym: uni.acronym || "",
               propertyCount: property?.propertyCount,
             });
           }
-        });
-      }
-    });
 
-    return result
-      .filter(
-        (item, index, self) =>
-          index ===
-          self.findIndex((t) => t.name === item.name && t.type === item.type)
-      )
-      .slice(0, 20);
+          if (property?.title?.toLowerCase().includes(normalizedQuery)) {
+            localSuggestions.push({
+              name: property.title,
+              city: loc?.city || "",
+              country: loc?.country || country.label,
+              type: "property",
+              propertyId: property._id,
+              region: loc?.region,
+              address: property.address,
+              propertyCount: 1,
+            });
+          }
+        });
+      });
+
+      return localSuggestions
+        .filter(
+          (item, index, self) =>
+            index ===
+            self.findIndex((t) => t.name === item.name && t.type === item.type)
+        )
+        .slice(0, 10);
+    },
+    [countryProperty]
+  );
+
+  const handleInputChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setSearchQuery(value);
+
+      if (value.trim() === "") {
+        setSuggestions([]);
+        setShowSuggestions(true);
+        setIsSearching(false);
+        setHasSearched(false);
+        return;
+      }
+
+      setIsSearching(true);
+      setShowSuggestions(true);
+      setHasSearched(true);
+
+      try {
+        const localSuggestions = getLocalSuggestions(value);
+        setSuggestions(localSuggestions);
+      } catch (err) {
+        console.error("Suggestion error:", err);
+        setSuggestions([]);
+      } finally {
+        setIsSearching(false);
+      }
+    },
+    [getLocalSuggestions, setShowSuggestions]
+  );
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setShowSuggestions(false);
+    setSuggestions([]);
   };
 
   const handleSearch = () => {
@@ -208,89 +256,24 @@ const HeroSearch = ({
     setShowSuggestions(false);
   };
 
- const handleSuggestionClick = (item: SuggestionItem) => {
-  const { country, city, id: propertyId } = item;
-  const query = new URLSearchParams();
-
-  if (country) query.set("country", country);
-  if (city) query.set("city", city);
-  if (propertyId) query.set("propertyId", propertyId);
-
-  router.push(`/properties?${query.toString()}`);
-};
   const getLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser.");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(({ coords }) => {
-      setLocation({
-        lat: coords.latitude.toString(),
-        lon: coords.longitude.toString(),
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        setFilterData({
+          lat: coords.latitude,
+          lon: coords.longitude,
+          city: "",
+          country: "",
+          keyword: "",
+        });
       });
-    });
+    }
   };
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchQuery(value);
 
-    if (value.trim() === "") {
-      setSuggestions([]);
+  const handleInputClick = () => {
+    if (!showSuggestions) {
       setShowSuggestions(true);
-      setActiveTab("popular");
-      setIsSearching(false);
-      setHasSearched(false);
-      return;
-    }
-
-    setIsSearching(true);
-    setShowSuggestions(true);
-    setActiveTab("all");
-    setHasSearched(true);
-
-    try {
-      const localSuggestions = getLocalSuggestions(value);
-      let apiSuggestionsRaw: unknown[] = [];
-
-      try {
-        apiSuggestionsRaw = await getSearchSuggestions(value);
-      } catch (err) {
-        console.error("API suggestion error:", err);
-      }
-
-      const apiSuggestions: SuggestionItem[] = (
-        apiSuggestionsRaw as SuggestionItem[]
-      ).map((item) => ({
-        name: item.name,
-        type: item.type,
-        city: item.city,
-        country: item.country,
-        acronym: item.acronym,
-        propertyId: item.propertyId,
-        region: item.region,
-        address: item.address,
-        propertyCount: item.propertyCount,
-      }));
-
-      const combinedSuggestions = [
-        ...localSuggestions,
-        ...apiSuggestions.filter(
-          (apiItem) =>
-            !localSuggestions.some(
-              (localItem) =>
-                localItem.name.toLowerCase() === apiItem.name.toLowerCase()
-            )
-        ),
-      ].slice(0, 10);
-
-      setSuggestions(combinedSuggestions);
-    } catch (err) {
-      console.error("Suggestion error:", err);
-      setSuggestions(getLocalSuggestions(value));
-    } finally {
-      setIsSearching(false);
     }
   };
 
@@ -300,58 +283,151 @@ const HeroSearch = ({
         suggestionBoxRef.current &&
         !suggestionBoxRef.current.contains(event.target as Node)
       ) {
-        clearSearch();
+        setShowSuggestions(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [setShowSuggestions]);
 
   return (
-    <div className="relative flex-1 w-full">
-      <MapPin
-        className="absolute z-10 left-4 top-1/2 transform -translate-y-1/2 text-blue-700 w-6 h-6 cursor-pointer"
-        onClick={getLocation}
-      />
-      <Input
-        type="text"
-        placeholder="Search by city, location or university"
-        value={searchQuery}
-        onChange={handleInputChange}
-        className="pl-14 pr-4 h-12 text-lg bg-white/70 glass-effect border-white/40 text-dark placeholder-dark focus:border-[var(--color-electric-400)] focus:bg-white/80 rounded-xl shadow-md"
-        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-      />
-      {searchQuery ? (
-        <X
-          onClick={clearSearch}
-          className="absolute z-10 right-4 top-1/2 transform -translate-y-1/2 text-blue-700 w-6 h-6 cursor-pointer"
+    <div style={{ zIndex: 9999 }} className="relative flex-1 w-full mb-10">
+      <div className="relative">
+        <MapPin
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-700 w-6 h-6 cursor-pointer"
+          onClick={getLocation}
         />
-      ) : (
-        <SearchIcon
-          onClick={handleSearch}
-          className="absolute z-10 right-4 top-1/2 transform -translate-y-1/2 text-blue-700 w-6 h-6 cursor-pointer"
+        <Input
+          type="text"
+          placeholder="Search by city, location or university"
+          value={searchQuery}
+          onChange={handleInputChange}
+          onClick={handleInputClick}
+          className="pl-14 pr-12 h-14 text-xl bg-white/70 border-white/40 focus:border-[var(--color-electric-400)] rounded-xl shadow-md"
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-      )}
+        {searchQuery ? (
+          <X
+            onClick={clearSearch}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-700 w-6 h-6 cursor-pointer"
+          />
+        ) : (
+          <SearchIcon
+            onClick={() => router.push("/properties")}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-700 w-6 h-6 cursor-pointer"
+          />
+        )}
+      </div>
 
       {showSuggestions && (
         <div
           ref={suggestionBoxRef}
-          className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-50 transition-all duration-300"
+          style={{ zIndex: 9999 }}
+          className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl transition-all duration-300"
         >
-          <SearchTabs
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            isSearching={isSearching}
-            hasSearched={hasSearched}
-            searchQuery={searchQuery}
-            suggestions={suggestions}
-            handleSuggestionClick={handleSuggestionClick}
-            getPopularCitiesFromCountries={getPopularCitiesFromCountries}
-            getPopularUniversitiesFromCountries={
-              getPopularUniversitiesFromCountries
-            }
-            getFilteredSuggestions={getFilteredSuggestions}
-          />
+          {searchQuery.trim() === "" ? (
+            <div className="p-4">
+              <div className="border-b border-gray-200 mb-4">
+                <nav className="flex overflow-x-auto scrollbar-hide -mb-px">
+                  {countryTabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveCountryTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                        activeCountryTab === tab.id
+                          ? "border-red-500 text-red-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+
+              <div className="flex flex-col  gap-4">
+                <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
+                  <h4 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-blue-500" />
+                    Cities in{" "}
+                    <span className="text-blue-600">
+                      {
+                        countryTabs.find((t) => t.id === activeCountryTab)
+                          ?.label
+                      }
+                    </span>
+                  </h4>
+
+                  <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-64 overflow-y-auto custom-scrollbar pr-1">
+                    {getCitiesForCountry(activeCountryTab).map((city) => (
+                      <button
+                        key={`${city.country}-${city.city}`}
+                        onClick={() => handleSuggestionClick(city)}
+                        className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50"
+                      >
+                        <span className="truncate">{city.name}</span>
+                        <span className="text-xs text-gray-400 ml-3 shrink-0">
+                          ({city.propertyCount})
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
+                  <h4 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    <GraduationCap className="w-5 h-5 text-blue-500" />
+                    Universities in{" "}
+                    <span className="text-blue-600">
+                      {
+                        countryTabs.find((t) => t.id === activeCountryTab)
+                          ?.label
+                      }
+                    </span>
+                  </h4>
+
+                  {isLoadingUniversities ? (
+                    <div className="flex justify-center p-4">
+                      <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-64 overflow-y-auto custom-scrollbar pr-1">
+                      {universities.map((uni) => (
+                        <button
+                          key={`${uni.country}-${uni.name}`}
+                          onClick={() => handleSuggestionClick(uni)}
+                          className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50"
+                        >
+                          <span className="truncate">
+                            {uni.name}
+                            {uni.acronym && ` (${uni.acronym})`}
+                          </span>
+                          <span className="text-xs text-gray-400 ml-3 shrink-0">
+                            ({uni.propertyCount})
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <SearchTabs
+              activeTab={activeSearchTab}
+              setActiveTab={setActiveSearchTab}
+              isSearching={isSearching}
+              hasSearched={hasSearched}
+              searchQuery={searchQuery}
+              suggestions={suggestions}
+              handleSuggestionClick={handleSuggestionClick}
+              getPopularCitiesFromCountries={getCitiesForCountry}
+              getPopularUniversitiesFromCountries={() => universities}
+              getFilteredSuggestions={(type) =>
+                suggestions.filter((item) => item.type === type)
+              }
+            />
+          )}
         </div>
       )}
     </div>

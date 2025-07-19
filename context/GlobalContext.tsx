@@ -46,13 +46,19 @@ interface GlobalContextType {
     propertyId?: string;
     location?: string;
   }) => Promise<void>;
+
+  fetchUniversities: () => Promise<University[]>;
+  searchProperties: (keyword: string, field: string) => Promise<Property[]>;
 }
 
 interface FilterData {
   country: string;
   city: string;
   keyword: string;
+  lat?: number;
+  lon?: number;
 }
+
 
 interface SuggestionItem {
   name: string;
@@ -61,6 +67,29 @@ interface SuggestionItem {
   propertyCount?: number;
   _id?: string;
 }
+
+interface University {
+  _id: string;
+  name: string;
+  country: string;
+  city: string;
+  propertyCount: number;
+  countries: { [country: string]: number };
+  // Add other properties as needed based on the API response
+}
+
+interface RawUniversity {
+  name: string;
+  city: string;
+  propertyCount?: number;
+}
+
+interface UniversityApiResponse {
+  countries: {
+    [countryName: string]: RawUniversity[];
+  };
+}
+
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
@@ -237,7 +266,64 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const fetchUniversities = async (): Promise<University[]> => {
+    try {
+      setLoading(true);
+      const response = (await fetchApi("/university")) as UniversityApiResponse;
 
+      // Flatten response
+      const universities: University[] = Object.entries(
+        response.countries
+      ).flatMap(([country, uniList]) =>
+        uniList.map((uni, index) => ({
+          _id: `${country}-${index}`, // generate an ID if none exists
+          name: uni.name,
+          country,
+          city: uni.city || "",
+          propertyCount: uni.propertyCount || 0,
+          countries: {}, // optional: depends on your structure
+          UniversityApiResponse: response, // optional: you may want to remove this
+        }))
+      );
+
+      return universities;
+    } catch (err) {
+      console.error("Failed to fetch universities:", err);
+      setError("Failed to fetch universities");
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const searchProperties = async (
+    keyword: string,
+    field: string
+  ): Promise<Property[]> => {
+    try {
+      setLoading(true);
+      const response = await fetchApi(
+        `/properties/searchproperties?keyword=${encodeURIComponent(
+          keyword
+        )}&field=${encodeURIComponent(field)}`
+      );
+
+      if (
+        typeof response === "object" &&
+        response !== null &&
+        "properties" in response
+      ) {
+        return response.properties as Property[];
+      }
+      throw new Error("Invalid response format");
+    } catch (err) {
+      console.error("Failed to search properties:", err);
+      setError("Failed to search properties");
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <GlobalContext.Provider
@@ -268,7 +354,9 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
         setSelectedBlog,
         countryProperty,
         getSearchSuggestions,
-        submitEnquiry
+        submitEnquiry,
+        fetchUniversities,
+        searchProperties,
       }}
     >
       {children}
