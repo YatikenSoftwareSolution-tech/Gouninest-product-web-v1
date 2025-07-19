@@ -163,7 +163,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
           >
             {/* WhatsApp Button */}
             <a
-              href="https://wa.me/2079933000"
+              href="https://wa.me/+442079933000"
               target="_blank"
               rel="noopener noreferrer"
               className={`rounded-l-full py-2 pr-1 pl-3 ${

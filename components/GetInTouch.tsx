@@ -36,6 +36,7 @@ const GetInTouch = () => {
             </h3>
             <p className="text-gray-600">+44 2079933000</p>
             <p className="text-gray-600">+91 9870468034</p>
+            <p className="text-gray-600">+1 3153410000</p>
           </Link>
 
           <Link

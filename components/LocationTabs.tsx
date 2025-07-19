@@ -10,7 +10,7 @@ const MAX_CITIES = 12;
 
 const LocationTabs = () => {
   const router = useRouter();
-  const { countries, locations, fetchProperties, setFilterData } = useGlobal();
+  const { countries, locations, fetchProperties, setFilterData, cityImages } = useGlobal();
   // console.log("111: ",locations)
 
   const handleClick = async (city: string, country: string) => {
@@ -25,6 +25,14 @@ const LocationTabs = () => {
 
   const handleViewAll = (country: string) => {
     router.push(`/properties/all-city?country=${country}`);
+  };
+
+  const getCityImage = (country: string, city: string) => {
+    const countryObj = cityImages.find((c) => c.country === country);
+    if (!countryObj) return "/placeholder.jpg"; // fallback
+    const cities = countryObj.cities as { _id: string; imageUrl: string }[];
+    const cityObj = cities.find((c) => c._id === city);
+    return cityObj?.imageUrl || "/placeholder.jpg";
   };
 
   return (
@@ -100,7 +108,7 @@ const LocationTabs = () => {
                       onClick={() => handleClick(loc.name, country.country)}
                     >
                       <Image
-                        src={`/${country.country}/loc${(idx + 1) % 16}.jpg`}
+                        src={getCityImage(country.country, loc.name)}
                         alt={`${loc.name} Location ${idx + 1}`}
                         width={200}
                         height={200}

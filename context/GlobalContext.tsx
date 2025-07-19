@@ -49,6 +49,8 @@ interface GlobalContextType {
 
   fetchUniversities: () => Promise<University[]>;
   searchProperties: (keyword: string, field: string) => Promise<Property[]>;
+  cityImages: image [];
+  fetchImages: () => void;
 }
 
 interface FilterData {
@@ -90,6 +92,11 @@ interface UniversityApiResponse {
   };
 }
 
+interface image{
+  country: string;
+  cities: []
+}
+
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
@@ -109,6 +116,20 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
     CountryPropertyCount[]
   >([]);
   const [hasFetchedUser, setHasFetchedUser] = useState(false);
+  const [cityImages, setCityImages] = useState<image[]>([]);
+
+  const fetchImages = async () =>{
+    try {
+      const response = await fetchApi('/city-images');
+      if (
+        response 
+      ) {
+        setCityImages(response as image[]);
+      }
+    } catch (err) {
+      console.error("Failed to fetch properties:", err);
+    }
+  }
 
   const fetchUserProfile = async () => {
     if (hasFetchedUser) return;
@@ -357,6 +378,8 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
         submitEnquiry,
         fetchUniversities,
         searchProperties,
+        fetchImages,
+        cityImages
       }}
     >
       {children}

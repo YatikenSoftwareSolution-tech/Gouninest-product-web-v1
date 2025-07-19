@@ -20,11 +20,12 @@ const countryNameMap: Record<string, string> = {
   NL: "Netherlands",
 };
 
+
 const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const country = searchParams.get("country");
-  const { locations, countryProperty, fetchProperties } = useGlobal();
+  const { locations, countryProperty, fetchProperties, cityImages } = useGlobal();
 
   console.log("aaa: ", country);
 
@@ -41,6 +42,15 @@ const Page = () => {
       </div>
     );
   }
+
+  const getCityImage = (country: string, city: string) => {
+    const countryObj = cityImages.find((c) => c.country === country);
+    if (!countryObj) return "/placeholder.jpg"; // fallback
+    const cities = countryObj.cities as { _id: string; imageUrl: string }[];
+    const cityObj = cities.find((c) => c._id === city);
+    return cityObj?.imageUrl || "/placeholder.jpg";
+  };
+  
 
   const handleCities = (city: string, country: string) => {
     fetchProperties(
@@ -86,7 +96,7 @@ const Page = () => {
               onClick={() => handleCities(city.name, countryData.country)}
             >
               <Image
-                src={`/${countryData.country}/loc${(idx % 16) + 1}.jpg`}
+                src={getCityImage(countryData.country, city.name)}
                 alt={`${city.name} Location`}
                 width={300}
                 height={200}

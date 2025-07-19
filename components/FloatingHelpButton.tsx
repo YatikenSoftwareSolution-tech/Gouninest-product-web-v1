@@ -121,7 +121,7 @@ const FloatingHelpButton = () => {
         onMouseLeave={() => setHoveredButton(null)}
       >
         <Link
-          href="https://wa.me/2079933000"
+          href="https://wa.me/+442079933000"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center rounded-full transition-all duration-300 hover:border-green-400"

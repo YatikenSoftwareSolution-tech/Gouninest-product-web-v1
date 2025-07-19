@@ -162,9 +162,9 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
           <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs sm:text-sm">
             📚 {selectedProperty.propertyType}
           </span>
-          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs sm:text-sm">
-            ✅ {selectedProperty.verified ? "Verified" : "Not Verified"}
-          </span>
+          {selectedProperty.verified && <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs sm:text-sm">
+            ✅ { "Verified"}
+          </span>}
         </div>
 
         {/* Address and ID */}

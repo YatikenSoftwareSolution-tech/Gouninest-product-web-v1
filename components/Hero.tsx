@@ -11,6 +11,7 @@ const Hero = () => {
     fetchPropertiesCountInLocations,
     fetchTopProperties,
     fetchUserProfile,
+    fetchImages
   } = useGlobal();
 
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -20,6 +21,7 @@ const Hero = () => {
     fetchLocationCountInCountries();
     fetchPropertiesCountInLocations();
     fetchTopProperties();
+    fetchImages();
   }, []);
 
   return (
