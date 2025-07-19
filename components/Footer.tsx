@@ -78,7 +78,7 @@ const Footer = () => {
                   <Linkedin className="w-6 h-6" />
                 </Link>
                 <Link
-                  href="https://youtube.com/gouninest"
+                  href="https://www.youtube.com/@Gouninest"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-electric-400 transition-colors duration-300"

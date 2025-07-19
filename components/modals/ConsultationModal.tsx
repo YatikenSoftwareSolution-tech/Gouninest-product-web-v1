@@ -11,6 +11,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -292,13 +293,17 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 />
                 <label htmlFor="agree" className="text-gray-600">
                   I have read and agree to the{" "}
+                  <Link href = 'policies'>
                   <span className="text-pink-600 underline cursor-pointer hover:text-pink-700">
                     Privacy Policy
                   </span>{" "}
+                  </Link>
                   and{" "}
+                  <Link href = 'terms'>
                   <span className="text-pink-600 underline cursor-pointer hover:text-pink-700">
-                    User Agreement
+                    Terms
                   </span>
+                  </Link>
                   .
                 </label>
               </div>
