@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import {
-  ChevronLeft,
-  ChevronRight,
   MapPin,
   Users,
   Star,
@@ -15,11 +13,12 @@ import {
   Check,
   Shield,
 } from "lucide-react";
-import Image from "next/image";
+// import Image from "next/image";
 import { Property } from "@/types/types";
 import { RenderTabContent } from "./RendorTabContent";
 import RightFormSection from "./RightFormSection";
 import ImageGalleryModal from "./modals/ImageGalleryModal";
+import { renderGalleryTabContent } from "./GalleryTabContent";
 
 interface PropertyModalProps {
   isModalOpen: boolean;
@@ -36,6 +35,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("basic-info");
+  const [activeGalleryTab, setActiveGalleryTab] = useState("photos");
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -99,6 +99,16 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
       prev === 0 ? selectedProperty.images.length - 1 : prev - 1
     );
   };
+
+  const handleGalleryTabClick = (tabId: string) => {
+    setActiveGalleryTab(tabId);
+  };
+
+  const galleryTabs = [
+    { id: "photos", label: "Photos" },
+    { id: "video", label: "Video" },
+    { id: "3d-views", label: "3D Views" },
+  ]
 
   const tabs = [
     { id: "basic-info", label: "Basic Info", icon: Home },
@@ -178,82 +188,43 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
           </span>
         </div>
 
-        {/* Image Gallery */}
-        <div className="mb-6 relative">
-          {!gridMode ? (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <div className="sm:col-span-2 relative">
-                <Image
-                  src={selectedProperty.images?.[selectedImageIndex]}
-                  alt="Main"
-                  width={800}
-                  height={500}
-                  className="rounded-lg object-cover w-full h-[220px] sm:h-[500px]"
-                  onClick={() => openImageModal(selectedImageIndex)}
-                />
-                {selectedProperty.images?.length > 1 && (
-                  <>
-                    <button
-                      onClick={handlePrevImage}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md"
-                    >
-                      <ChevronLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={handleNextImage}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md"
-                    >
-                      <ChevronRight className="w-5 h-5" />
-                    </button>
-                  </>
-                )}
-              </div>
-              <div className="flex sm:flex-col flex-row gap-2">
-                {selectedProperty.images
-                  ?.filter((_, i) => i !== selectedImageIndex)
-                  .slice(0, 2)
-                  .map((img, i) => (
-                    <Image
-                      key={i}
-                      src={img}
-                      alt={`Thumbnail ${i}`}
-                      width={400}
-                      height={200}
-                      className="rounded-lg object-cover w-full h-[80px] sm:h-[247px] cursor-pointer"
-                      onClick={() => {
-                        const index = selectedProperty.images.indexOf(img);
-                        setSelectedImageIndex(index);
-                      }}
-                    />
-                  ))}
-              </div>
-            </div>
-          ) : (
-            <div className="grid gap-2 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-              {selectedProperty.images?.map((img, index) => (
-                <Image
-                  key={index}
-                  src={img}
-                  alt={`Grid ${index}`}
-                  width={400}
-                  height={300}
-                  className={`rounded-lg object-cover w-full h-24 sm:h-40 cursor-pointer ${
-                    index === selectedImageIndex ? "ring-2 ring-blue-500" : ""
+        <div className="relative">
+          {/* gallery tabs & content */}
+          <div className="absolute bottom-20 left-[50%] transform -translate-x-1/2 z-50">
+            <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-1 border border-gray-200">
+              {galleryTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleGalleryTabClick(tab.id)}
+                  className={`w-28 flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                    activeGalleryTab === tab.id
+                      ? "bg-gradient border border-blue-400 text-blue-50 text-[13px] font-semibold shadow-md"
+                      : "text-gray-700 text-[13px] font-semibold  hover:text-gray-900 hover:bg-gray-100"
                   }`}
-                  onClick={() => {
-                    setSelectedImageIndex(index);
-                    setGridMode(false);
-                  }}
-                />
+                >
+                  {tab.label}
+                  {/* <span className="pl-0 h-10 bg-black"></span> */}
+                  {activeGalleryTab === tab.id && (
+                    <span className="w-2 h-2 bg-white rounded-full opacity-80"></span>
+                  )}
+                </button>
               ))}
             </div>
-          )}
-          <button
-            onClick={() => setGridMode(!gridMode)}
-            className="text-blue-600 underline text-sm mt-2"
-          >
-            {gridMode ? "Back to main view" : "Show all images"}
-          </button>
+          </div>
+
+          <div className="w-full">
+            {renderGalleryTabContent(
+              activeGalleryTab,
+              selectedProperty,
+              gridMode,
+              selectedImageIndex,
+              setSelectedImageIndex,
+              setGridMode,
+              openImageModal,
+              handlePrevImage,
+              handleNextImage
+            )}
+          </div>
         </div>
 
         {/* Tabs & Content */}

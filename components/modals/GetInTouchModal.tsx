@@ -101,7 +101,7 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
     <>
       {/* Success Notification Popup */}
       {isSubmitted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-65 backdrop-blur-xs px-4">
+        <div className="fixed inset-0 z-[99] flex items-center justify-center backdrop-brightness-65 backdrop-blur-xs px-4">
           <div className="bg-white w-full max-w-md rounded-xl shadow-xl p-6 relative text-center">
             <div className="flex justify-center mb-4">
               <CheckCircle className="text-green-500 w-12 h-12" />
