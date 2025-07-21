@@ -248,13 +248,15 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
                 </>
               )}
             </div>
-            <div className="flex items-center gap-1 bg-emerald-50 px-3 py-1 rounded-full">
-              <MapPin className="w-4 h-4 text-emerald-500" />
-              <span className="text-sm text-gray-700 font-medium">
-                Move-in:{" "}
-                {new Date(property.moveInDate).toLocaleDateString("en-GB")}
-              </span>
-            </div>
+            {new Date(property.moveInDate) > new Date() && (
+              <div className="flex items-center gap-1 bg-emerald-50 px-3 py-1 rounded-full">
+                <MapPin className="w-4 h-4 text-emerald-500" />
+                <span className="text-sm text-gray-700 font-medium">
+                  Move-in:{" "}
+                  {new Date(property.moveInDate).toLocaleDateString("en-GB")}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Amenities */}
