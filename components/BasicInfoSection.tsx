@@ -1,14 +1,80 @@
 import React from "react";
 import { Users, Bed, Bath } from "lucide-react";
 import { Property } from "@/types/types";
+import DOMPurify from "dompurify";
 
 export interface SectionProps {
   selectedProperty: Property;
 }
 
+// Remove <h3> tags globally
+const removeH3Tags = (html: string) => {
+  return html.replace(/<h3[^>]*>.*?<\/h3>/gi, "");
+};
+
+// h4 tag shoul be bold
+const boldH4Tags = (html: string): string => {
+  return html.replace(
+    /<h4([^>]*)>(.*?)<\/h4>/gi,
+    `<h4 class="py-3"$1><strong>$2</strong></h4>`
+  );
+};
+
+// Wrap <li> tags in <ol> if not already
+const wrapListItemsWithOl = (html: string) => {
+  return html.replace(
+    /((?:<li>.*?<\/li>\s*)+)/gi,
+    (match) => `<ol class="list-disc pl-6">${match}</ol>`
+  );
+};
+
+const breakAfterEveryThirdFullStop = (html: string) => {
+  const sentences = html.split(/(?<=\.)/); // Split while keeping the dot
+  let count = 0;
+  const result = sentences.map((sentence) => {
+    count++;
+    if (count % 3 === 0) {
+      return sentence + '<div class="py-1"></div>';
+    }
+    return sentence;
+  });
+  return result.join("");
+};
+
+// Remove first 8 characters in every second <p> tag
+const hideFirst8LettersInEverySecondParagraph = (html: string) => {
+  const paragraphs = html.split("<p>");
+
+  const modifiedParagraphs = paragraphs.map((paragraph, index) => {
+    if (index === 1) return paragraph; // Skip anything before first <p>
+
+    const [content, ...rest] = paragraph.split("</p>");
+    if (index % 4 === 3) {
+      const stripped = content.slice(8);
+      return `<p>${stripped}</p>${rest.join("</p>")}`;
+    } else {
+      return `<p>${content}</p>${rest.join("</p>")}`;
+    }
+  });
+
+  return modifiedParagraphs.join("");
+};
+
 export const BasicInfoSection: React.FC<SectionProps> = ({
   selectedProperty,
 }) => {
+  const cleanedDescription = selectedProperty.description
+    ? breakAfterEveryThirdFullStop(
+        wrapListItemsWithOl(
+          boldH4Tags(
+            hideFirst8LettersInEverySecondParagraph(
+              removeH3Tags(selectedProperty.description)
+            )
+          )
+        )
+      )
+    : "";
+
   return (
     <div className="space-y-6">
       <div className="mb-8">
@@ -44,11 +110,16 @@ export const BasicInfoSection: React.FC<SectionProps> = ({
 
       <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
         <h4 className="font-semibold text-gray-800 mb-3">Description</h4>
-        <p className="text-gray-600 leading-relaxed">
-          {selectedProperty.description || (
-            <span className="text-gray-400">No description available</span>
-          )}
-        </p>
+        {cleanedDescription ? (
+          <div
+            className="prose max-w-none text-gray-700 text-sm prose-h1:text-lg prose-p:leading-relaxed prose-ol:pl-5 prose-li:marker:text-blue-500"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(cleanedDescription),
+            }}
+          />
+        ) : (
+          <p className="text-gray-400">No description available</p>
+        )}
       </div>
     </div>
   );

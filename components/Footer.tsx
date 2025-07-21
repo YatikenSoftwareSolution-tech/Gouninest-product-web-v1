@@ -22,6 +22,30 @@ const Footer = () => {
     { code: "+1", number: "3153410000", countryCode: "US" },
   ];
 
+  const countryNames: Record<string, string> = {
+    GB: "United Kingdom",
+    US: "United States of America",
+    AU: "Australia",
+    CA: "Canada",
+    DE: "Germany",
+    FR: "France",
+    IE: "Ireland",
+    NZ: "New Zealand",
+    NL: "Netherlands",
+  };
+
+  const cityMap: Record<string, string> = {
+    GB: "London",
+    AU: "Sydney",
+    US: "Boston",
+    IE: "Dublin",
+    NZ: "Auckland",
+    CA: "Toronto",
+    DE: "Berlin",
+    FR: "Paris",
+    NL: "Amsterdam",
+  };
+
   // Function to handle click on city links
   const handleClick = async (city: string, country: string) => {
     setFilterData({ city, country, keyword: "" });
@@ -31,7 +55,7 @@ const Footer = () => {
     router.push(`/properties?city=${city}&country=${country}`);
   };
   return (
-    <footer className="bg-gray-900 text-white px-8">
+    <footer className="bg-gray-900 text-white px-12 sm:px-6">
       {/* Main Footer Content */}
       <div className="py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -78,7 +102,7 @@ const Footer = () => {
                   <Linkedin className="w-6 h-6" />
                 </Link>
                 <Link
-                  href="https://www.youtube.com/@Gouninest"
+                  href="https://youtube.com/gouninest"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
@@ -185,30 +209,21 @@ const Footer = () => {
             >
               <h4 className="text-lg font-semibold text-white mb-6">Explore</h4>
               <ul className="space-y-3">
-                <li
-                  onClick={() => handleClick("London", "GB")}
-                  className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
-                >
-                  United Kingdom &gt;
-                </li>
-                <li
-                  onClick={() => handleClick("Sydney", "AU")}
-                  className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
-                >
-                  Australia &gt;
-                </li>
-                <li
-                  onClick={() => handleClick("Boston", "US")}
-                  className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
-                >
-                  United State of America &gt;
-                </li>
+                {Object.entries(countryNames).map(([code, name]) => (
+                  <li
+                    key={code}
+                    onClick={() => handleClick(cityMap[code], code)}
+                    className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                  >
+                    {name} &gt;
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Contact Info */}
             <div
-              className="animate-fade-in w-1/2 sm:w-1/5"
+              className="animate-fade-in w-full sm:w-1/4"
               style={{ animationDelay: "0.3s" }}
             >
               <h4 className="text-lg font-semibold text-white mb-6">
@@ -225,7 +240,7 @@ const Footer = () => {
                 </div>
                 <div className="flex flex-col space-y-5">
                   {phoneNumbers.map(({ code, number, countryCode }) => (
-                    <div key={code} className="flex space-x-2">
+                    <div key={code} className="flex items-center space-x-2">
                       <Image
                         src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
                         alt={`${countryCode} Flag`}
@@ -266,7 +281,7 @@ const Footer = () => {
             <p className="text-gray-400 text-sm">
               © 2025 Go Uninest. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
+            <div className="flex flex-col sm:flex-row justify-start space-x-6 gap-1 sm:gap-0 mt-4 md:mt-0">
               <Link
                 href="/policies"
                 className="text-gray-400 hover:text-electric-400 text-sm transition-colors duration-300"

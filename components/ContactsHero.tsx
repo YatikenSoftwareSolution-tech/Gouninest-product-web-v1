@@ -178,7 +178,7 @@ const ContactsHero = () => {
           </a>
 
           <a
-            href="https://www.google.com/maps/search/?api=1&query=123+Student+Street,+London"
+            href="https://www.google.com/maps/search/?api=1&query=First+Floor+85+Great+Portland+Street+London+W1W+7LT+United+Kingdom"
             target="_blank"
             rel="noopener noreferrer"
             className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-2xl p-6 text-center hover-scale transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-coral-500)]"

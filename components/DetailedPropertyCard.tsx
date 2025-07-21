@@ -56,10 +56,11 @@ const CURRENCY_SYMBOLS = {
   NL: "€",
 } as const;
 
-const DetailedPropertyCard = ({ property}: DetailedPropertyCardProps) => {
+const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
+  console.log("property: ", property.description);
   const symbol =
     CURRENCY_SYMBOLS[property.countryCode as keyof typeof CURRENCY_SYMBOLS] ||
     "£";
@@ -105,6 +106,24 @@ const DetailedPropertyCard = ({ property}: DetailedPropertyCardProps) => {
   const handleNextImage = () => {
     setCurrentImage((prev) => (prev + 1) % property.images.length);
   };
+
+  // Remove H3 and H4 tags
+  const removeH3H4Tags = (html: string) => {
+    return html
+      .replace(/<h3[^>]*>.*?<\/h3>/gi, "")
+      .replace(/<h4[^>]*>.*?<\/h4>/gi, "");
+  };
+
+  const htmlToPlainText = (html: string) => {
+    if (typeof window === "undefined") return html;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
+
+  const plainDescription = htmlToPlainText(
+    removeH3H4Tags(property.description)
+  );
 
   return (
     <>
@@ -173,9 +192,10 @@ const DetailedPropertyCard = ({ property}: DetailedPropertyCardProps) => {
             {property.title}
           </h3>
           <p className="text-gray-600 text-sm mb-2">
-            {property.description.split(" ").slice(0, 20).join(" ")}
-            {property.description.split(" ").length > 25 && "..."}
+            {plainDescription.split(" ").slice(0, 20).join(" ")}
+            {plainDescription.split(" ").length > 25 && "..."}
           </p>
+
           <div className="flex items-center text-gray-600 mb-2">
             <MapPin className="w-4 h-4 mr-1 text-electric-500" />
             <span className="text-sm">{property.location.address}</span>
