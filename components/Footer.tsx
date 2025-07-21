@@ -215,7 +215,7 @@ const Footer = () => {
                     onClick={() => handleClick(cityMap[code], code)}
                     className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
                   >
-                    {name} &gt;
+                    {name}
                   </li>
                 ))}
               </ul>

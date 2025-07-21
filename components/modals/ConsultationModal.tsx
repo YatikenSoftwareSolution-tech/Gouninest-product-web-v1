@@ -293,16 +293,26 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 />
                 <label htmlFor="agree" className="text-gray-600">
                   I have read and agree to the{" "}
-                  <Link href = 'policies'>
-                  <span className="text-pink-600 underline cursor-pointer hover:text-pink-700">
+                  <Link
+                    href="/policies"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent click from bubbling up to modal
+                      window.open("/policies", "_blank"); // Open in new tab
+                    }}
+                    className="text-pink-600 underline cursor-pointer hover:text-pink-700"
+                  >
                     Privacy Policy
-                  </span>{" "}
-                  </Link>
+                  </Link>{" "}
                   and{" "}
-                  <Link href = 'terms'>
-                  <span className="text-pink-600 underline cursor-pointer hover:text-pink-700">
+                  <Link
+                    href="/terms"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent click from bubbling up to modal
+                      window.open("/terms", "_blank"); // Open in new tab
+                    }}
+                    className="text-pink-600 underline cursor-pointer hover:text-pink-700"
+                  >
                     Terms
-                  </span>
                   </Link>
                   .
                 </label>
