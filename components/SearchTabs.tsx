@@ -8,6 +8,7 @@ import {
   Home,
 } from "lucide-react";
 import { Tabs, TabsContent } from "./ui/tabs";
+// import { Universities } from "@/types/types";
 
 interface SuggestionItem {
   name: string;
@@ -30,7 +31,7 @@ interface SearchTabsProps {
   suggestions: SuggestionItem[];
   handleSuggestionClick: (item: SuggestionItem) => void;
   getPopularCitiesFromCountries: (countryId: string) => SuggestionItem[];
-  getPopularUniversitiesFromCountries: () => SuggestionItem[];
+  filteredUniversities: string[];
   getFilteredSuggestions: (type: string) => SuggestionItem[];
 }
 
@@ -43,8 +44,9 @@ const SearchTabs = ({
   suggestions,
   handleSuggestionClick,
   getPopularCitiesFromCountries,
-  getPopularUniversitiesFromCountries,
+  // getPopularUniversitiesFromCountries,
   getFilteredSuggestions,
+  filteredUniversities,
 }: SearchTabsProps) => {
   const popularCountries = [
     "UK",
@@ -59,6 +61,8 @@ const SearchTabs = ({
     "NL",
   ];
 
+  console.log(filteredUniversities)
+
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <div className="border-b border-gray-200 mb-4 mt-3 px-4 bg-white sticky top-0 z-10">
@@ -66,18 +70,17 @@ const SearchTabs = ({
           {[
             { id: "all", label: "All", icon: SearchIcon },
             { id: "city", label: "City", icon: MapPin },
-            { id: "university", label: "University", icon: GraduationCap },
             { id: "properties", label: "Properties", icon: MapPin },
+            { id: "university", label: "University", icon: GraduationCap },
             { id: "neighborhood", label: "Nearby", icon: MapPin },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1 sm:gap-2 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
-                activeTab === tab.id
+              className={`flex items-center gap-1 sm:gap-2 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === tab.id
                   ? "border-red-500 text-red-600"
                   : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
+                }`}
               aria-current={activeTab === tab.id ? "page" : undefined}
             >
               <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -86,46 +89,6 @@ const SearchTabs = ({
           ))}
         </nav>
       </div>
-
-      {/* <TabsContent value="popular">
-        <div className="p-4">
-          <div>
-            <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-gray-500" />
-              Popular Cities ({popularCountries.join(", ")})
-            </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4 text-sm text-gray-600">
-              {getPopularCitiesFromCountries().map((city, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSuggestionClick(city)}
-                  className="text-left hover:text-blue-600 hover:underline transition-colors"
-                >
-                  {city.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-              <GraduationCap className="w-4 h-4 text-gray-500" />
-              Popular Universities ({popularCountries.join(", ")})
-            </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-sm text-gray-600">
-              {getPopularUniversitiesFromCountries().map((school, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSuggestionClick(school)}
-                  className="text-left hover:text-blue-600 hover:underline transition-colors"
-                >
-                  {school.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </TabsContent> */}
 
       <TabsContent value="all">
         <div className="max-h-60 overflow-y-auto">
@@ -253,65 +216,48 @@ const SearchTabs = ({
       </TabsContent>
 
       <TabsContent value="university">
-        <div className="max-h-60 overflow-y-auto">
+      <div className="max-h-60 overflow-y-auto">
           {isSearching ? (
             <div className="flex items-center justify-center p-4 text-gray-500">
               <Loader2Icon className="w-4 h-4 animate-spin mr-2" />
-              <span className="text-sm">Searching universities...</span>
+              <span className="text-sm">Searching properties...</span>
             </div>
           ) : searchQuery.trim() === "" ? (
-            <div className="p-4">
-              <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <GraduationCap className="w-4 h-4 text-gray-500" />
-                Popular Universities ({popularCountries.join(", ")})
-              </h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-sm text-gray-600">
-                {getPopularUniversitiesFromCountries().map((school, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSuggestionClick(school)}
-                    className="text-left hover:text-blue-600 hover:underline transition-colors"
-                  >
-                    {school.name}
-                  </button>
-                ))}
-              </div>
+            <div className="flex flex-col items-center justify-center p-6 text-center">
+              <SearchIcon className="w-8 h-8 text-gray-300 mb-2" />
+              <p className="text-sm text-gray-500">
+                Search for properties by title
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                Enter keywords to find specific properties
+              </p>
             </div>
-          ) : getFilteredSuggestions("university").length > 0 ? (
+          ) : filteredUniversities.length > 0 ? (
             <div className="divide-y divide-gray-100">
-              {getFilteredSuggestions("university").map((item, index) => (
+              {filteredUniversities.map((item, index) => (
                 <button
                   key={index}
                   className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
-                  onClick={() => handleSuggestionClick(item)}
+                  // onClick={() => handleSuggestionClick(item)}
                 >
                   <div className="flex items-start gap-3">
                     <GraduationCap className="w-5 h-5 mt-0.5 text-gray-600 shrink-0" />
                     <div className="flex flex-col">
                       <div className="text-sm font-semibold text-gray-800 leading-tight">
-                        {item?.acronym && `(${item.acronym}) `}
-                        {item.name}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-0.5">
-                        {[item.city, item?.region, item.country]
-                          .filter(Boolean)
-                          .join(", ")}
+                        {item}
                       </div>
                     </div>
                   </div>
-                  {item.propertyCount && (
-                    <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
-                      {item.propertyCount}{" "}
-                      {item.propertyCount === 1 ? "property" : "properties"}
-                    </div>
-                  )}
+                  <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
+                    University
+                  </div>
                 </button>
               ))}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center p-6 text-center">
               <GraduationCap className="w-8 h-8 text-gray-300 mb-2" />
-              <p className="text-sm text-gray-500">No universities found</p>
+              <p className="text-sm text-gray-500">No university found</p>
               <p className="text-xs text-gray-400 mt-1">
                 Try different keywords or check spelling
               </p>
@@ -379,17 +325,62 @@ const SearchTabs = ({
 
       <TabsContent value="neighborhood">
         <div className="max-h-60 overflow-y-auto">
-          <div className="flex flex-col items-center justify-center p-6 text-center">
-            <MapPin className="w-8 h-8 text-gray-300 mb-2" />
-            <p className="text-sm text-gray-500">
-              Neighborhood search coming soon
-            </p>
-            <p className="text-xs text-gray-400 mt-1">
-              Find properties near specific areas and landmarks
-            </p>
-          </div>
+          {isSearching ? (
+            <div className="flex items-center justify-center p-4 text-gray-500">
+              <Loader2Icon className="w-4 h-4 animate-spin mr-2" />
+              <span className="text-sm">Searching properties...</span>
+            </div>
+          ) : searchQuery.trim() === "" ? (
+            <div className="flex flex-col items-center justify-center p-6 text-center">
+              <SearchIcon className="w-8 h-8 text-gray-300 mb-2" />
+              <p className="text-sm text-gray-500">
+                Search for properties by title
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                Enter keywords to find specific properties
+              </p>
+            </div>
+          ) : getFilteredSuggestions("property").length > 0 ? (
+            <div className="divide-y divide-gray-100">
+              {getFilteredSuggestions("property").map((item, index) => (
+                <button
+                  key={index}
+                  className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                  onClick={() => handleSuggestionClick(item)}
+                >
+                  <div className="flex items-start gap-3">
+                    <Home className="w-5 h-5 mt-0.5 text-gray-600 shrink-0" />
+                    <div className="flex flex-col">
+                      <div className="text-sm font-semibold text-gray-800 leading-tight">
+                        {item.name}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-0.5">
+                        {item.address ||
+                          [item.city, item?.region, item.country]
+                            .filter(Boolean)
+                            .join(", ")}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
+                    Property
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center p-6 text-center">
+              <Home className="w-8 h-8 text-gray-300 mb-2" />
+              <p className="text-sm text-gray-500">No properties found</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Try different keywords or check spelling
+              </p>
+            </div>
+          )}
         </div>
       </TabsContent>
+
+
     </Tabs>
   );
 };

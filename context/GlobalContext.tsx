@@ -8,6 +8,7 @@ import {
   Locations,
   Property,
   User,
+  Universities
 } from "@/types/types";
 
 interface GlobalContextType {
@@ -47,10 +48,11 @@ interface GlobalContextType {
     location?: string;
   }) => Promise<void>;
 
-  fetchUniversities: () => Promise<University[]>;
+  fetchUniversities: () => void;
   searchProperties: (keyword: string, field: string) => Promise<Property[]>;
   cityImages: image [];
   fetchImages: () => void;
+  universities: Universities[];
 }
 
 interface FilterData {
@@ -70,27 +72,7 @@ interface SuggestionItem {
   _id?: string;
 }
 
-interface University {
-  _id: string;
-  name: string;
-  country: string;
-  city: string;
-  propertyCount: number;
-  countries: { [country: string]: number };
-  // Add other properties as needed based on the API response
-}
 
-interface RawUniversity {
-  name: string;
-  city: string;
-  propertyCount?: number;
-}
-
-interface UniversityApiResponse {
-  countries: {
-    [countryName: string]: RawUniversity[];
-  };
-}
 
 interface image{
   country: string;
@@ -117,7 +99,7 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
   >([]);
   const [hasFetchedUser, setHasFetchedUser] = useState(false);
   const [cityImages, setCityImages] = useState<image[]>([]);
-
+  const [universities, setUniversities] = useState<Universities[]>([]);
   const fetchImages = async () =>{
     try {
       const response = await fetchApi('/city-images');
@@ -287,35 +269,15 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const fetchUniversities = async (): Promise<University[]> => {
-    try {
-      setLoading(true);
-      const response = (await fetchApi("/university")) as UniversityApiResponse;
 
-      // Flatten response
-      const universities: University[] = Object.entries(
-        response.countries
-      ).flatMap(([country, uniList]) =>
-        uniList.map((uni, index) => ({
-          _id: `${country}-${index}`, // generate an ID if none exists
-          name: uni.name,
-          country,
-          city: uni.city || "",
-          propertyCount: uni.propertyCount || 0,
-          countries: {}, // optional: depends on your structure
-          UniversityApiResponse: response, // optional: you may want to remove this
-        }))
-      );
-
-      return universities;
-    } catch (err) {
-      console.error("Failed to fetch universities:", err);
-      setError("Failed to fetch universities");
-      return [];
-    } finally {
-      setLoading(false);
+  const fetchUniversities = async () => {
+    try{
+      const response =  await fetchApi('/university')
+      setUniversities(response as Universities[])
+    }catch (err){
+      console.log(err)
     }
-  };
+  }
 
   const searchProperties = async (
     keyword: string,
@@ -379,7 +341,8 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
         fetchUniversities,
         searchProperties,
         fetchImages,
-        cityImages
+        cityImages,
+        universities
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { MapPin, X, SearchIcon, GraduationCap, Loader2 } from "lucide-react";
+import { MapPin, X, SearchIcon, GraduationCap } from "lucide-react";
 import { useGlobal } from "@/context/GlobalContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -35,7 +35,7 @@ const HeroSearch = ({
     fetchProperties,
     setFilterData,
     countryProperty,
-    fetchUniversities,
+    universities
   } = useGlobal();
 
   const router = useRouter();
@@ -47,8 +47,19 @@ const HeroSearch = ({
   const [hasSearched, setHasSearched] = useState(false);
   const [activeCountryTab, setActiveCountryTab] = useState("US");
   const [activeSearchTab, setActiveSearchTab] = useState("all");
-  const [universities, setUniversities] = useState<SuggestionItem[]>([]);
-  const [isLoadingUniversities, setIsLoadingUniversities] = useState(false);
+
+  // Collect all university names from all countries
+  const allUniversityNames = universities
+    ? universities.flatMap((u) => u.universities)
+    : [];
+
+  // Filter universities by search query (case-insensitive substring match)
+  const filteredUniversities = searchQuery.trim() === ""
+    ? allUniversityNames
+    : allUniversityNames.filter((uni) =>
+        uni.toLowerCase().includes(searchQuery.toLowerCase().trim())
+      );
+
 
   const countryTabs =
     countries?.map((country) => ({
@@ -57,10 +68,10 @@ const HeroSearch = ({
         country.country === "GB"
           ? "UK"
           : country.country === "AU"
-          ? "AUS"
-          : country.country === "US"
-          ? "US"
-          : country.country,
+            ? "AUS"
+            : country.country === "US"
+              ? "US"
+              : country.country,
     })) || [];
 
   const getCitiesForCountry = useCallback(
@@ -81,42 +92,6 @@ const HeroSearch = ({
     [locations]
   );
 
-  useEffect(() => {
-   const loadUniversities = async () => {
-     if (!showSuggestions || searchQuery.trim() !== "") return;
-     setUniversities([]);
-
-     setIsLoadingUniversities(true);
-    //  try {
-    //    const uniData = await fetchUniversities();
-    //    const universityList = Array.isArray(uniData) ? uniData : [];
-
-    //    // Flatten all universities with country info
-    //    const flattenedUniversities = universityList.flatMap(
-    //      () =>  []
-    //    );
-
-    //    // Filter by active country
-    //    const filteredUnis = flattenedUniversities
-    //      .filter((uni) => uni.country === activeCountryTab)
-    //      .map((uni) => ({
-    //        name: uni.name,
-    //        city: uni.city,
-    //        country: uni.country,
-    //        type: "university" as const,
-    //        propertyCount: uni.propertyCount,
-    //      }));
-
-    //    setUniversities(filteredUnis);
-    //  } catch (err) {
-    //    console.error("Failed to load universities:", err);
-    //  } finally {
-    //    setIsLoadingUniversities(false);
-    //  }
-   };
-
-    loadUniversities();
-  }, [activeCountryTab, fetchUniversities, showSuggestions, searchQuery]);
 
   const handleSuggestionClick = useCallback(
     async (item: SuggestionItem) => {
@@ -326,26 +301,28 @@ const HeroSearch = ({
           className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl transition-all duration-300"
         >
           {searchQuery.trim() === "" ? (
-            <div className="p-4">
+            <div className="px-4 py-2">
               <div className="border-b border-gray-200 mb-4">
                 <nav className="flex overflow-x-auto scrollbar-hide -mb-px">
-                  {countryTabs.map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveCountryTab(tab.id)}
-                      className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
-                        activeCountryTab === tab.id
+                  {countryTabs.map((tab) => {
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveCountryTab(tab.id)}
+                        className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeCountryTab === tab.id
                           ? "border-red-500 text-red-600"
                           : "border-transparent text-gray-500 hover:text-gray-700"
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
+                          }`}
+                      >
+
+                        {tab.label}
+                      </button>
+                    )
+                  })}
                 </nav>
               </div>
 
-              <div className="flex flex-col  gap-4">
+              <div className="flex flex-col gap-4">
                 <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
                   <h4 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
                     <MapPin className="w-5 h-5 text-blue-500" />
@@ -358,7 +335,7 @@ const HeroSearch = ({
                     </span>
                   </h4>
 
-                  <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-64 overflow-y-auto custom-scrollbar pr-1">
+                  <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-34 overflow-y-auto custom-scrollbar pr-1">
                     {getCitiesForCountry(activeCountryTab).map((city) => (
                       <button
                         key={`${city.country}-${city.city}`}
@@ -372,10 +349,7 @@ const HeroSearch = ({
                       </button>
                     ))}
                   </div>
-                </div>
-
-                <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
-                  <h4 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <h4 className="text-base font-semibold text-gray-800 my-4 flex items-center gap-2">
                     <GraduationCap className="w-5 h-5 text-blue-500" />
                     Universities in{" "}
                     <span className="text-blue-600">
@@ -386,29 +360,16 @@ const HeroSearch = ({
                     </span>
                   </h4>
 
-                  {isLoadingUniversities ? (
-                    <div className="flex justify-center p-4">
-                      <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-64 overflow-y-auto custom-scrollbar pr-1">
-                      {universities.map((uni) => (
-                        <button
-                          key={`${uni.country}-${uni.name}`}
-                          onClick={() => handleSuggestionClick(uni)}
-                          className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50"
-                        >
-                          <span className="truncate">
-                            {uni.name}
-                            {uni.acronym && ` (${uni.acronym})`}
-                          </span>
-                          <span className="text-xs text-gray-400 ml-3 shrink-0">
-                            ({uni.propertyCount})
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-30 overflow-y-auto custom-scrollbar pr-1">
+                  {
+                      universities.find((t) => t.countryCode === activeCountryTab)?.universities.map(uni =>
+                        <p key={uni}  className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50">{uni}</p>
+                      )
+
+                    }
+                  </div>
+
+                 
                 </div>
               </div>
             </div>
@@ -422,7 +383,7 @@ const HeroSearch = ({
               suggestions={suggestions}
               handleSuggestionClick={handleSuggestionClick}
               getPopularCitiesFromCountries={getCitiesForCountry}
-              getPopularUniversitiesFromCountries={() => universities}
+              filteredUniversities={filteredUniversities}
               getFilteredSuggestions={(type) =>
                 suggestions.filter((item) => item.type === type)
               }

@@ -3,6 +3,12 @@ export interface LoginCred extends Record<string, unknown> {
   password: string;
 }
 
+export interface Universities {
+  countryCode: string;
+  universities: [string];
+  // Add other properties as needed based on the API response
+}
+
 export interface LoginRes {
   message: string;
   token: string;

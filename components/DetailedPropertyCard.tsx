@@ -60,7 +60,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
-  console.log("property: ", property.description);
+  // console.log("property: ", property.description);
   const symbol =
     CURRENCY_SYMBOLS[property.countryCode as keyof typeof CURRENCY_SYMBOLS] ||
     "£";

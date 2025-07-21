@@ -11,7 +11,8 @@ const Hero = () => {
     fetchPropertiesCountInLocations,
     fetchTopProperties,
     fetchUserProfile,
-    fetchImages
+    fetchImages,
+    fetchUniversities
   } = useGlobal();
 
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -22,6 +23,7 @@ const Hero = () => {
     fetchPropertiesCountInLocations();
     fetchTopProperties();
     fetchImages();
+    fetchUniversities();
   }, []);
 
   return (
@@ -68,12 +70,12 @@ const Hero = () => {
         <p className="text-white max-w-3xl mx-auto animate-fade-in drop-shadow-md">
           Live near campus, pay less.
         </p>
-        <p className="text-white mb-12 max-w-3xl mx-auto animate-fade-in drop-shadow-md">
+        <p className="text-white mb-6 max-w-3xl mx-auto animate-fade-in drop-shadow-md">
           We cut costs, not comfort — your budget-friendly upgrade.
         </p>
 
         <div
-          className="flex flex-col sm:flex-row items-center md:gap-4 p-6 md:p-8 max-w-4xl mx-auto"
+          className="flex flex-col sm:flex-row items-center md:gap-4  max-w-4xl mx-auto"
           style={{ animationDelay: "0.4s" }}
         >
           <HeroSearch
