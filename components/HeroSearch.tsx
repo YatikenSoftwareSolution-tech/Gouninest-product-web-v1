@@ -6,6 +6,8 @@ import { useGlobal } from "@/context/GlobalContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import SearchTabs from "./SearchTabs";
+import { fetchApi } from "@/utils/fetchApi";
+import { Property } from "@/types/types";
 
 interface SuggestionItem {
   id?: string;
@@ -40,13 +42,14 @@ const HeroSearch = ({
 
   const router = useRouter();
   const suggestionBoxRef = useRef<HTMLDivElement>(null);
-  console.log(countries, locations)
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [activeCountryTab, setActiveCountryTab] = useState("US");
   const [activeSearchTab, setActiveSearchTab] = useState("all");
+
+
 
   const allUniversityNames = universities
   ? universities.flatMap((u) => u.universities)
@@ -73,12 +76,9 @@ const HeroSearch = ({
   const filteredCities = searchQuery.trim() === ""
   ? allCitiesWithCountry
   : allCitiesWithCountry.filter((c) =>
-      c.city.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+      c.city.name.toLowerCase().includes(searchQuery.toLowerCase().trim()) || c.country.toLowerCase().includes(searchQuery.toLowerCase().trim())
     );
 
-
-
- 
 
 
   const countryTabs =
@@ -289,6 +289,34 @@ const HeroSearch = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [setShowSuggestions]);
 
+  const [searchedProperties, setSearchedProperties] = useState<Property[]>([]);
+
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setSearchedProperties([]);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const fetchProperties = async () => {
+        setIsSearching(true);
+        try {
+          const response = (await fetchApi(
+            `/properties/searchproperties?keyword=${searchQuery}`
+          )) as { properties: Property[] };
+          setSearchedProperties(response.properties);
+        } catch (err) {
+          console.log(err);
+        } finally {
+          setIsSearching(false);
+        }
+      };
+      fetchProperties();
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   return (
     <div style={{ zIndex: 9999 }} className="relative flex-1 w-full mb-10">
       <div className="relative">
@@ -409,6 +437,7 @@ const HeroSearch = ({
               getPopularCitiesFromCountries={getCitiesForCountry}
               filteredUniversities={filteredUniversities}
               filteredCities={filteredCities}
+              searchedProperties={searchedProperties}
               getFilteredSuggestions={(type) =>
                 suggestions.filter((item) => item.type === type)
               }

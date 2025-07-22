@@ -104,11 +104,14 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     setActiveGalleryTab(tabId);
   };
 
+  const hasVideos = selectedProperty.roomTypes?.some(rt => rt.videos && rt.videos.length > 0);
+  const has3DViews = selectedProperty.roomTypes?.some(rt => rt.vrs && rt.vrs.length > 0);
+
   const galleryTabs = [
     { id: "photos", label: "Photos" },
-    { id: "video", label: "Video" },
-    { id: "3d-views", label: "3D Views" },
-  ]
+    ...(hasVideos ? [{ id: "video", label: "Video" }] : []),
+    ...(has3DViews ? [{ id: "3d-views", label: "3D Views" }] : []),
+  ];
 
   const tabs = [
     { id: "basic-info", label: "Basic Info", icon: Home },

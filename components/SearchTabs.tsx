@@ -8,10 +8,11 @@ import {
   Home,
 } from "lucide-react";
 import { Tabs, TabsContent } from "./ui/tabs";
-import { City } from "@/types/types";
+import { City, Property } from "@/types/types";
 import { useGlobal } from "@/context/GlobalContext";
 import { useRouter } from "next/navigation";
-// import { Universities } from "@/types/types";
+import { useState } from "react";
+import PropertyModal from "./PropertyModal";
 
 interface SuggestionItem {
   name: string;
@@ -37,6 +38,7 @@ interface SearchTabsProps {
   filteredUniversities: string[];
   getFilteredSuggestions: (type: string) => SuggestionItem[];
   filteredCities: { city: City, country: string }[];
+  searchedProperties: Property[]
 }
 
 const SearchTabs = ({
@@ -46,15 +48,20 @@ const SearchTabs = ({
   hasSearched,
   searchQuery,
   suggestions,
-  handleSuggestionClick,
-  // getPopularUniversitiesFromCountries,
-  getFilteredSuggestions,
   filteredUniversities,
-  filteredCities
+  filteredCities,
+  searchedProperties
 }: SearchTabsProps) => {
 
   const { fetchProperties } = useGlobal();
   const router = useRouter();
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePropertyClick = (property: Property) => {
+    setSelectedProperty(property);
+    setIsModalOpen(true);
+  };
 
   const handleCityClick = async (item: { city: City, country: string }) => {
     await fetchProperties(`/properties/searchproperties?city=${item.city.name}&country=${item.country}`)
@@ -65,6 +72,12 @@ const SearchTabs = ({
     await fetchProperties(`/properties/searchproperties?keyword=${uni}&field=university`)
     router.push(`/properties?university=${uni}`)
   }
+
+  const hasResults =
+    (filteredCities && filteredCities.length > 0) ||
+    (filteredUniversities && filteredUniversities.length > 0) ||
+    (searchedProperties && searchedProperties.length > 0) ||
+    (suggestions && suggestions.length > 0);
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -100,8 +113,27 @@ const SearchTabs = ({
               <Loader2Icon className="w-4 h-4 animate-spin mr-2" />
               <span className="text-sm">Searching...</span>
             </div>
-          ) : suggestions.length > 0 ? (
+          ) : hasResults ? (
             <div className="divide-y divide-gray-100">
+              {searchedProperties.map((item, index) => (
+                <button
+                  key={index}
+                  className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                  onClick={() => handlePropertyClick(item)}
+                >
+                  <div className="flex items-start gap-3">
+                    <Home className="w-5 h-5 mt-0.5 text-gray-600 shrink-0" />
+                    <div className="flex flex-col">
+                      <div className="text-sm font-semibold text-gray-800 leading-tight">
+                        {item.title}{" "}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
+                    {item.location.city}, {item.location.country}
+                  </div>
+                </button>
+              ))}
 
               {filteredCities.map((item, index) => (
                 <button
@@ -268,23 +300,27 @@ const SearchTabs = ({
                 Enter keywords to find specific properties
               </p>
             </div>
-          ) : getFilteredSuggestions("property").length > 0 ? (
+          ) : searchedProperties.length > 0 ? (
             <div className="divide-y divide-gray-100">
-              {getFilteredSuggestions("property").map((item, index) => (
+              {searchedProperties.map((item, index) => (
                 <button
                   key={index}
                   className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
-                  onClick={() => handleSuggestionClick(item)}
+                  onClick={() => handlePropertyClick(item)}
                 >
                   <div className="flex items-start gap-3">
                     <Home className="w-5 h-5 mt-0.5 text-gray-600 shrink-0" />
                     <div className="flex flex-col">
                       <div className="text-sm font-semibold text-gray-800 leading-tight">
-                        {item.name}
+                        {item.title}
                       </div>
                       <div className="text-xs text-gray-500 mt-0.5">
                         {item.address ||
-                          [item.city, item?.region, item.country]
+                          [
+                            item.location.city,
+                            item?.location.region,
+                            item.location.country,
+                          ]
                             .filter(Boolean)
                             .join(", ")}
                       </div>
@@ -325,23 +361,27 @@ const SearchTabs = ({
                 Enter keywords to find specific properties
               </p>
             </div>
-          ) : getFilteredSuggestions("property").length > 0 ? (
+          ) : searchedProperties.length > 0 ? (
             <div className="divide-y divide-gray-100">
-              {getFilteredSuggestions("property").map((item, index) => (
+              {searchedProperties.map((item, index) => (
                 <button
                   key={index}
                   className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
-                  onClick={() => handleSuggestionClick(item)}
+                  onClick={() => handlePropertyClick(item)}
                 >
                   <div className="flex items-start gap-3">
                     <Home className="w-5 h-5 mt-0.5 text-gray-600 shrink-0" />
                     <div className="flex flex-col">
                       <div className="text-sm font-semibold text-gray-800 leading-tight">
-                        {item.name}
+                        {item.title}
                       </div>
                       <div className="text-xs text-gray-500 mt-0.5">
                         {item.address ||
-                          [item.city, item?.region, item.country]
+                          [
+                            item.location.city,
+                            item?.location.region,
+                            item.location.country,
+                          ]
                             .filter(Boolean)
                             .join(", ")}
                       </div>
@@ -364,7 +404,11 @@ const SearchTabs = ({
           )}
         </div>
       </TabsContent>
-
+      {selectedProperty && <PropertyModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        selectedProperty={selectedProperty}
+      />}
 
     </Tabs>
   );
