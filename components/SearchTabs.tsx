@@ -189,36 +189,7 @@ const SearchTabs = ({
 
       <TabsContent value="city">
         <div className="max-h-60 overflow-y-auto">
-          {isSearching ? (
-            <div className="flex items-center justify-center p-4 text-gray-500">
-              <Loader2Icon className="w-4 h-4 animate-spin mr-2" />
-              <span className="text-sm">Searching cities...</span>
-            </div>
-          ) : searchQuery.trim() === "" ? (
-            <div className="p-4">
-              <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-gray-500" />
-                Popular Cities ({popularCountries.join(", ")})
-              </h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-sm text-gray-600">
-                {popularCountries.map((countryId) =>
-                  getPopularCitiesFromCountries(countryId).map(
-                    (city, index) => (
-                      <button
-                        key={`${countryId}-${index}`}
-                        onClick={() => handleSuggestionClick(city)}
-                        className="text-left hover:text-blue-600 hover:underline transition-colors"
-                      >
-                        {city.name}
-                      </button>
-                    )
-                  )
-                )}
-              </div>
-            </div>
-          ) : getFilteredSuggestions("city").length > 0 ? (
-            <div className="divide-y divide-gray-100">
-              {filteredCities.map((item, index) => (
+        {filteredCities.map((item, index) => (
                 <button
                   key={index}
                   className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
@@ -239,16 +210,6 @@ const SearchTabs = ({
 
                 </button>
               ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center p-6 text-center">
-              <MapPin className="w-8 h-8 text-gray-300 mb-2" />
-              <p className="text-sm text-gray-500">No cities found</p>
-              <p className="text-xs text-gray-400 mt-1">
-                Try different keywords or check spelling
-              </p>
-            </div>
-          )}
         </div>
       </TabsContent>
 
