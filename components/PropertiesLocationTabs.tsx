@@ -7,7 +7,7 @@ import SearchedProperties from "./SearchedProperties";
 
 const PropertiesLocationTabs = () => {
   const { properties, filterData } = useGlobal();
-  console.log(properties);
+
   if (properties.length === 0) {
     return <PropertyTabs />;
   } else {

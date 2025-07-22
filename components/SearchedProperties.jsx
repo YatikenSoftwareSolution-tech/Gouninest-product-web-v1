@@ -175,35 +175,50 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
     setIsSortOpen(false);
   };
 
+  const renderHeading = () => {
+    if (filterData.country && filterData.city) {
+      return (
+        <>
+          Browse Properties in{" "}
+          <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
+            {filterData.city} - {filterData.country}
+          </span>
+        </>
+      )
+    } else if (filterData.country) {
+      return (<>
+        Browse Properties in{" "}
+        <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
+          {filterData.country}
+        </span>
+      </>)
+    } else if (filterData.university) {
+      return (<>
+        Browse Properties near{" "}
+        <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
+          {filterData.university}
+        </span>
+      </>)
+    } else {
+      return (
+        <>
+          Browse Properties by
+          <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
+            {" "}
+            Location
+          </span>
+        </>
+      )
+    }
+  }
+
   return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {filterData?.country && filterData?.city ? (
-              <>
-                Browse Properties in{" "}
-                <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-                  {filterData.city} - {filterData.country}
-                </span>
-              </>
-            ) : filterData?.country ? (
-              <>
-                Browse Properties in{" "}
-                <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-                  {filterData.country}
-                </span>
-              </>
-            ) : (
-              <>
-                Browse Properties by
-                <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-                  {" "}
-                  Location
-                </span>
-              </>
-            )}
+
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Explore our verified student accommodations across top university
@@ -236,9 +251,8 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
                     ? sortOptions.find((opt) => opt.value === sortOption)?.label
                     : "Sort by"}
                   <ChevronDown
-                    className={`w-4 h-4 ml-2 transition-transform ${
-                      isSortOpen ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 ml-2 transition-transform ${isSortOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
@@ -248,11 +262,10 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
                       <button
                         key={option.value}
                         onClick={() => handleSortChange(option.value)}
-                        className={`block w-full px-4 py-2 text-sm text-left cursor-pointer ${
-                          sortOption === option.value
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-gray-700 hover:bg-gray-100"
-                        }`}
+                        className={`block w-full px-4 py-2 text-sm text-left cursor-pointer ${sortOption === option.value
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-700 hover:bg-gray-100"
+                          }`}
                       >
                         {option.label}
                       </button>

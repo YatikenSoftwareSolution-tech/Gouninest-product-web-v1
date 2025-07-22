@@ -10,8 +10,9 @@ const PropertiesContent = () => {
   const searchParams = useSearchParams();
   const country = searchParams.get("country");
   const city = searchParams.get("city");
+  const university = searchParams.get("university");
 
-  const hasFilters = country !== null && city !== null;
+  const hasFilters = (country !== null && city !== null) || university !== null;
 
   return (
     <>

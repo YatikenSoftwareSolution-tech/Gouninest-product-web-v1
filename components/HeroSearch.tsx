@@ -40,7 +40,7 @@ const HeroSearch = ({
 
   const router = useRouter();
   const suggestionBoxRef = useRef<HTMLDivElement>(null);
-
+  console.log(countries, locations)
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -48,17 +48,37 @@ const HeroSearch = ({
   const [activeCountryTab, setActiveCountryTab] = useState("US");
   const [activeSearchTab, setActiveSearchTab] = useState("all");
 
-  // Collect all university names from all countries
   const allUniversityNames = universities
-    ? universities.flatMap((u) => u.universities)
-    : [];
+  ? universities.flatMap((u) => u.universities)
+  : [];
 
-  // Filter universities by search query (case-insensitive substring match)
   const filteredUniversities = searchQuery.trim() === ""
-    ? allUniversityNames
-    : allUniversityNames.filter((uni) =>
-        uni.toLowerCase().includes(searchQuery.toLowerCase().trim())
-      );
+  ? allUniversityNames
+  : allUniversityNames.filter((uni) =>
+      uni.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    );
+    
+  const allCitiesWithCountry = locations
+  ? locations.flatMap((l) =>
+      l.cities.map((city) => ({
+        city,
+        country: l.country,
+      }))
+    )
+  : [];
+
+  // console.log(allCitiesWithCountry)
+
+
+  const filteredCities = searchQuery.trim() === ""
+  ? allCitiesWithCountry
+  : allCitiesWithCountry.filter((c) =>
+      c.city.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    );
+
+
+
+ 
 
 
   const countryTabs =
@@ -252,6 +272,10 @@ const HeroSearch = ({
     }
   };
 
+  const handleInitialUniClick = async (uni: string) =>{
+    await fetchProperties(`/properties/searchproperties?keyword=${uni}&field=university`)
+    router.push(`/properties?university=${uni}`)
+  }
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -363,7 +387,7 @@ const HeroSearch = ({
                   <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-30 overflow-y-auto custom-scrollbar pr-1">
                   {
                       universities.find((t) => t.countryCode === activeCountryTab)?.universities.map(uni =>
-                        <p key={uni}  className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50">{uni}</p>
+                        <p key={uni} onClick={() => handleInitialUniClick(uni)}  className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50">{uni}</p>
                       )
 
                     }
@@ -384,6 +408,7 @@ const HeroSearch = ({
               handleSuggestionClick={handleSuggestionClick}
               getPopularCitiesFromCountries={getCitiesForCountry}
               filteredUniversities={filteredUniversities}
+              filteredCities={filteredCities}
               getFilteredSuggestions={(type) =>
                 suggestions.filter((item) => item.type === type)
               }
