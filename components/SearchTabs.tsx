@@ -115,24 +115,7 @@ const SearchTabs = ({
             </div>
           ) : suggestions.length > 0 ? (
             <div className="divide-y divide-gray-100">
-              {suggestions.map((item, index) => (
-                <button
-                  key={index}
-                  className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
-                  onClick={() => handleSuggestionClick(item)}
-                >
-                  <div className="flex items-start gap-3">
-
-
-                  </div>
-                  {item.propertyCount && (
-                    <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
-                      {item.propertyCount}{" "}
-                      {item.propertyCount === 1 ? "property" : "properties"}
-                    </div>
-                  )}
-                </button>
-              ))}
+              
               {filteredCities.map((item, index) => (
                 <button
                   key={index}
@@ -171,6 +154,24 @@ const SearchTabs = ({
                   <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
                     University
                   </div>
+                </button>
+              ))}
+              {suggestions.map((item, index) => (
+                <button
+                  key={index}
+                  className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                  onClick={() => handleSuggestionClick(item)}
+                >
+                  <div className="flex items-start gap-3">
+
+
+                  </div>
+                  {item.propertyCount && (
+                    <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
+                      {item.propertyCount}{" "}
+                      {item.propertyCount === 1 ? "property" : "properties"}
+                    </div>
+                  )}
                 </button>
               ))}
             </div>
