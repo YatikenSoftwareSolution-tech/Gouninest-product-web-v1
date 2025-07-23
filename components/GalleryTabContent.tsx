@@ -1,123 +1,37 @@
 import React from "react";
 import Image from "next/image";
-import { Video, Box, Play, ChevronLeft, ChevronRight } from "lucide-react";
+import {  ChevronLeft, ChevronRight,  } from "lucide-react";
+import VideoWrapper from '../components/VideoWrapper';
+import VrsViewer from '../components/VrsViewer';
 
 interface GalleryProperty {
   images?: string[];
   videos?: {
-    id: number;
-    title: string;
-    duration: string;
-    thumbnail: string;
+    type: string
     url: string;
   }[];
   threeDTours?: {
-    id: number;
-    title: string;
-    thumbnail: string;
+    type: string
     url: string;
   }[];
 }
 
 interface VideoItem {
-  id: number;
-  title: string;
-  duration: string;
-  thumbnail: string;
+  type: string
   url: string;
 }
 
 interface ThreeDTourItem {
-  id: number;
-  title: string;
-  thumbnail: string;
+  type: string
   url: string;
 }
 
 interface GalleryProperty {
   images?: string[];
   videos?: VideoItem[];
-  threeDTours?: ThreeDTourItem[];
+  vrs?: ThreeDTourItem[];
 }
 
-
-
-const renderVideoContent = (
-  videos: VideoItem[]
-) => (
-  <div className="space-y-3 h-[465px]">
-    {videos.length > 0 ? (
-      <div className="grid grid-cols-1 gap-3">
-        {videos.map((video) => (
-          <div
-            key={video.id}
-            className="group relative rounded-lg overflow-hidden border border-gray-200"
-          >
-            <div className="relative aspect-video">
-              <Image
-                src={video.thumbnail}
-                alt={video.title}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                <div className="w-12 h-12 bg-blue-600/80 rounded-full flex items-center justify-center">
-                  <Play className="w-5 h-5 text-white" />
-                </div>
-              </div>
-            </div>
-            <div className="p-2">
-              <h4 className="font-medium text-sm">{video.title}</h4>
-              <p className="text-xs text-gray-500">{video.duration}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div className="flex flex-col justify-center text-center py-6 bg-gray-50 rounded-lg h-[465px]">
-        <Video className="w-8 h-8 mx-auto text-gray-400" />
-        <p className="mt-2 text-gray-500 text-sm">No videos available</p>
-      </div>
-    )}
-  </div>
-);
-
-const render3DContent = (tours: ThreeDTourItem[]) => (
-  <div className="space-y-3 h-[465px]">
-    {tours.length > 0 ? (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {tours.map((tour) => (
-          <div
-            key={tour.id}
-            className="group relative rounded-lg overflow-hidden border border-gray-200"
-          >
-            <div className="relative aspect-square">
-              <Image
-                src={tour.thumbnail}
-                alt={tour.title}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded-md">
-                  View in 3D
-                </div>
-              </div>
-            </div>
-            <div className="p-2">
-              <h4 className="font-medium text-sm">{tour.title}</h4>
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div className="flex flex-col justify-center text-center py-6 bg-gray-50 rounded-lg h-[465px]">
-        <Box className="w-8 h-8 mx-auto text-gray-400" />
-        <p className="mt-2 text-gray-500 text-sm">No 3D tours available</p>
-      </div>
-    )}
-  </div>
-);
 
 const renderPhotosContent = (
   selectedProperty: GalleryProperty,
@@ -192,9 +106,8 @@ const renderPhotosContent = (
             alt={`Grid ${index}`}
             width={400}
             height={300}
-            className={`rounded-lg object-cover w-full h-24 sm:h-40 cursor-pointer ${
-              index === selectedImageIndex ? "ring-2 ring-blue-500" : ""
-            }`}
+            className={`rounded-lg object-cover w-full h-24 sm:h-40 cursor-pointer ${index === selectedImageIndex ? "ring-2 ring-blue-500" : ""
+              }`}
             onClick={() => {
               setSelectedImageIndex(index);
               setGridMode(false);
@@ -239,20 +152,14 @@ const renderGalleryTabContent = (
       return (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
           <div className="">
-            {renderVideoContent(
-              selectedProperty.videos || []
-            )}
+           <VideoWrapper videos={selectedProperty.videos}/>
           </div>
         </div>
       );
     case "3d-views":
       return (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
-          <div className="">
-            {render3DContent(
-              selectedProperty.threeDTours || []
-            )}
-          </div>
+          <VrsViewer videos={selectedProperty.vrs}/>
         </div>
       );
     default:

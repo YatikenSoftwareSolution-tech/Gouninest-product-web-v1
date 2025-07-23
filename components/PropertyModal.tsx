@@ -105,13 +105,15 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     setActiveGalleryTab(tabId);
   };
 
-  const hasVideos = selectedProperty.roomTypes?.some(rt => rt.videos && rt.videos.length > 0);
-  const has3DViews = selectedProperty.roomTypes?.some(rt => rt.vrs && rt.vrs.length > 0);
+  const videos = selectedProperty.media.videos
+  const vrs = selectedProperty.media.vrs
+
+  
 
   const galleryTabs = [
     { id: "photos", label: "Photos" },
-    ...(hasVideos ? [{ id: "video", label: "Video" }] : []),
-    ...(has3DViews ? [{ id: "3d-views", label: "3D Views" }] : []),
+    ...(videos.length > 0 ? [{ id: "video", label: "Video" }] : []),
+    ...(vrs.length > 0 ? [{ id: "3d-views", label: "3D Views" }] : []),
   ];
 
   const tabs = [
@@ -123,25 +125,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     { id: "reviews", label: "Reviews", icon: MessageCircle },
   ];
 
-  // Aggregate videos and 3D views from all roomTypes
-  const videos = selectedProperty.roomTypes?.flatMap((rt, idx) =>
-    (rt.videos || []).map((url, vIdx) => ({
-      id: idx * 1000 + vIdx,
-      title: rt.roomName || `Video ${vIdx + 1}`,
-      duration: '', // No duration info available
-      thumbnail: url, // Use video URL as thumbnail if no separate thumbnail
-      url,
-    }))
-  ) || [];
 
-  const threeDTours = selectedProperty.roomTypes?.flatMap((rt, idx) =>
-    (rt.vrs || []).map((url, vIdx) => ({
-      id: idx * 1000 + vIdx,
-      title: rt.roomName || `3D View ${vIdx + 1}`,
-      thumbnail: url, // Use 3D view URL as thumbnail if no separate thumbnail
-      url,
-    }))
-  ) || [];
 
   if (!isModalOpen) return null;
 
@@ -239,7 +223,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
           <div className="w-full">
             {renderGalleryTabContent(
               activeGalleryTab,
-              { ...selectedProperty, videos, threeDTours },
+              { ...selectedProperty, videos, vrs },
               gridMode,
               selectedImageIndex,
               setSelectedImageIndex,

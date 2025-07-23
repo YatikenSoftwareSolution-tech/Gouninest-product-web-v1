@@ -111,6 +111,21 @@ export interface Property {
     country: string;
     postalCode: string;
   };
+  
+  media:{
+    images: image[];
+    videos: video[];
+    vrs: video[]
+  }
+}
+
+interface image {
+  url: string;
+  type: string
+}
+interface video{
+  url:string;
+  type: string;
 }
 
 export interface City {
