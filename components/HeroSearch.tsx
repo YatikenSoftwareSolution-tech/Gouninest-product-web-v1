@@ -298,6 +298,19 @@ const HeroSearch = ({
     }
 
     const timer = setTimeout(() => {
+      const fetchCities = async () => {
+        setIsSearching(true);
+        try {
+          const response = (await fetchApi(
+            `/properties/searchproperties?keyword=${searchQuery}&field=city`
+          )) 
+          console.log(response)
+        } catch (err) {
+          console.log(err);
+        } finally {
+          setIsSearching(false);
+        }
+      };
       const fetchProperties = async () => {
         setIsSearching(true);
         try {
@@ -311,8 +324,11 @@ const HeroSearch = ({
           setIsSearching(false);
         }
       };
+      fetchCities()
       fetchProperties();
     }, 500); // 500ms debounce
+
+    
 
     return () => clearTimeout(timer);
   }, [searchQuery]);

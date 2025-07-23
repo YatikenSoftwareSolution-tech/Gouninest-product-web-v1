@@ -112,7 +112,7 @@ export const BasicInfoSection: React.FC<SectionProps> = ({
         <h4 className="font-semibold text-gray-800 mb-3">Description</h4>
         {cleanedDescription ? (
           <div
-            className="prose max-w-none text-gray-700 text-sm prose-h1:text-lg prose-p:leading-relaxed prose-ol:pl-5 prose-li:marker:text-blue-500"
+            className="text-left prose max-w-none text-gray-700 text-sm prose-h1:text-lg prose-p:leading-relaxed prose-ol:pl-5 prose-li:marker:text-blue-500"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(cleanedDescription),
             }}

@@ -46,6 +46,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     agreePrivacy: false,
   });
 
+
   const handleCopy = () => {
     const textToCopy = selectedProperty._id || "32912";
     navigator.clipboard.writeText(textToCopy).then(() => {
@@ -121,6 +122,26 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     { id: "house-rules", label: "Rules", icon: Shield },
     { id: "reviews", label: "Reviews", icon: MessageCircle },
   ];
+
+  // Aggregate videos and 3D views from all roomTypes
+  const videos = selectedProperty.roomTypes?.flatMap((rt, idx) =>
+    (rt.videos || []).map((url, vIdx) => ({
+      id: idx * 1000 + vIdx,
+      title: rt.roomName || `Video ${vIdx + 1}`,
+      duration: '', // No duration info available
+      thumbnail: url, // Use video URL as thumbnail if no separate thumbnail
+      url,
+    }))
+  ) || [];
+
+  const threeDTours = selectedProperty.roomTypes?.flatMap((rt, idx) =>
+    (rt.vrs || []).map((url, vIdx) => ({
+      id: idx * 1000 + vIdx,
+      title: rt.roomName || `3D View ${vIdx + 1}`,
+      thumbnail: url, // Use 3D view URL as thumbnail if no separate thumbnail
+      url,
+    }))
+  ) || [];
 
   if (!isModalOpen) return null;
 
@@ -218,7 +239,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
           <div className="w-full">
             {renderGalleryTabContent(
               activeGalleryTab,
-              selectedProperty,
+              { ...selectedProperty, videos, threeDTours },
               gridMode,
               selectedImageIndex,
               setSelectedImageIndex,
