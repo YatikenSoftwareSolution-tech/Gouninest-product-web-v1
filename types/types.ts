@@ -15,6 +15,12 @@ export interface LoginRes {
   user: User;
 }
 
+export interface AllCountries{
+  name: string;
+  callingCode: string;
+  flag: string;
+}
+
 export interface BlogPost {
   id: number;
   title: string;

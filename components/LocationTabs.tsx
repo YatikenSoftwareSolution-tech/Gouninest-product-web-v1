@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useGlobal } from "@/context/GlobalContext";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
+import {  useEffect } from "react";
 
 const MAX_CITIES = 12;
 
@@ -12,6 +13,7 @@ const LocationTabs = () => {
   const router = useRouter();
   const { countries, locations, fetchProperties, setFilterData, cityImages } = useGlobal();
   // console.log("111: ",locations)
+  const {fetchAllCountries} = useGlobal();
 
   const handleClick = async (city: string, country: string) => {
     setFilterData({ city, country, keyword: "" });
@@ -34,6 +36,10 @@ const LocationTabs = () => {
     const cityObj = cities.find((c) => c._id === city);
     return cityObj?.imageUrl || "/placeholder.jpg";
   };
+
+  useEffect(() => {
+    fetchAllCountries();
+  }, []);
 
   return (
     <>

@@ -8,7 +8,8 @@ import {
   Locations,
   Property,
   User,
-  Universities
+  Universities,
+  AllCountries
 } from "@/types/types";
 
 interface GlobalContextType {
@@ -53,6 +54,8 @@ interface GlobalContextType {
   cityImages: image [];
   fetchImages: () => void;
   universities: Universities[];
+  allCountries: AllCountries[];
+  fetchAllCountries: () => Promise<void>;
 }
 
 interface FilterData {
@@ -71,6 +74,7 @@ interface SuggestionItem {
   propertyCount?: number;
   _id?: string;
 }
+
 
 
 
@@ -100,6 +104,21 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
   const [hasFetchedUser, setHasFetchedUser] = useState(false);
   const [cityImages, setCityImages] = useState<image[]>([]);
   const [universities, setUniversities] = useState<Universities[]>([]);
+  const [allCountries, setAllCountries] = useState<AllCountries[]>([]);
+
+  const fetchAllCountries = async () => {
+    try {
+      const response = await fetchApi('/countries');
+      if (response && Array.isArray(response)) {
+        setAllCountries(response as AllCountries[]);
+      } else {
+        console.error("Invalid countries data received");
+      }
+    } catch (err) {
+      console.error("Failed to fetch countries:", err);
+    }
+  };
+
   const fetchImages = async () =>{
     try {
       const response = await fetchApi('/city-images');
@@ -342,7 +361,9 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
         searchProperties,
         fetchImages,
         cityImages,
-        universities
+        universities,
+        allCountries,
+        fetchAllCountries
       }}
     >
       {children}
