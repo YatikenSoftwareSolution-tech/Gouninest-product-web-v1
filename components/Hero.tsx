@@ -71,7 +71,7 @@ const Hero = () => {
           Live near campus, pay less.
         </p>
         <p className="text-white mb-6 max-w-3xl mx-auto animate-fade-in drop-shadow-md">
-          We cut costs, not comfort — your budget-friendly upgrade.
+          We cut costs, not comfort, your budget-friendly upgrade.
         </p>
 
         <div
