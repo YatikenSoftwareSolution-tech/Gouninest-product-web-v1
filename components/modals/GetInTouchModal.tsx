@@ -84,7 +84,7 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
   const filteredCountries = allCountries.filter(
     (country) =>
       country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      country.callingCode.includes(searchTerm)
+      String(country.callingCode).toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (!isOpen) return null;
@@ -231,7 +231,7 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
                       <div className="divide-y divide-gray-100">
                         {filteredCountries.map((country) => (
                           <button
-                            key={country.callingCode}
+                            key={`${country.callingCode}-${country.name}`}
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();

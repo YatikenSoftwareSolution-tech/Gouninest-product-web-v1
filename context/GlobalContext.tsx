@@ -108,7 +108,7 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
 
   const fetchAllCountries = async () => {
     try {
-      const response = await fetchApi('/countries');
+      const response = await fetchApi('/countries');  
       if (response && Array.isArray(response)) {
         setAllCountries(response as AllCountries[]);
       } else {

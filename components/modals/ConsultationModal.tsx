@@ -44,11 +44,13 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
   }, []);
 
 
-  const filteredCountries = allCountries.filter(
-    (country) =>
-      country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      country.callingCode.includes(searchTerm)
-  );
+
+
+const filteredCountries = allCountries.filter(
+  (country) =>
+    country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(country.callingCode).toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   if (!isOpen) return null;
 
@@ -177,7 +179,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                       </div>
                       {filteredCountries.map((country) => (
                         <button
-                          key={country.callingCode}
+                          key={`${country.callingCode}-${country.name}`}
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();

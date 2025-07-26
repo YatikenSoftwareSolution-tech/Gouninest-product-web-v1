@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
-import { Property } from "@/types/types";
+import React, { useEffect, useState } from "react";
+import { AllCountries, Property } from "@/types/types";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
+import { useGlobal } from "@/context/GlobalContext";
 
 interface RightFormSectionProps {
   selectedProperty: Property;
@@ -32,54 +33,6 @@ const CURRENCY_SYMBOLS = {
   NL: "€",
 } as const;
 
-const countries = [
-  { code: "IN", dial_code: "+91", name: "India" },
-  { code: "US", dial_code: "+1", name: "United States" },
-  { code: "GB", dial_code: "+44", name: "United Kingdom" },
-  { code: "AU", dial_code: "+61", name: "Australia" },
-  { code: "CA", dial_code: "+1", name: "Canada" },
-  { code: "IE", dial_code: "+353", name: "Ireland" },
-  { code: "NZ", dial_code: "+64", name: "New Zealand" },
-  { code: "DE", dial_code: "+49", name: "Germany" },
-  { code: "FR", dial_code: "+33", name: "France" },
-  { code: "NL", dial_code: "+31", name: "Netherlands" },
-  { code: "SG", dial_code: "+65", name: "Singapore" },
-  { code: "ZA", dial_code: "+27", name: "South Africa" },
-  { code: "AE", dial_code: "+971", name: "United Arab Emirates" },
-  { code: "SA", dial_code: "+966", name: "Saudi Arabia" },
-  { code: "CN", dial_code: "+86", name: "China" },
-  { code: "JP", dial_code: "+81", name: "Japan" },
-  { code: "KR", dial_code: "+82", name: "South Korea" },
-  { code: "BR", dial_code: "+55", name: "Brazil" },
-  { code: "RU", dial_code: "+7", name: "Russia" },
-  { code: "MX", dial_code: "+52", name: "Mexico" },
-  { code: "ES", dial_code: "+34", name: "Spain" },
-  { code: "IT", dial_code: "+39", name: "Italy" },
-  { code: "SE", dial_code: "+46", name: "Sweden" },
-  { code: "CH", dial_code: "+41", name: "Switzerland" },
-  { code: "BE", dial_code: "+32", name: "Belgium" },
-  { code: "NO", dial_code: "+47", name: "Norway" },
-  { code: "FI", dial_code: "+358", name: "Finland" },
-  { code: "DK", dial_code: "+45", name: "Denmark" },
-  { code: "AT", dial_code: "+43", name: "Austria" },
-  { code: "PL", dial_code: "+48", name: "Poland" },
-  { code: "PT", dial_code: "+351", name: "Portugal" },
-  { code: "AR", dial_code: "+54", name: "Argentina" },
-  { code: "TH", dial_code: "+66", name: "Thailand" },
-  { code: "MY", dial_code: "+60", name: "Malaysia" },
-  { code: "ID", dial_code: "+62", name: "Indonesia" },
-  { code: "TR", dial_code: "+90", name: "Turkey" },
-  { code: "NG", dial_code: "+234", name: "Nigeria" },
-  { code: "KE", dial_code: "+254", name: "Kenya" },
-  { code: "EG", dial_code: "+20", name: "Egypt" },
-  { code: "BD", dial_code: "+880", name: "Bangladesh" },
-  { code: "PK", dial_code: "+92", name: "Pakistan" },
-  { code: "LK", dial_code: "+94", name: "Sri Lanka" },
-];
-
-
-const getFlagUrl = (code: string) =>
-  `https://flagcdn.com/w40/${code.toLowerCase()}.jpg`;
 
 const RightFormSection: React.FC<RightFormSectionProps> = ({
   selectedProperty,
@@ -88,8 +41,14 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState(countries[0]);
+  const [selectedCountry, setSelectedCountry] = useState<AllCountries | undefined>();
+  const { allCountries, fetchAllCountries } = useGlobal();
 
+  useEffect(() => {
+    if (allCountries.length <= 0) {
+      fetchAllCountries();
+    }
+  }, []);
   // Read countryCode directly from selectedProperty
   const countryCode =
     selectedProperty.countryCode as keyof typeof CURRENCY_SYMBOLS;
@@ -105,10 +64,10 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
       maximumFractionDigits: 2,
     });
 
-  const filteredCountries = countries.filter(
+  const filteredCountries = allCountries.filter(
     (country) =>
       country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      country.dial_code.includes(searchTerm)
+      String(country.callingCode).toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -200,21 +159,20 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
                 }}
                 className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 border-r border-gray-300 min-w-[120px]"
               >
-                <Image
-                  src={getFlagUrl(selectedCountry.code)}
-                  alt={selectedCountry.name}
+                {selectedCountry && <Image
+                  src={selectedCountry?.flag}
+                  alt={selectedCountry?.name}
                   width={20}
                   height={15}
                   className="h-4 w-6 object-cover rounded-sm"
-                />
-                <span className="text-sm text-gray-700">
-                  {selectedCountry.dial_code}
-                </span>
+                />}
+                {selectedCountry && <span className="text-sm font-medium text-gray-700">
+                  {selectedCountry.callingCode}
+                </span>}
                 <ChevronDown
                   size={16}
-                  className={`text-gray-500 transition-transform ${
-                    isDropdownOpen ? "rotate-180" : ""
-                  }`}
+                  className={`text-gray-500 transition-transform ${isDropdownOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
               <input
@@ -243,7 +201,7 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
                   </div>
                   {filteredCountries.map((country) => (
                     <button
-                      key={country.code}
+                      key={`${country.callingCode}-${country.name}`}
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -254,7 +212,7 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
                       className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50"
                     >
                       <Image
-                        src={getFlagUrl(country.code)}
+                        src={country.flag}
                         alt={country.name}
                         width={20}
                         height={15}
@@ -263,8 +221,8 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
                       <span className="text-sm font-medium text-gray-900">
                         {country.name}
                       </span>
-                      <span className="text-sm text-gray-500 ml-auto">
-                        {country.dial_code}
+                      <span className="text-sm text-gray-500 ml-2">
+                        {country.callingCode}
                       </span>
                     </button>
                   ))}
