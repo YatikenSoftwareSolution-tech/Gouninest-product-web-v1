@@ -19,6 +19,7 @@ export interface AllCountries{
   name: string;
   callingCode: string;
   flag: string;
+  currencySymbol: string;
 }
 
 export interface BlogPost {

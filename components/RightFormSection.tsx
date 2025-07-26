@@ -71,7 +71,7 @@ const RightFormSection: React.FC<RightFormSectionProps> = ({
   );
 
   return (
-    <div className="w-full bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200 lg:sticky lg:top-4 h-fit">
+    <div className="w-full text-left bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200 lg:sticky lg:top-4 h-fit">
       <div className="mb-4 sm:mb-6">
         <div className="text-xl sm:text-2xl font-bold">
           {symbol}
