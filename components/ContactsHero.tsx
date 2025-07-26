@@ -160,9 +160,9 @@ const ContactsHero = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Call Us
             </h3>
-            <p className="text-gray-600">+44 2079933000</p>
             <p className="text-gray-600">+91 9870468034</p>
             <p className="text-gray-600">+1 3153410000</p>
+            <p className="text-gray-600">+44 2079933000</p>
           </a>
 
           <a

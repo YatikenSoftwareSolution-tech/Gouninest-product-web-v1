@@ -18,8 +18,8 @@ const Footer = () => {
 
   const phoneNumbers = [
     { code: "+91", number: "9870468034", countryCode: "IN" },
-    { code: "+44", number: "2079933000", countryCode: "GB" },
     { code: "+1", number: "3153410000", countryCode: "US" },
+    { code: "+44", number: "2079933000", countryCode: "GB" },
   ];
 
   const countryNames: Record<string, string> = {

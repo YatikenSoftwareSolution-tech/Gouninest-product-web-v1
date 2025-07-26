@@ -31,11 +31,6 @@ const GetInTouch = () => {
               Call Us
             </h3>
             <p className="text-gray-600 cursor-pointer">
-              <a href="tel:+442079933000" className="hover:underline">
-                +44 2079933000
-              </a>
-            </p>
-            <p className="text-gray-600 cursor-pointer">
               <a href="tel:+919870468034" className="hover:underline">
                 +91 9870468034
               </a>
@@ -43,6 +38,11 @@ const GetInTouch = () => {
             <p className="text-gray-600 cursor-pointer">
               <a href="tel:+13153410000" className="hover:underline">
                 +1 3153410000
+              </a>
+            </p>
+            <p className="text-gray-600 cursor-pointer">
+              <a href="tel:+442079933000" className="hover:underline">
+                +44 2079933000
               </a>
             </p>
           </div>
