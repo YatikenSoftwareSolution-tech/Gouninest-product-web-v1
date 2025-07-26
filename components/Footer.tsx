@@ -111,6 +111,35 @@ const Footer = () => {
                 </Link>
               </div>
             </div>
+            {/* Services */}
+            <div
+              className="animate-fade-in "
+              style={{ animationDelay: "0.2s" }}
+            >
+              <h4 className="text-lg font-semibold text-white mb-6">
+                Services
+              </h4>
+              <ul className="space-y-3">
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                  Property Search
+                </li>
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                  Virtual Tours
+                </li>
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                  Booking Management
+                </li>
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                  Student Services
+                </li>
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                  Maintenance
+                </li>
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                  Community Events
+                </li>
+              </ul>
+            </div>
 
             {/* Quick Links */}
             <div
@@ -173,35 +202,7 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Services */}
-            <div
-              className="animate-fade-in "
-              style={{ animationDelay: "0.2s" }}
-            >
-              <h4 className="text-lg font-semibold text-white mb-6">
-                Services
-              </h4>
-              <ul className="space-y-3">
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
-                  Property Search
-                </li>
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
-                  Virtual Tours
-                </li>
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
-                  Booking Management
-                </li>
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
-                  Student Services
-                </li>
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
-                  Maintenance
-                </li>
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
-                  Community Events
-                </li>
-              </ul>
-            </div>
+            
 
             <div
               className="animate-fade-in "
