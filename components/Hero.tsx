@@ -12,7 +12,7 @@ const Hero = () => {
     fetchTopProperties,
     fetchUserProfile,
     fetchImages,
-    fetchUniversities
+    fetchUniversities,
   } = useGlobal();
 
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -68,10 +68,9 @@ const Hero = () => {
         </h1>
 
         <p className="text-white max-w-3xl mx-auto animate-fade-in drop-shadow-md">
-          Live near campus, pay less.
-        </p>
-        <p className="text-white mb-6 max-w-3xl mx-auto animate-fade-in drop-shadow-md">
-          We cut costs, not comfort, your budget-friendly upgrade.
+          Explore student rooms close to top universities in the UK, Australia,
+          and the US. Safe, fully furnished, and move-in ready options for every
+          budget.
         </p>
 
         <div
