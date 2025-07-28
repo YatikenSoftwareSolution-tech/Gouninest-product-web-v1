@@ -67,7 +67,7 @@ const Hero = () => {
           </span>
         </h1>
 
-        <p className="text-white max-w-3xl mx-auto animate-fade-in drop-shadow-md">
+        <p className="text-white max-w-3xl mb-4 mx-auto animate-fade-in drop-shadow-md">
           Explore student rooms close to top universities in the UK, Australia,
           and the US. Safe, fully furnished, and move-in ready options for every
           budget.
