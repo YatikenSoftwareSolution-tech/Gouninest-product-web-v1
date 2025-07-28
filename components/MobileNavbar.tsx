@@ -132,6 +132,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
               <button
                 type="submit"
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-500 text-white p-1 rounded-full"
+                aria-label="Search"
               >
                 <Search size={16} />
               </button>
@@ -173,6 +174,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
                   ? "hover:bg-red-400 transition-colors duration-200"
                   : "hover:bg-red-200"
               }`}
+              aria-label="Select phone number"
             >
               <Image
                 src={isScrolled ? "/telephone-red.png" : "/telephone-white.png"}
@@ -210,6 +212,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
           <button
             onClick={toggleMenu}
             className={`p-2 ${isScrolled ? "text-gray-800" : "text-white"}`}
+            aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -248,6 +251,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
                 <button
                   onClick={toggleMobileAccountDropdown}
                   className="flex items-center justify-between w-full text-white transition-colors hover:text-red-400"
+                  aria-label="Account options"
                 >
                   <span>Account</span>
                   <ChevronDown

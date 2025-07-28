@@ -175,24 +175,6 @@ const SearchTabs = ({
                   </div>
                 </button>
               ))}
-              {/* {suggestions.map((item, index) => (
-                <button
-                  key={index}
-                  className="flex w-full justify-between items-start px-4 py-3 hover:bg-gray-50 transition-colors text-left"
-                  onClick={() => handleSuggestionClick(item)}
-                >
-                  <div className="flex items-start gap-3">
-
-
-                  </div>
-                  {item.propertyCount && (
-                    <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
-                      {item.propertyCount}{" "}
-                      {item.propertyCount === 1 ? "property" : "properties"}
-                    </div>
-                  )}
-                </button>
-              ))} */}
             </div>
           ) : hasSearched ? (
             <div className="flex flex-col items-center justify-center p-6 text-center">

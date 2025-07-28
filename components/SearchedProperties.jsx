@@ -246,6 +246,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
                 <button
                   onClick={() => setIsSortOpen(!isSortOpen)}
                   className="w-full flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100  cursor-pointer"
+                  aria-label="Sort properties"
                 >
                   {sortOption
                     ? sortOptions.find((opt) => opt.value === sortOption)?.label

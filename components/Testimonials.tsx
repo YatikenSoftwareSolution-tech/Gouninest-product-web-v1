@@ -117,12 +117,14 @@ const Testimonials = () => {
           <button
             onClick={prevTestimonial}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-transform duration-300 hover:scale-110"
+            aria-label="Previous testimonial"
           >
             <ChevronLeft className="w-6 h-6 text-gray-600" />
           </button>
           <button
             onClick={nextTestimonial}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-transform duration-300 hover:scale-110"
+            aria-label="Next testimonial"
           >
             <ChevronRight className="w-6 h-6 text-gray-600" />
           </button>

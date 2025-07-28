@@ -296,6 +296,7 @@ const Signup = () => {
             type="button"
             variant="ghost"
             size="sm"
+            aria-label={showPassword ? "Hide password" : "Show password"}
             className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
             onClick={() => setShowPassword((prev) => !prev)}
           >
@@ -326,6 +327,7 @@ const Signup = () => {
             type="button"
             variant="ghost"
             size="sm"
+            aria-label={showPassword ? "Hide password" : "Show password"}
             className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
             onClick={() => setShowPassword((prev) => !prev)}
           >

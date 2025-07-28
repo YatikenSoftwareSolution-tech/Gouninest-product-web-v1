@@ -129,6 +129,7 @@ const ImageGalleryModal = ({
               <div className="flex items-center gap-4">
                 <button
                   onClick={onClose}
+                  aria-label="Close gallery"
                   className="hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all"
                 >
                   <ChevronLeft className="w-6 h-6" />
@@ -140,15 +141,17 @@ const ImageGalleryModal = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleShare}
+                  aria-label="Share property"
                   className="hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all"
                 >
                   <Share2 className="w-6 h-6" />
                 </button>
-                <button className="hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all">
+                <button aria-label="Add to favorites" className="hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all">
                   <Heart className="w-6 h-6" />
                 </button>
                 <button
                   onClick={onClose}
+                  aria-label="Close gallery"
                   className="hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all"
                 >
                   <X className="w-6 h-6" />
@@ -168,6 +171,7 @@ const ImageGalleryModal = ({
             <button
               onClick={prev}
               disabled={isTransitioning}
+              aria-label="Previous image"
               className="absolute left-4 z-10 bg-opacity-20 hover:bg-opacity-30 disabled:opacity-50 text-black p-3 rounded-full transition-all"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -185,6 +189,7 @@ const ImageGalleryModal = ({
             <button
               onClick={next}
               disabled={isTransitioning}
+              aria-label="Next image"
               className="absolute right-4 z-10 bg-opacity-20 hover:bg-opacity-30 disabled:opacity-50 text-black p-3 rounded-full transition-all"
             >
               <ChevronRight className="w-6 h-6" />
@@ -211,6 +216,7 @@ const ImageGalleryModal = ({
               {images.map((image, index) => (
                 <button
                   key={index}
+                  aria-label={`Go to image ${index + 1}`}
                   onClick={() => goToImage(index)}
                   className={`flex-shrink-0 w-24 h-18 mt-1 rounded overflow-hidden transition-all ${
                     current === index

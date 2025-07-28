@@ -63,12 +63,14 @@ const renderPhotosContent = (
               <button
                 onClick={handlePrevImage}
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md"
+                aria-label="Previous image"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={handleNextImage}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md"
+                aria-label="Next image"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>

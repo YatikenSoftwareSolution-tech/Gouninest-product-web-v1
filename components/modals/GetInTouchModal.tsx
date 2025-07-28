@@ -178,6 +178,7 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
                   {/* Country Dropdown Button */}
                   <button
                     type="button"
+                    aria-label="Select country calling code"
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsDropdownOpen(!isDropdownOpen);
@@ -233,6 +234,7 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
                           <button
                             key={`${country.callingCode}-${country.name}`}
                             type="button"
+                            aria-label={`Select country `}
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedCountry(country);

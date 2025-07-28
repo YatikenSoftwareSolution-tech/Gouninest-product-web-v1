@@ -132,6 +132,7 @@ const filteredCountries = allCountries.filter(
                 <div className="flex items-center border border-gray-300 rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-purple-500 transition-all">
                   <button
                     type="button"
+                    aria-label="Select country calling code"
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsDropdownOpen(!isDropdownOpen);
@@ -181,6 +182,7 @@ const filteredCountries = allCountries.filter(
                         <button
                           key={`${country.callingCode}-${country.name}`}
                           type="button"
+                          aria-label=" Select country"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCountry(country);

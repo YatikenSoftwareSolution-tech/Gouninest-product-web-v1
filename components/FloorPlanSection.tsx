@@ -206,6 +206,7 @@ const FloorPlanSection: React.FC<PropertyProps> = ({
                 <button
                   onClick={() => toggleFavorite(roomType.roomTypeSlug)}
                   className="p-2 max-sm:p-1 rounded-full hover:bg-gray-100 max-sm:self-start"
+                  aria-label={`Favorite ${roomType.roomName}`}
                 >
                   <Heart
                     className={`w-6 h-6 max-sm:w-5 max-sm:h-5 ${
@@ -406,6 +407,7 @@ const FloorPlanSection: React.FC<PropertyProps> = ({
             <button
               onClick={() => setIsAmenityModalOpen(false)}
               className="absolute top-2 right-2 text-gray-600 hover:text-black"
+              aria-label="Close amenities modal"
             >
               <X className="w-5 h-5 max-sm:w-4 max-sm:h-4 transition-transform duration-300 hover:rotate-90" />
             </button>

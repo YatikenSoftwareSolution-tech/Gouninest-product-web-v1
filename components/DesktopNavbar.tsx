@@ -181,10 +181,13 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
             {/* Phone Dropdown */}
             <div className="relative" ref={phoneDropdownRef}>
               <button
+
                 onClick={() => setShowPhoneDropdown(!showPhoneDropdown)}
+
                 className={`rounded-r-full py-2 pl-1 pr-3 ${
                   isScrolled ? "hover:bg-red-200" : "hover:bg-red-400"
                 } transition-colors duration-200`}
+                aria-label="Select phone number"
               >
                 <Image
                   src={
@@ -245,6 +248,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
                   ? "text-gray-800 bg-gray-200 hover:bg-gray-100"
                   : "text-white hover:bg-white hover:text-gray-800"
               }`}
+              aria-label="Account options"
             >
               <User size={32} />
               <ChevronDown

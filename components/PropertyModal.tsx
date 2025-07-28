@@ -150,15 +150,17 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
             <button
               onClick={handleShare}
               className="p-2 hover:bg-gray-100 rounded-full"
+              aria-label="Share property"
             >
               <Share2 className="w-5 h-5" />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
+            <button aria-label="Add to favorites" className="p-2 hover:bg-gray-100 rounded-full">
               <Heart className="w-5 h-5" />
             </button>
             <button
               onClick={() => setIsModalOpen(false)}
               className="p-2 hover:bg-gray-100 rounded-full"
+              aria-label="Close modal"
             >
               <X className="w-5 h-5 max-sm:w-4 max-sm:h-4 transition-transform duration-300 hover:rotate-90" />
             </button>
@@ -186,7 +188,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
           </div>
           <span className="text-xs sm:text-sm text-gray-500 flex items-center gap-1">
             Property ID: S0{selectedProperty.externalId || "32912"}
-            <button onClick={handleCopy}>
+            <button onClick={handleCopy} aria-label="Copy property ID">
               {copied ? (
                 <Check className="w-4 h-4 text-green-500" />
               ) : (
