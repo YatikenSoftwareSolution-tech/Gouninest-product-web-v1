@@ -8,7 +8,7 @@ import FloatingChatBot from "@/components/FloatingChatBot";
 
 export const metadata: Metadata = {
   title: "Go UniNest | Find Your Perfect Student Home",
-  description: "Discover affordable, verified student accommodation near top universities in the UK, Australia, and the US. Book stress-free with flexible leases, instant quotes, and global support.",
+  description: "Discover affordable, verified student accommodation near top universities in the UK, Australia, and USA.",
   keywords: [
     "student accommodation near university",
     "verified student housing",
