@@ -20,21 +20,21 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: yatiken
+          project_id: gouninest
 
       - name: Authenticate Docker with GCR
         run: gcloud auth configure-docker gcr.io
 
       - name: Build Docker Image
-        run: docker build -t gcr.io/yatiken/gouninest-web-image:latest -f Dockerfiles/Dockerfile .
+        run: docker build -t gcr.io/gouninest/gouninest-web-image:latest -f Dockerfiles/Dockerfile .
 
       - name: Push Docker Image to GCR
-        run: docker push gcr.io/yatiken/gouninest-web-image:latest
+        run: docker push gcr.io/gouninest/gouninest-web-image:latest
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy gouninest-web-service \
-            --image gcr.io/yatiken/gouninest-web-image:latest \
+          gcloud run deploy gouninest-web-app \
+            --image gcr.io/gouninest/gouninest-web-image:latest \
             --region us-central1 \
             --platform managed \
             --allow-unauthenticated \
