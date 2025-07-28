@@ -121,6 +121,12 @@ const Footer = () => {
               </h4>
               <ul className="space-y-3">
                 <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                  Become a Partner
+                </li>
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                  List your properties
+                </li>
+                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
                   Property Search
                 </li>
                 <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
