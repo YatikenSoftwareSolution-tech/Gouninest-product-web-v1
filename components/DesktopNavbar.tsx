@@ -103,9 +103,8 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
       <div className="max-w-7xl mx-auto px-5 flex items-center justify-between py-1 relative">
         {/* Logo */}
         <div
-          className={`flex-shrink-0 hidden md:flex ${
-            isScrolled ? "hidden" : ""
-          }`}
+          className={`flex-shrink-0 hidden md:flex ${isScrolled ? "hidden" : ""
+            }`}
         >
           <Link href="/" className="flex-shrink-0">
             <Image src={"/Logo.png"} alt="Go Uninest" height={60} width={60} />
@@ -138,14 +137,12 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
           {/* Refer to Earn */}
           <div className="hidden md:flex items-center space-x-6">
             <button
-              className={`flex items-center space-x-1 bg-gray-200/20 py-2 px-4 rounded-full ${
-                isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
-              }`}
+              className={`flex items-center space-x-1 bg-gray-200/20 py-2 px-4 rounded-full ${isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
+                }`}
             >
               <span
-                className={`font-medium ${
-                  isScrolled ? "text-gray-800" : "text-white"
-                }`}
+                className={`font-medium ${isScrolled ? "text-gray-800" : "text-white"
+                  }`}
               >
                 Refer to Earn
               </span>
@@ -157,24 +154,23 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
 
           {/* Contact Icons */}
           <div
-            className={`hidden md:flex gap-1 items-center rounded-full bg-white/20 ${
-              isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
-            }`}
+            className={`hidden md:flex gap-1 items-center rounded-full bg-white/20 ${isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
+              }`}
           >
             {/* WhatsApp Button */}
             <a
               href="https://wa.me/+442079933000"
               target="_blank"
               rel="noopener noreferrer"
-              className={`rounded-l-full py-2 pr-1 pl-3 ${
-                isScrolled ? "hover:bg-green-200" : "hover:bg-green-600"
-              } transition-colors duration-200`}
+              className={`rounded-l-full py-2 pr-1 pl-3 ${isScrolled ? "hover:bg-green-200" : "hover:bg-green-600"
+                } transition-colors duration-200`}
             >
               <Image
                 src={isScrolled ? "/whatsapp-color.png" : "/whatsapp-white.png"}
                 alt="whatsapp"
                 width={23}
                 height={25}
+                style={{ width: 30, height: "auto" }}
               />
             </a>
 
@@ -184,9 +180,8 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
 
                 onClick={() => setShowPhoneDropdown(!showPhoneDropdown)}
 
-                className={`rounded-r-full py-2 pl-1 pr-3 ${
-                  isScrolled ? "hover:bg-red-200" : "hover:bg-red-400"
-                } transition-colors duration-200`}
+                className={`rounded-r-full py-2 pl-1 pr-3 ${isScrolled ? "hover:bg-red-200" : "hover:bg-red-400"
+                  } transition-colors duration-200`}
                 aria-label="Select phone number"
               >
                 <Image
@@ -194,7 +189,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
                     isScrolled ? "/telephone-red.png" : "/telephone-white.png"
                   }
                   alt="telephone"
-                  width={23}
+                  width={25}
                   height={25}
                 />
               </button>
@@ -243,19 +238,17 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
             onMouseLeave={handleAccountMouseLeave}
           >
             <button
-              className={`flex items-center space-x-1 p-2 rounded-full ${
-                isScrolled
+              className={`flex items-center space-x-1 p-2 rounded-full ${isScrolled
                   ? "text-gray-800 bg-gray-200 hover:bg-gray-100"
                   : "text-white hover:bg-white hover:text-gray-800"
-              }`}
+                }`}
               aria-label="Account options"
             >
               <User size={32} />
               <ChevronDown
                 size={16}
-                className={`transition-transform ${
-                  showAccountDropdown ? "rotate-180" : ""
-                }`}
+                className={`transition-transform ${showAccountDropdown ? "rotate-180" : ""
+                  }`}
               />
             </button>
 

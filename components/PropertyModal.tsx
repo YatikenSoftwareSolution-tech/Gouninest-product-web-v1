@@ -125,8 +125,6 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     { id: "reviews", label: "Reviews", icon: MessageCircle },
   ];
 
-  console.log(selectedProperty)
-
   if (!isModalOpen) return null;
 
   return (

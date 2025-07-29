@@ -143,9 +143,8 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
           <Image
             src={property.images[currentImage] || "/placeholder.jpg"}
             alt={property.title}
-            height={208}
-            width={400}
-            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+            fill
+            className="object-cover h-full transition-transform duration-500 group-hover:scale-110"
             priority
           />
           <div
@@ -161,7 +160,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
               {Math.round(
                 ((property.originalPrice - property.price) /
                   property.originalPrice) *
-                  100
+                100
               )}
               %
             </Badge>
@@ -241,7 +240,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
                     {Math.round(
                       ((property.originalPrice - property.price) /
                         property.originalPrice) *
-                        100
+                      100
                     )}
                     %
                   </span>

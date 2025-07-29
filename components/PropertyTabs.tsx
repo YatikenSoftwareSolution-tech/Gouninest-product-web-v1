@@ -50,7 +50,8 @@ const PropertyTabs = () => {
                   alt={country!.country}
                   height={20}
                   width={24}
-                  className="h-5 w-8"
+                  className="w-8"
+                  style={{ height: 'auto' }}
                 />
                 <span className="">
                   {country!.country === "GB"
