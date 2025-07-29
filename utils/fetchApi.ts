@@ -1,4 +1,4 @@
-'use client';
+
 
 function getAuthToken(): string | null {
   if (typeof window !== 'undefined') {

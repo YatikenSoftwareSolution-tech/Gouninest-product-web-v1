@@ -54,7 +54,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <GlobalProvider>
           <Navbar />
+            
+          <main>
           {children}
+          </main>
           <FloatingHelpButton />
           <FloatingChatBot />
           <Footer />

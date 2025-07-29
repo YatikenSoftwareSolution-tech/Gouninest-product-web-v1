@@ -44,9 +44,7 @@ const FloatingHelpButton = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleEmailClick = () => {
-    window.location.href = "mailto:support@gouninest.com";
-  };
+
 
   return (
     <div className="fixed left-3 bottom-20 z-40 flex flex-col items-end gap-3">
@@ -56,14 +54,15 @@ const FloatingHelpButton = () => {
         onMouseEnter={() => setHoveredButton("email")}
         onMouseLeave={() => setHoveredButton(null)}
       >
+        <Link href="mailto:info@gouninest.com">
         <button
-          onClick={handleEmailClick}
           className="rounded-full p-1.5 shadow-sm transition-all duration-300
                    border border-red-400 text-red-500 bg-white hover:text-red-100 hover:bg-red-500"
           aria-label="Get help via email"
         >
           <Mail size={23} />
         </button>
+        </Link>
         {hoveredButton === "email" && (
           <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-10">
             <span className="text-sm font-medium">Get Help</span>

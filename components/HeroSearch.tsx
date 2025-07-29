@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import SearchTabs from "./SearchTabs";
 import { fetchApi } from "@/utils/fetchApi";
-import { Property } from "@/types/types";
+import { CountryCityPropertyCount, CountryLocationCount, CountryPropertyCount, Property, Universities } from "@/types/types";
 
 interface SuggestionItem {
   id?: string;
@@ -25,19 +25,24 @@ interface SuggestionItem {
 interface HeroSearchProps {
   showSuggestions: boolean;
   setShowSuggestions: (show: boolean) => void;
+  countryProperty: CountryPropertyCount[];
+  locations: CountryCityPropertyCount[];
+  countries: CountryLocationCount[];
+  universities: Universities[]
+
 }
 
 const HeroSearch = ({
   showSuggestions,
   setShowSuggestions,
+  countries,
+  locations,
+  universities,
+  countryProperty
 }: HeroSearchProps) => {
   const {
-    countries,
-    locations,
     fetchProperties,
-    setFilterData,
-    countryProperty,
-    universities
+    setFilterData
   } = useGlobal();
 
   const router = useRouter();
