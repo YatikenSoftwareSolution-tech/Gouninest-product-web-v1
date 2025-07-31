@@ -54,7 +54,7 @@ const FloatingHelpButton = () => {
         onMouseEnter={() => setHoveredButton("email")}
         onMouseLeave={() => setHoveredButton(null)}
       >
-        <Link href="mailto:info@gouninest.com">
+        <Link href="https://mail.google.com/mail/?view=cm&to=info@gouninest.co.uk" target="_blank" rel="noopener noreferrer">
         <button
           className="rounded-full p-1.5 shadow-sm transition-all duration-300
                    border border-red-400 text-red-500 bg-white hover:text-red-100 hover:bg-red-500"

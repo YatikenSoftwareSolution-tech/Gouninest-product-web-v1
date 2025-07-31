@@ -53,6 +53,7 @@ const Home = async () => {
             muted
             playsInline
             className="absolute w-full h-full object-cover"
+            preload="auto"
           />
           <div className="absolute inset-0 bg-black/30"></div>
         </div>

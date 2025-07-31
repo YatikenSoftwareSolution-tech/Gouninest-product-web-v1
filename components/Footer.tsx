@@ -1,5 +1,4 @@
-"use client";
-import { useGlobal } from "@/context/GlobalContext";
+
 import {
   MapPin,
   Mail,
@@ -10,11 +9,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const Footer = () => {
-  const { fetchProperties, setFilterData } = useGlobal();
-  const router = useRouter();
 
   const phoneNumbers = [
     { code: "+91", number: "9870468034", countryCode: "IN" },
@@ -46,14 +42,6 @@ const Footer = () => {
     NL: "Amsterdam",
   };
 
-  // Function to handle click on city links
-  const handleClick = async (city: string, country: string) => {
-    setFilterData({ city, country, keyword: "" });
-    fetchProperties(
-      `/properties/city-properties?country=${country}&city=${city}`
-    );
-    router.push(`/properties?city=${city}&country=${country}`);
-  };
   return (
     <footer className="bg-gray-900 text-white px-12 sm:px-6">
       {/* Main Footer Content */}
@@ -217,13 +205,13 @@ const Footer = () => {
               <h4 className="text-lg font-semibold text-white mb-6">Explore</h4>
               <ul className="space-y-3">
                 {Object.entries(countryNames).map(([code, name]) => (
+                  <Link key={code} href={`/properties?city=${cityMap[code]}&country=${code}`} >
                   <li
-                    key={code}
-                    onClick={() => handleClick(cityMap[code], code)}
                     className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
                   >
                     {name}
                   </li>
+                  </Link>
                 ))}
               </ul>
             </div>

@@ -19,7 +19,7 @@ import { AllCountries } from "@/types/types";
 interface GetInTouchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  propertyId?: string; 
+  propertyId?: string;
   isEnquiry?: boolean;
 }
 
@@ -30,14 +30,16 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
   isEnquiry = false,
 }) => {
   const { submitEnquiry } = useGlobal();
-  const [selectedCountry, setSelectedCountry] = useState<AllCountries | undefined>();
+  const [selectedCountry, setSelectedCountry] = useState<
+    AllCountries | undefined
+  >();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-    const { allCountries,fetchAllCountries } = useGlobal();
+  const { allCountries, fetchAllCountries } = useGlobal();
 
-    useEffect(() => { 
+  useEffect(() => {
     if (allCountries.length <= 0) {
       fetchAllCountries();
     }
@@ -83,8 +85,11 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
 
   const filteredCountries = allCountries.filter(
     (country) =>
-      country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(country.callingCode).toLowerCase().includes(searchTerm.toLowerCase())
+      country.name.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+      String(country.callingCode)
+        .toLowerCase()
+        .startsWith(searchTerm.toLowerCase()) ||
+      country.code.toLowerCase().startsWith(searchTerm.toLowerCase())
   );
 
   if (!isOpen) return null;
@@ -185,16 +190,20 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
                     }}
                     className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 transition-colors border-r border-gray-300 min-w-[120px]"
                   >
-                    {selectedCountry && <Image
-                      src={selectedCountry?.flag}
-                      alt={selectedCountry?.name}
-                      width={20}
-                      height={15}
-                      className="h-4 w-6 object-cover rounded-sm"
-                    />}
-                    {selectedCountry && <span className="text-sm font-medium text-gray-700">
-                      {selectedCountry.callingCode}
-                    </span>}
+                    {selectedCountry && (
+                      <Image
+                        src={selectedCountry?.flag}
+                        alt={selectedCountry?.name}
+                        width={20}
+                        height={15}
+                        className="h-4 w-6 object-cover rounded-sm"
+                      />
+                    )}
+                    {selectedCountry && (
+                      <span className="text-sm font-medium text-gray-700">
+                        {selectedCountry.callingCode}
+                      </span>
+                    )}
                     <ChevronDown
                       size={16}
                       className={`text-gray-500 transition-transform ${

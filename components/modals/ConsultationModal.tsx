@@ -48,8 +48,9 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
 const filteredCountries = allCountries.filter(
   (country) =>
-    country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    String(country.callingCode).toLowerCase().includes(searchTerm.toLowerCase())
+    country.name.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+    String(country.callingCode).toLowerCase().startsWith(searchTerm.toLowerCase())||
+    country.code.toLowerCase().startsWith(searchTerm.toLowerCase())
 );
 
   if (!isOpen) return null;

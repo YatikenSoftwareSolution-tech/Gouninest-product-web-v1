@@ -15,18 +15,18 @@ const Navbar = () => {
   const router = useRouter();
 
   const handleScroll = useCallback(() => {
-    if (typeof window !== "undefined") {
-      const heroHeight = window.innerHeight * 0.8;
-      const scrolled = window.scrollY > heroHeight;
+    if (typeof document !== "undefined") {
+      const heroHeight = (document.documentElement.clientHeight || 0) * 0.8;
+      const scrolled = (document.documentElement.scrollTop || document.body.scrollTop) > heroHeight;
       setIsScrolled(scrolled);
       setShowSearch(scrolled);
     }
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
+    if (typeof document !== "undefined") {
+      document.addEventListener("scroll", handleScroll);
+      return () => document.removeEventListener("scroll", handleScroll);
     }
   }, [handleScroll]);
 
