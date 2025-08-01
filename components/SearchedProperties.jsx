@@ -5,6 +5,45 @@ import FilterSidebar from "./FilterSidebar";
 import { ChevronDown } from "lucide-react";
 
 const SearchedProperties = ({ properties}) => {
+
+
+  // const renderHeading = () => {
+  //   if (filterData.country && filterData.city) {
+  //     return (
+  //       <>
+  //         Browse Properties in{" "}
+  //         <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
+  //           {filterData.city} - {filterData.country}
+  //         </span>
+  //       </>
+  //     )
+  //   } else if (filterData.country) {
+  //     return (<>
+  //       Browse Properties in{" "}
+  //       <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
+  //         {filterData.country}
+  //       </span>
+  //     </>)
+  //   } else if (filterData.university) {
+  //     return (<>
+  //       Browse Properties near{" "}
+  //       <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
+  //         {filterData.university}
+  //       </span>
+  //     </>)
+  //   } else {
+  //     return (
+  //       <>
+  //         Browse Properties by
+  //         <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
+  //           {" "}
+  //           Location
+  //         </span>
+  //       </>
+  //     )
+  //   }
+  // }
+
   // State for filtered properties
   const [filteredProperties, setFilteredProperties] =
     useState(properties);

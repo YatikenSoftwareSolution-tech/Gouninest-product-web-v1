@@ -1,3 +1,5 @@
+"use client";
+
 const TERMS_TEXT = `
 Terms and Conditions
 

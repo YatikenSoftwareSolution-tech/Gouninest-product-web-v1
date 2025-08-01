@@ -5,15 +5,16 @@ import { Property } from "@/types/types";
 import { fetchApi } from "@/utils/fetchApi";
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     country?: string;
     city?: string;
     university?: string;
-  };
+  }>;
 }
 
 export default async function Properties({ searchParams }: Props) {
-  const { country, city, university } = await searchParams;
+   const params = await searchParams;
+  const { country, city, university } = params;
   let properties: Property[] = [];
   let response;
   if (country && city) {
