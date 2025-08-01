@@ -1,6 +1,3 @@
-"use client"
-import { useCallback } from 'react';
-
 const TERMS_TEXT = `
 Terms and Conditions
 
@@ -89,7 +86,7 @@ Address: 85 Great Portland Street, First Floor, London, W1W 7LT
 
 
 const TermsPage = () => {
-  const downloadTerms = useCallback(() => {
+  const downloadTerms = () => {
     const blob = new Blob([TERMS_TEXT], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -99,7 +96,7 @@ const TermsPage = () => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }, []);
+  };
   return (
     <section className="py-20 flex flex-col justify-center items-center gap-4">
       <div className="max-w-4xl mx-auto relative">

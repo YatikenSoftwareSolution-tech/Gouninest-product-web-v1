@@ -1,36 +1,43 @@
-"use client";
 
-import PropertiesHero from "@/components/PropertiesHero";
-import PropertiesLocationTabs from "@/components/PropertiesLocationTabs";
-import ScrollTransition from "@/components/ScrollTransition";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+// import PropertiesLocationTabs from "@/components/PropertiesLocationTabs";
+import SearchedProperties from "@/components/SearchedProperties";
+import { Property } from "@/types/types";
+import { fetchApi } from "@/utils/fetchApi";
 
-const PropertiesContent = () => {
-  const searchParams = useSearchParams();
-  const country = searchParams.get("country");
-  const city = searchParams.get("city");
-  const university = searchParams.get("university");
+interface Props {
+  searchParams: {
+    country?: string;
+    city?: string;
+    university?: string;
+  };
+}
 
-  const hasFilters = (country !== null && city !== null) || university !== null;
+export default async function Properties({ searchParams }: Props) {
+  const { country, city, university } = await searchParams;
+  let properties: Property[] = [];
+  let response;
+  if (country && city) {
+    response = await fetchApi(`/properties/searchproperties?country=${country}&city=${city}`);
+  } else if (university) {
+    response = await fetchApi(`/properties/searchproperties?keyword=${university}&field=university`);
+  }
 
-  return (
-    <>
-      {!hasFilters && <PropertiesHero />}
-      <ScrollTransition />
-      <PropertiesLocationTabs />
-    </>
-  );
-};
-
-const Properties = () => {
+  if (
+        response &&
+        typeof response === "object" &&
+        "properties" in response
+      ) {
+    properties = response.properties as Property[];
+  } else {
+    properties = [];
+  }
   return (
     <div className="min-h-screen">
-      <Suspense fallback={null}>
-        <PropertiesContent />
-      </Suspense>
+      {properties.length > 0 ? (
+        <SearchedProperties properties={properties} />
+      ) : (
+        <p>No properties found.</p>
+      )}
     </div>
   );
-};
-
-export default Properties;
+}

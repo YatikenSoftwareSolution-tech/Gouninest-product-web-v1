@@ -1,17 +1,14 @@
 "use client";
 
 
-import { useGlobal } from "@/context/GlobalContext";
-
 import SearchedProperties from "./SearchedProperties";
 import PropertyTabs from "./PropertyTabs";
 import { useEffect, useState } from "react";
 import { fetchTopProperties } from "@/constants/api";
-import { CountryPropertyCount } from "@/types/types";
+import { CountryPropertyCount, Property } from "@/types/types";
 
-const PropertiesLocationTabs = () => {
+const PropertiesLocationTabs = ({ properties }: { properties: Property[] }) => {
   const [countryProperty, setCountryProperty] = useState<CountryPropertyCount[]>([]);
-  const { properties, filterData } = useGlobal();
 
   useEffect(() => {
 
@@ -26,7 +23,7 @@ const PropertiesLocationTabs = () => {
     return <PropertyTabs countryProperty={countryProperty}/>;
   } else {
     return (
-      <SearchedProperties properties={properties} filterData={filterData}/>
+      <SearchedProperties properties={properties}/>
     );
   }
 };

@@ -1,12 +1,13 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import DetailedPropertyCard from "./DetailedPropertyCard";
 import FilterSidebar from "./FilterSidebar";
 import { ChevronDown } from "lucide-react";
 
-const SearchedProperties = ({ properties: initialProperties, filterData }) => {
+const SearchedProperties = ({ properties}) => {
   // State for filtered properties
   const [filteredProperties, setFilteredProperties] =
-    useState(initialProperties);
+    useState(properties);
   // State for all filter criteria
   const [filters, setFilters] = useState({
     priceRange: { min: 0, max: 15000 },
@@ -31,7 +32,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
 
   // Filter and sort properties whenever filters or sort option changes
   useEffect(() => {
-    let filtered = [...initialProperties];
+    let filtered = [...properties];
 
     // Apply filters
     filtered = filtered.filter((property) => {
@@ -112,7 +113,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
     filtered = sortProperties(filtered, sortOption);
 
     setFilteredProperties(filtered);
-  }, [filters, initialProperties, sortOption]);
+  }, [filters, properties, sortOption]);
 
   // Sort properties based on selected option
   const sortProperties = (properties, option) => {
@@ -175,43 +176,6 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
     setIsSortOpen(false);
   };
 
-  const renderHeading = () => {
-    if (filterData.country && filterData.city) {
-      return (
-        <>
-          Browse Properties in{" "}
-          <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-            {filterData.city} - {filterData.country}
-          </span>
-        </>
-      )
-    } else if (filterData.country) {
-      return (<>
-        Browse Properties in{" "}
-        <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-          {filterData.country}
-        </span>
-      </>)
-    } else if (filterData.university) {
-      return (<>
-        Browse Properties near{" "}
-        <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-          {filterData.university}
-        </span>
-      </>)
-    } else {
-      return (
-        <>
-          Browse Properties by
-          <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-            {" "}
-            Location
-          </span>
-        </>
-      )
-    }
-  }
-
   return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -234,7 +198,7 @@ const SearchedProperties = ({ properties: initialProperties, filterData }) => {
             <div className="">
               <FilterSidebar
                 filters={filters}
-                initialProperties={initialProperties}
+                initialProperties={properties}
                 onPriceRangeChange={handlePriceRangeChange}
                 onCheckboxChange={handleCheckboxChange}
                 onClearFilters={clearFilters}
