@@ -7,42 +7,7 @@ import { ChevronDown } from "lucide-react";
 const SearchedProperties = ({ properties}) => {
 
 
-  // const renderHeading = () => {
-  //   if (filterData.country && filterData.city) {
-  //     return (
-  //       <>
-  //         Browse Properties in{" "}
-  //         <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-  //           {filterData.city} - {filterData.country}
-  //         </span>
-  //       </>
-  //     )
-  //   } else if (filterData.country) {
-  //     return (<>
-  //       Browse Properties in{" "}
-  //       <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-  //         {filterData.country}
-  //       </span>
-  //     </>)
-  //   } else if (filterData.university) {
-  //     return (<>
-  //       Browse Properties near{" "}
-  //       <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-  //         {filterData.university}
-  //       </span>
-  //     </>)
-  //   } else {
-  //     return (
-  //       <>
-  //         Browse Properties by
-  //         <span className="text-gradient bg-gradient-to-r from-[var(--color-electric-500)] to-amber-500 bg-clip-text text-transparent">
-  //           {" "}
-  //           Location
-  //         </span>
-  //       </>
-  //     )
-  //   }
-  // }
+
 
   // State for filtered properties
   const [filteredProperties, setFilteredProperties] =
@@ -216,20 +181,8 @@ const SearchedProperties = ({ properties}) => {
   };
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className=" bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Explore our verified student accommodations across top university
-            cities in the UK, Australia, and the USA. Each listing is curated to
-            ensure affordability, accessibility, and comfort, no matter where
-            you&apos;re headed.
-          </p>
-        </div>
 
         <div className="flex flex-col ">
           <div className="flex justify-between md:mb-0 mb-6">
