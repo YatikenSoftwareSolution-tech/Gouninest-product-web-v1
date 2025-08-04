@@ -31,16 +31,7 @@ import { Property } from "@/types/types";
 import PropertyModal from "./PropertyModal";
 
 interface DetailedPropertyCardProps {
-  // key: string;
   property: Property;
-  // id: string;
-  // title: string;
-  // location: string;
-  // price: number;
-  // image: string;
-  // rating: number;
-  // capacity: number;
-  // amenities: string[];
 }
 
 // Currency symbols mapping
@@ -115,10 +106,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
   };
 
   const htmlToPlainText = (html: string) => {
-    if (typeof window === "undefined") return html;
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    return doc.body.textContent || "";
+    return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
   };
 
   const plainDescription = htmlToPlainText(
@@ -195,7 +183,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
             {plainDescription.split(" ").length > 25 && "..."}
           </p>
 
-          <div className="flex items-center text-gray-600 mb-2">
+          <div className="flex text-gray-600 mb-2">
             <MapPin className="w-4 h-4 mr-1 text-electric-500" />
             <span className="text-sm">{property.location.address}</span>
           </div>
