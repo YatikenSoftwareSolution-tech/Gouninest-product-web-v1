@@ -10,7 +10,6 @@ const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
 
@@ -39,14 +38,9 @@ const Navbar = () => {
     }
   };
 
-  const handleLinkClick = () => {
-    setIsOpen(false);
-    setShowAccountDropdown(false);
-  };
-
   return (
     <>
-      <nav style={{ zIndex: 40 }}
+      <nav style={{ zIndex: 90 }}
         className={`fixed top-0 left-0 right-0 transition-all duration-300 ${
           isScrolled
             ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm"
@@ -61,8 +55,6 @@ const Navbar = () => {
               searchValue={searchValue}
               setSearchValue={setSearchValue}
               handleSearch={handleSearch}
-              showAccountDropdown={showAccountDropdown}
-              setShowAccountDropdown={setShowAccountDropdown}
               setShowModal={setShowModal}
             />
           </div>
@@ -74,10 +66,7 @@ const Navbar = () => {
               searchValue={searchValue}
               setSearchValue={setSearchValue}
               handleSearch={handleSearch}
-              showAccountDropdown={showAccountDropdown}
-              setShowAccountDropdown={setShowAccountDropdown}
               setShowModal={setShowModal}
-              handleLinkClick={handleLinkClick}
             />
           </div>
         </div>

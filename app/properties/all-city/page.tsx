@@ -1,13 +1,19 @@
-"use client";
-
-import { useGlobal } from "@/context/GlobalContext";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
 import DetailedPropertyCard from "@/components/DetailedPropertyCard";
-import { Suspense } from "react"; 
+import Link from "next/link";
+import {
+  fetchImages,
+  fetchPropertiesCountInLocations,
+  fetchTopProperties,
+} from "@/constants/api";
+import { CountryCityPropertyCount, CountryPropertyCount } from "@/types/types";
 
-// Supported countries list
+interface CityImageType {
+  country: string;
+  cities: { _id: string; imageUrl: string }[];
+}
+
 const countryNameMap: Record<string, string> = {
   GB: "UK",
   AU: "Australia",
@@ -20,17 +26,20 @@ const countryNameMap: Record<string, string> = {
   NL: "Netherlands",
 };
 
+const Page = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ country: string }>;
+}) => {
+  const { country } = await searchParams;
 
-const Page = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const country = searchParams.get("country");
-  const { locations, countryProperty, fetchProperties, cityImages } = useGlobal();
-
-  console.log("aaa: ", country);
+  const [locations, countryProperty, cityImages] = await Promise.all([
+    fetchPropertiesCountInLocations() as Promise<CountryCityPropertyCount[]>,
+    fetchTopProperties() as Promise<CountryPropertyCount[]>,
+    fetchImages() as Promise<CityImageType[]>,
+  ]);
 
   const countryData = locations.find((loc) => loc.country === country);
-
   const selectedCountryProperties =
     countryProperty.find((entry) => entry.country === country)?.properties ||
     [];
@@ -45,18 +54,9 @@ const Page = () => {
 
   const getCityImage = (country: string, city: string) => {
     const countryObj = cityImages.find((c) => c.country === country);
-    if (!countryObj) return "/placeholder.jpg"; // fallback
-    const cities = countryObj.cities as { _id: string; imageUrl: string }[];
-    const cityObj = cities.find((c) => c._id === city);
+    if (!countryObj) return "/placeholder.jpg";
+    const cityObj = countryObj.cities.find((c) => c._id === city);
     return cityObj?.imageUrl || "/placeholder.jpg";
-  };
-  
-
-  const handleCities = (city: string, country: string) => {
-    fetchProperties(
-      `/properties/city-properties?country=${country}&city=${city}`
-    );
-    router.push(`/properties?city=${city}&country=${country}`);
   };
 
   return (
@@ -65,35 +65,32 @@ const Page = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4 sm:gap-6">
           <div className="sm:ml-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 animate-fade-in">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
               All Cities in{" "}
               <span className="text-gradient">
                 {countryNameMap[country || ""] ?? country}
               </span>
             </h2>
-            <p
-              className="text-gray-600 mt-1 text-sm sm:text-base animate-fade-in"
-              style={{ animationDelay: "0.2s" }}
-            >
+            <p className="text-gray-600 mt-1 text-sm sm:text-base">
               {countryData.cities.length} cities available
             </p>
           </div>
-          <button
-            onClick={() => router.back()}
+          <Link
+            href="/"
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 shadow transition duration-300"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-medium">Back</span>
-          </button>
+          </Link>
         </div>
 
         {/* Cities grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
           {countryData.cities.map((city, idx) => (
-            <div
-              className="relative rounded-lg overflow-hidden shadow group cursor-pointer"
+            <Link
+              className="relative rounded-lg overflow-hidden shadow group"
               key={idx}
-              onClick={() => handleCities(city.name, countryData.country)}
+              href={`/properties?city=${city.name}&country=${countryData.country}`}
             >
               <Image
                 src={getCityImage(countryData.country, city.name)}
@@ -107,7 +104,7 @@ const Page = () => {
                   {city.name} ({city.count})
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -134,15 +131,4 @@ const Page = () => {
   );
 };
 
-// ✅ Wrap and export with Suspense
-export default function SuspendedPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="py-20 text-center text-gray-500">Loading...</div>
-      }
-    >
-      <Page />
-    </Suspense>
-  );
-}
+export default Page;

@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, Menu, X, ChevronDown } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
 
 interface MobileNavbarProps {
   isScrolled: boolean;
@@ -11,12 +11,7 @@ interface MobileNavbarProps {
   searchValue: string;
   setSearchValue: (value: string) => void;
   handleSearch: (e: React.FormEvent) => void;
-  showAccountDropdown: boolean;
-  setShowAccountDropdown: (
-    value: boolean | ((prev: boolean) => boolean)
-  ) => void;
   setShowModal: (value: boolean) => void;
-  handleLinkClick: () => void;
 }
 
 const MobileNavbar: React.FC<MobileNavbarProps> = ({
@@ -26,41 +21,9 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
   searchValue,
   setSearchValue,
   handleSearch,
-  showAccountDropdown,
-  setShowAccountDropdown,
   setShowModal,
-  handleLinkClick,
 }) => {
-  const mobileAccountDropdownRef = useRef<HTMLDivElement>(null);
-  const mobileAccountDropdownTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const setDropdownTimeout = (
-    ref: React.MutableRefObject<NodeJS.Timeout | null>,
-    fn: () => void
-  ) => {
-    ref.current = setTimeout(fn, 100);
-  };
-
-  const clearDropdownTimeout = (
-    ref: React.MutableRefObject<NodeJS.Timeout | null>
-  ) => {
-    if (ref.current) clearTimeout(ref.current);
-  };
-
-  const handleMobileAccountMouseEnter = () => {
-    clearDropdownTimeout(mobileAccountDropdownTimeout);
-    setShowAccountDropdown(true);
-  };
-
-  const handleMobileAccountMouseLeave = () => {
-    setDropdownTimeout(mobileAccountDropdownTimeout, () =>
-      setShowAccountDropdown(false)
-    );
-  };
-
-  const toggleMobileAccountDropdown = () => {
-    setShowAccountDropdown((prev) => !prev);
-  };
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
@@ -148,7 +111,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
           >
             {/* WhatsApp */}
             <a
-              href="https://wa.me/919876543210"
+              href="https://wa.me/+442079933000"
               target="_blank"
               rel="noopener noreferrer"
               className={`rounded-l-full py-2 pr-1 pl-3 ${
@@ -242,44 +205,18 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
                 Get in Touch
               </button>
 
-              {/* Account Dropdown */}
-              <div
-                ref={mobileAccountDropdownRef}
-                onMouseEnter={handleMobileAccountMouseEnter}
-                onMouseLeave={handleMobileAccountMouseLeave}
-              >
-                <button
-                  onClick={toggleMobileAccountDropdown}
-                  className="flex items-center justify-between w-full text-white transition-colors hover:text-red-400"
-                  aria-label="Account options"
+              {/* Exclusive Offers - redirect to whatsapp */}
+              <div>
+                <Link
+                  href="https://wa.me/+442079933000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--color-electric-500)] to-lime-600 rounded-full p-3 "
                 >
-                  <span>Account</span>
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform ${
-                      showAccountDropdown ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-
-                {showAccountDropdown && (
-                  <div className="pl-2 mt-2 space-y-1">
-                    <Link
-                      href="/login"
-                      onClick={handleLinkClick}
-                      className="block text-white text-sm py-2 hover:text-red-400"
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      href="/signup"
-                      onClick={handleLinkClick}
-                      className="block text-white text-sm py-2 hover:text-red-400"
-                    >
-                      Sign Up
-                    </Link>
-                  </div>
-                )}
+                  <span className="text-white font-semibold">
+                    Exclusive Offers
+                  </span>
+                </Link>
               </div>
             </div>
           </div>

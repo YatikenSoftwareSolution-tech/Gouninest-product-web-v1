@@ -2,7 +2,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, User, ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Search } from "lucide-react";
 
 interface Contact {
   code: string;
@@ -16,25 +17,33 @@ interface DesktopNavbarProps {
   searchValue: string;
   setSearchValue: (value: string) => void;
   handleSearch: (e: React.FormEvent) => void;
-  showAccountDropdown: boolean;
-  setShowAccountDropdown: (value: boolean) => void;
   setShowModal: (value: boolean) => void;
 }
 
 const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
-  isScrolled,
+  isScrolled: initialIsScrolled,
   showSearch,
   searchValue,
   setSearchValue,
   handleSearch,
-  showAccountDropdown,
-  setShowAccountDropdown,
   setShowModal,
 }) => {
-  const accountDropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
   const phoneDropdownRef = useRef<HTMLDivElement>(null);
-  const accountDropdownTimeout = useRef<NodeJS.Timeout | null>(null);
   const [showPhoneDropdown, setShowPhoneDropdown] = useState(false);
+
+  // Determine if we should force isScrolled based on pathname
+  const isHomePage = pathname === "/";
+  // Always start with true for non-home pages, then respect scroll for home page
+  const [isScrolled, setIsScrolled] = useState(!isHomePage);
+
+  useEffect(() => {
+    if (isHomePage) {
+      setIsScrolled(initialIsScrolled);
+    } else {
+      setIsScrolled(true);
+    }
+  }, [initialIsScrolled, isHomePage]);
 
   // Handle clicks outside phone dropdown
   useEffect(() => {
@@ -55,30 +64,6 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showPhoneDropdown]);
-
-  const setDropdownTimeout = (
-    ref: React.MutableRefObject<NodeJS.Timeout | null>,
-    fn: () => void
-  ) => {
-    ref.current = setTimeout(fn, 100);
-  };
-
-  const clearDropdownTimeout = (
-    ref: React.MutableRefObject<NodeJS.Timeout | null>
-  ) => {
-    if (ref.current) clearTimeout(ref.current);
-  };
-
-  const handleAccountMouseEnter = () => {
-    clearDropdownTimeout(accountDropdownTimeout);
-    setShowAccountDropdown(true);
-  };
-
-  const handleAccountMouseLeave = () => {
-    setDropdownTimeout(accountDropdownTimeout, () =>
-      setShowAccountDropdown(false)
-    );
-  };
 
   const contacts: Contact[] = [
     {
@@ -103,8 +88,9 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
       <div className="max-w-7xl mx-auto px-5 flex items-center justify-between py-1 relative">
         {/* Logo */}
         <div
-          className={`flex-shrink-0 hidden md:flex ${isScrolled ? "hidden" : ""
-            }`}
+          className={`flex-shrink-0 hidden md:flex ${
+            isScrolled ? "hidden" : ""
+          }`}
         >
           <Link href="/" className="flex-shrink-0">
             <Image src={"/Logo.png"} alt="Go Uninest" height={60} width={60} />
@@ -137,12 +123,14 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
           {/* Refer to Earn */}
           <div className="hidden md:flex items-center space-x-6">
             <button
-              className={`flex items-center space-x-1 bg-gray-200/20 py-2 px-4 rounded-full ${isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
-                }`}
+              className={`flex items-center space-x-1 bg-gray-200/20 py-2 px-4 rounded-full ${
+                isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
+              }`}
             >
               <span
-                className={`font-medium ${isScrolled ? "text-gray-800" : "text-white"
-                  }`}
+                className={`font-medium ${
+                  isScrolled ? "text-gray-800" : "text-white"
+                }`}
               >
                 Refer to Earn
               </span>
@@ -154,16 +142,18 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
 
           {/* Contact Icons */}
           <div
-            className={`hidden md:flex gap-1 items-center rounded-full bg-white/20 ${isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
-              }`}
+            className={`hidden md:flex gap-1 items-center rounded-full bg-white/20 ${
+              isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
+            }`}
           >
             {/* WhatsApp Button */}
-            <a
+            <Link
               href="https://wa.me/+442079933000"
               target="_blank"
               rel="noopener noreferrer"
-              className={`rounded-l-full py-2 pr-1 pl-3 ${isScrolled ? "hover:bg-green-200" : "hover:bg-green-600"
-                } transition-colors duration-200`}
+              className={`rounded-l-full py-2 pr-1 pl-3 ${
+                isScrolled ? "hover:bg-green-200" : "hover:bg-green-600"
+              } transition-colors duration-200`}
             >
               <Image
                 src={isScrolled ? "/whatsapp-color.png" : "/whatsapp-white.png"}
@@ -172,16 +162,15 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
                 height={25}
                 style={{ width: 30, height: "auto" }}
               />
-            </a>
+            </Link>
 
             {/* Phone Dropdown */}
             <div className="relative" ref={phoneDropdownRef}>
               <button
-
                 onClick={() => setShowPhoneDropdown(!showPhoneDropdown)}
-
-                className={`rounded-r-full py-2 pl-1 pr-3 ${isScrolled ? "hover:bg-red-200" : "hover:bg-red-400"
-                  } transition-colors duration-200`}
+                className={`rounded-r-full py-2 pl-1 pr-3 ${
+                  isScrolled ? "hover:bg-red-200" : "hover:bg-red-400"
+                } transition-colors duration-200`}
                 aria-label="Select phone number"
               >
                 <Image
@@ -198,7 +187,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
                 <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                   <div className="max-h-60 overflow-y-auto">
                     {contacts.map((contact, index) => (
-                      <a
+                      <Link
                         key={index}
                         href={`tel:${contact.dial.replace(/\s/g, "")}`}
                         onClick={() => setShowPhoneDropdown(false)}
@@ -214,7 +203,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
                         <span className="text-sm text-gray-800 font-medium">
                           {contact.dial}
                         </span>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -230,44 +219,16 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
             Get in Touch
           </button>
 
-          {/* Account Dropdown */}
-          <div
-            className="relative dropdown-container hidden md:flex"
-            ref={accountDropdownRef}
-            onMouseEnter={handleAccountMouseEnter}
-            onMouseLeave={handleAccountMouseLeave}
-          >
-            <button
-              className={`flex items-center space-x-1 p-2 rounded-full ${isScrolled
-                  ? "text-gray-800 bg-gray-200 hover:bg-gray-100"
-                  : "text-white hover:bg-white hover:text-gray-800"
-                }`}
-              aria-label="Account options"
+          {/* Exclusive Offers - redirect to whatsapp*/}
+          <div>
+            <Link
+              href="https://wa.me/+442079933000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1 bg-gradient-to-r from-[var(--color-electric-500)] to-lime-600 py-2 px-4 rounded-full shadow-sm"
             >
-              <User size={32} />
-              <ChevronDown
-                size={16}
-                className={`transition-transform ${showAccountDropdown ? "rotate-180" : ""
-                  }`}
-              />
-            </button>
-
-            {showAccountDropdown && (
-              <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                <Link
-                  href="/login"
-                  className="block px-4 py-2 text-gray-800 hover:bg-red-100"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/signup"
-                  className="block px-4 py-2 text-gray-800 hover:bg-red-100"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
+              <span className="font-medium text-white">Exclusive Offers</span>
+            </Link>
           </div>
         </div>
       </div>

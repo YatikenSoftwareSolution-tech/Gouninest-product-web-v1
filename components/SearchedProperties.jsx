@@ -6,9 +6,6 @@ import { ChevronDown } from "lucide-react";
 
 const SearchedProperties = ({ properties}) => {
 
-
-
-
   // State for filtered properties
   const [filteredProperties, setFilteredProperties] =
     useState(properties);

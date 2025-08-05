@@ -51,3 +51,13 @@ export const fetchUniversities = async () => {
         return [];
     }
 }
+
+export const fetchPropertyById = async (id: string) => {
+    try {
+        const response = await fetchApi(`/properties/${id}`);
+        return response;
+    } catch (err) {
+        console.error("Failed to fetch property by ID:", err);
+        return null;
+    }
+};

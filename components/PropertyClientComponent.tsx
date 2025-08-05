@@ -1,43 +1,45 @@
+// PropertyClientComponent.tsx
 "use client";
-import React, { useState } from "react";
-import {
-  MapPin,
-  Users,
-  Star,
-  X,
-  Heart,
-  Share2,
-  Home,
-  MessageCircle,
-  Copy,
-  Check,
-  Shield,
-} from "lucide-react";
-// import Image from "next/image";
+import React from "react";
 import { Property } from "@/types/types";
-import { RenderTabContent } from "./RendorTabContent";
-import RightFormSection from "./RightFormSection";
+import { renderGalleryTabContent } from "@/components/GalleryTabContent";
+import { RenderTabContent } from "@/components/RendorTabContent";
+import RightFormSection from "@/components/RightFormSection";
+import {
+  ArrowLeft,
+  Check,
+  Copy,
+  Heart,
+  Home,
+  MapPin,
+  MessageCircle,
+  Share2,
+  Shield,
+  Star,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
 import ImageGalleryModal from "./modals/ImageGalleryModal";
-import { renderGalleryTabContent } from "./GalleryTabContent";
 
-interface PropertyModalProps {
-  isModalOpen: boolean;
-  setIsModalOpen: (open: boolean) => void;
-  selectedProperty: Property;
+// const ImageGalleryModal = dynamic(
+//   () => import("@/components/modals/ImageGalleryModal"),
+//   { ssr: false }
+// );
+
+interface PropertyClientComponentProps {
+  property: Property;
 }
 
-const PropertyModal: React.FC<PropertyModalProps> = ({
-  isModalOpen,
-  setIsModalOpen,
-  selectedProperty,
-}) => {
-  const [gridMode, setGridMode] = useState(false);
-  const [imageModalOpen, setImageModalOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState("basic-info");
-  const [activeGalleryTab, setActiveGalleryTab] = useState("photos");
-  const [copied, setCopied] = useState(false);
-  const [formData, setFormData] = useState({
+export default function PropertyClientComponent({
+  property,
+}: PropertyClientComponentProps) {
+  const [activeTab, setActiveTab] = React.useState("basic-info");
+  const [activeGalleryTab, setActiveGalleryTab] = React.useState("photos");
+  const [copied, setCopied] = React.useState(false);
+  const [imageModalOpen, setImageModalOpen] = React.useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = React.useState(0);
+  const [gridMode, setGridMode] = React.useState(false);
+  const [formData, setFormData] = React.useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -46,9 +48,10 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     agreePrivacy: false,
   });
 
+  // console.log("topProperties", topProperties);
 
   const handleCopy = () => {
-    const textToCopy = selectedProperty._id || "32912";
+    const textToCopy = property?._id || "32912";
     navigator.clipboard.writeText(textToCopy).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -58,7 +61,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
   const handleShare = async () => {
     try {
       const shareData = {
-        title: document.title,
+        title: property?.title || "Property on UniNest",
         text: "Check out this property on UniNest",
         url: window.location.href,
       };
@@ -88,16 +91,16 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
   };
 
   const handleNextImage = () => {
-    if (!selectedProperty.images) return;
+    if (!property?.images) return;
     setSelectedImageIndex((prev) =>
-      prev === selectedProperty.images.length - 1 ? 0 : prev + 1
+      prev === property.images.length - 1 ? 0 : prev + 1
     );
   };
 
   const handlePrevImage = () => {
-    if (!selectedProperty.images) return;
+    if (!property?.images) return;
     setSelectedImageIndex((prev) =>
-      prev === 0 ? selectedProperty.images.length - 1 : prev - 1
+      prev === 0 ? property.images.length - 1 : prev - 1
     );
   };
 
@@ -105,10 +108,8 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     setActiveGalleryTab(tabId);
   };
 
-  const videos = selectedProperty.media.videos
-  const vrs = selectedProperty.media.vrs
-
-  
+  const videos = property?.media?.videos || [];
+  const vrs = property?.media?.vrs || [];
 
   const galleryTabs = [
     { id: "photos", label: "Photos" },
@@ -125,26 +126,42 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
     { id: "reviews", label: "Reviews", icon: MessageCircle },
   ];
 
-  if (!isModalOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[999] overflow-y-auto bg-white mt-16 px-2 sm:px-4 md:px-8 lg:px-36">
+    <div className="bg-white pt-16 px-2 sm:px-4 md:px-8 lg:px-36">
       <div className="px-2 py-2 sm:px-4 sm:py-4">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <h1 className="text-lg sm:text-2xl font-bold text-gray-900 line-clamp-2">
-              {selectedProperty.title}
+              {property?.title}
             </h1>
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-              <span className="font-semibold">{selectedProperty.ratings}</span>
+              <span className="font-semibold">{property?.ratings}</span>
               <span className="text-gray-500 text-sm sm:text-base">
-                ({selectedProperty.reviews} reviews)
+                ({property?.reviews} reviews)
               </span>
             </div>
           </div>
-          <div className="flex items-center justify-end gap-2">
+          <div className="hidden sm:flex items-center ">
+            <Link
+              href={"/"}
+              className="flex items-center gap-2 mr-1 bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full text-xs sm:text-base"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Link>
+          </div>
+
+          <div className="flex sm:hidden absolute top-2 right-2">
+            <Link
+              href={"/"}
+              className="flex items-center gap-2 mr-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="absolute top-10 right-2 flex items-center justify-end gap-2">
             <button
               onClick={handleShare}
               className="p-2 hover:bg-gray-100 rounded-full"
@@ -152,15 +169,11 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
             >
               <Share2 className="w-5 h-5" />
             </button>
-            <button aria-label="Add to favorites" className="p-2 hover:bg-gray-100 rounded-full">
-              <Heart className="w-5 h-5" />
-            </button>
             <button
-              onClick={() => setIsModalOpen(false)}
+              aria-label="Add to favorites"
               className="p-2 hover:bg-gray-100 rounded-full"
-              aria-label="Close modal"
             >
-              <X className="w-5 h-5 max-sm:w-4 max-sm:h-4 transition-transform duration-300 hover:rotate-90" />
+              <Heart className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -168,11 +181,13 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
         {/* Property Tags */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs sm:text-sm">
-            📚 {selectedProperty.propertyType}
+            📚 {property?.propertyType}
           </span>
-          {selectedProperty.verified && <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs sm:text-sm">
-            ✅ { "Verified"}
-          </span>}
+          {property?.verified && (
+            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs sm:text-sm">
+              ✅ Verified
+            </span>
+          )}
         </div>
 
         {/* Address and ID */}
@@ -180,12 +195,12 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
           <div className="flex items-center gap-2 text-gray-600 text-sm sm:text-base">
             <MapPin className="w-4 h-4" />
             <span className="line-clamp-1">
-              {selectedProperty.title},{" "}
-              {selectedProperty.location?.address || "Address not available"}
+              {property?.title},{" "}
+              {property?.location?.address || "Address not available"}
             </span>
           </div>
           <span className="text-xs sm:text-sm text-gray-500 flex items-center gap-1">
-            Property ID: S0{selectedProperty.externalId || "32912"}
+            Property ID: S0{property?.externalId || "32912"}
             <button onClick={handleCopy} aria-label="Copy property ID">
               {copied ? (
                 <Check className="w-4 h-4 text-green-500" />
@@ -211,7 +226,6 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
                   }`}
                 >
                   {tab.label}
-                  {/* <span className="pl-0 h-10 bg-black"></span> */}
                   {activeGalleryTab === tab.id && (
                     <span className="w-2 h-2 bg-white rounded-full opacity-80"></span>
                   )}
@@ -223,7 +237,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
           <div className="w-full">
             {renderGalleryTabContent(
               activeGalleryTab,
-              { ...selectedProperty, videos, vrs },
+              { ...property, videos, vrs },
               gridMode,
               selectedImageIndex,
               setSelectedImageIndex,
@@ -272,8 +286,8 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
                       <span className="font-medium">Address</span>
                     </div>
                     <p className="text-gray-600 text-sm">
-                      {selectedProperty.title},{" "}
-                      {selectedProperty.location?.address || "Not available"}
+                      {property.title},{" "}
+                      {property.location?.address || "Not available"}
                     </p>
                   </div>
                   <div className="h-64 rounded-lg overflow-hidden border border-gray-200">
@@ -284,8 +298,8 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
                       style={{ border: 0 }}
                       referrerPolicy="no-referrer-when-downgrade"
                       src={`https://www.google.com/maps?q=${encodeURIComponent(
-                        `${selectedProperty.title}, ${
-                          selectedProperty?.location?.address || "New Delhi"
+                        `${property.title}, ${
+                          property?.location?.address || "New Delhi"
                         }`
                       )}&output=embed`}
                       allowFullScreen
@@ -295,7 +309,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
               ) : (
                 <RenderTabContent
                   activeTab={activeTab}
-                  selectedProperty={selectedProperty}
+                  selectedProperty={property}
                 />
               )}
             </div>
@@ -303,7 +317,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
 
           <div className="w-full lg:max-w-md">
             <RightFormSection
-              selectedProperty={selectedProperty}
+              selectedProperty={property}
               formData={formData}
               handleChange={handleChange}
             />
@@ -314,18 +328,16 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
       {/* Fullscreen Gallery Modal */}
       {imageModalOpen && (
         <ImageGalleryModal
-          images={selectedProperty.images || []}
+          images={property.images || []}
           initialIndex={selectedImageIndex}
           onClose={() => setImageModalOpen(false)}
-          propertyTitle={selectedProperty.title}
+          propertyTitle={property.title}
           selectedProperty={{
-            ratings: selectedProperty.ratings ?? 0,
-            reviewCount: selectedProperty.reviewCount ?? 0,
+            ratings: property.ratings ?? 0,
+            reviewCount: property.reviewCount ?? 0,
           }}
         />
       )}
     </div>
   );
-};
-
-export default PropertyModal;
+}

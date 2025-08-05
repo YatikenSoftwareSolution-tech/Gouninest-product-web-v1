@@ -1,3 +1,4 @@
+// SearchTabs.tsx
 "use client";
 
 import {
@@ -11,8 +12,6 @@ import { Tabs, TabsContent } from "./ui/tabs";
 import { City, Property } from "@/types/types";
 import { useGlobal } from "@/context/GlobalContext";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import PropertyModal from "./PropertyModal";
 
 interface SuggestionItem {
   name: string;
@@ -55,12 +54,15 @@ const SearchTabs = ({
 
   const { fetchProperties } = useGlobal();
   const router = useRouter();
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  // console.log(selectedProperty);
 
   const handlePropertyClick = (property: Property) => {
-    setSelectedProperty(property);
-    setIsModalOpen(true);
+    // setSelectedProperty(property);
+    router.push(
+      `/properties/${property._id}?country=${property.location.country}`
+    );
+
   };
 
   const handleCityClick = async (item: { city: City, country: string }) => {
@@ -93,10 +95,11 @@ const SearchTabs = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1 sm:gap-2 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === tab.id
-                ? "border-red-500 text-red-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
+              className={`flex items-center gap-1 sm:gap-2 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === tab.id
+                  ? "border-red-500 text-red-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
               aria-current={activeTab === tab.id ? "page" : undefined}
             >
               <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -146,14 +149,12 @@ const SearchTabs = ({
                     <div className="flex flex-col">
                       <div className="text-sm font-semibold text-gray-800 leading-tight">
                         {item.city.name}{" "}
-
                       </div>
                     </div>
                   </div>
                   <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
                     {item.country}
                   </div>
-
                 </button>
               ))}
               {filteredUniversities.map((item, index) => (
@@ -201,14 +202,12 @@ const SearchTabs = ({
                 <div className="flex flex-col">
                   <div className="text-sm font-semibold text-gray-800 leading-tight">
                     {item.city.name}{" "}
-
                   </div>
                 </div>
               </div>
               <div className="text-xs text-gray-400 whitespace-nowrap ml-2">
                 {item.country}
               </div>
-
             </button>
           ))}
         </div>
@@ -386,12 +385,6 @@ const SearchTabs = ({
           )}
         </div>
       </TabsContent>
-      {selectedProperty && <PropertyModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        selectedProperty={selectedProperty}
-      />}
-
     </Tabs>
   );
 };

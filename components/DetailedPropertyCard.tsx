@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Property } from "@/types/types";
-import PropertyModal from "./PropertyModal";
+import { useState } from "react";
 
 interface DetailedPropertyCardProps {
   property: Property;
@@ -48,17 +48,11 @@ const CURRENCY_SYMBOLS = {
 } as const;
 
 const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
-  // console.log("property: ", property.description);
   const symbol =
     CURRENCY_SYMBOLS[property.countryCode as keyof typeof CURRENCY_SYMBOLS] ||
     "£";
-
-  const handleCardClick = () => {
-    setIsModalOpen(true);
-  };
 
   const getAmenityIcon = (amenity: string) => {
     const icons = {
@@ -90,11 +84,15 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
     );
   };
 
-  const handlePrevImage = () => {
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setCurrentImage((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleNextImage = () => {
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setCurrentImage((prev) => (prev + 1) % property.images.length);
   };
 
@@ -106,7 +104,10 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
   };
 
   const htmlToPlainText = (html: string) => {
-    return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+    return html
+      .replace(/<[^>]+>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
   };
 
   const plainDescription = htmlToPlainText(
@@ -114,10 +115,12 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
   );
 
   return (
-    <>
+    <Link
+      href={`/properties/${property._id}?country=${property.countryCode}&city=${property.location.city}`}
+      className="block" // Added block class to make the link fill the container
+    >
       <Card
         className={`group border border-gray-100 overflow-hidden cursor-pointer transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl bg-white rounded-2xl`}
-        onClick={handleCardClick}
       >
         {/* Image */}
         <div className="relative overflow-hidden h-52">
@@ -148,7 +151,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
               {Math.round(
                 ((property.originalPrice - property.price) /
                   property.originalPrice) *
-                100
+                  100
               )}
               %
             </Badge>
@@ -228,7 +231,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
                     {Math.round(
                       ((property.originalPrice - property.price) /
                         property.originalPrice) *
-                      100
+                        100
                     )}
                     %
                   </span>
@@ -272,14 +275,7 @@ const DetailedPropertyCard = ({ property }: DetailedPropertyCardProps) => {
           </div>
         </div>
       </Card>
-
-      {/* Property modal preview */}
-      <PropertyModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        selectedProperty={property}
-      />
-    </>
+    </Link>
   );
 };
 

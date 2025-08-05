@@ -1,3 +1,4 @@
+'use client'
 import { Pause, Play, Video, ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useRef, useState } from 'react'
 
