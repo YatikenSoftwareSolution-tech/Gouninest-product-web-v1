@@ -15,6 +15,11 @@ import Image from "next/image";
 import { useGlobal } from "@/context/GlobalContext";
 import Link from "next/link";
 import { AllCountries } from "@/types/types";
+import emailjs from "@emailjs/browser";
+
+const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
+const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
 
 interface GetInTouchModalProps {
   isOpen: boolean;
@@ -29,7 +34,6 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
   propertyId,
   isEnquiry = false,
 }) => {
-  const { submitEnquiry } = useGlobal();
   const [selectedCountry, setSelectedCountry] = useState<
     AllCountries | undefined
   >();
@@ -52,25 +56,43 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
     const formData = new FormData(e.currentTarget);
     const formValues = Object.fromEntries(formData.entries());
 
-    try {
-      const payload = {
-        firstName: formValues.firstName as string,
-        lastName: formValues.lastName as string,
-        phone: `${selectedCountry?.callingCode}${formValues.phoneNumber}`,
-        email: formValues.email as string,
-        message: formValues.needs as string,
-        ...(propertyId && { propertyId }),
-        ...(formValues.location && { location: formValues.location as string }),
-      };
+    const payload = {
+      firstName: formValues.firstName as string,
+      lastName: formValues.lastName as string,
+      phone: `${selectedCountry?.callingCode}${formValues.phoneNumber}`,
+      email: formValues.email as string,
+      message: formValues.needs as string,
+      ...(propertyId && { propertyId }),
+      ...(formValues.location && { location: formValues.location as string }),
+    };
 
-      await submitEnquiry(payload);
+    try {
+      // 1. Send email via EmailJS
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          user_name: `${payload.firstName} ${payload.lastName}`,
+          user_email: payload.email,
+          user_phone: payload.phone,
+          user_message: payload.message,
+          user_location: payload.location || "Not specified",
+          property_id: payload.propertyId,
+        },
+        PUBLIC_KEY
+      );
+
+      // 2. Optionally, still submit to backend if required
+      // await submitEnquiry(payload);
+
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Error submitting enquiry:", error);
+      console.error("Error submitting enquiry or sending email:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

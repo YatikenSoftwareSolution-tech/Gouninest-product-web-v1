@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import DesktopNavbar from "./DesktopNavbar";
 import MobileNavbar from "./MobileNavbar";
 import GetInTouchModal from "./modals/GetInTouchModal";
@@ -10,8 +10,21 @@ const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const [isScrolled, setIsScrolled] = useState(!isHomePage);
+  
+
+    // Always start with true for non-home pages, then respect scroll for home page
+  
+    useEffect(() => {
+      if (isHomePage) {
+        setIsScrolled(isScrolled);
+      } else {
+        setIsScrolled(true);
+      }
+    }, [isScrolled, isHomePage]);
 
   const handleScroll = useCallback(() => {
     if (typeof document !== "undefined") {

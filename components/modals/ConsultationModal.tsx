@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useGlobal } from "@/context/GlobalContext";
 import { AllCountries } from "@/types/types";
+import emailjs from "@emailjs/browser";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -32,16 +33,67 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
   const { allCountries,fetchAllCountries } = useGlobal();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-  };
+
+ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+   e.preventDefault();
+
+   const form = e.currentTarget;
+   const firstName = (form.elements.namedItem("firstName") as HTMLInputElement)
+     .value;
+   const lastName = (form.elements.namedItem("lastName") as HTMLInputElement)
+     .value;
+   const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+   const phone = (form.elements.namedItem("phoneNumber") as HTMLInputElement)
+     .value;
+   const location = (form.elements.namedItem("location") as HTMLInputElement)
+     .value;
+   const needs = (form.elements.namedItem("needs") as HTMLTextAreaElement)
+     .value;
+
+   const fullPhone = selectedCountry
+     ? `${selectedCountry.callingCode} ${phone}`
+     : phone;
+
+   const templateParams = {
+     user_name: `${firstName} ${lastName}`,
+     user_email: email,
+     user_phone: fullPhone,
+     user_location: location,
+     user_message: needs,
+     property_id: "", // or you can make this dynamic
+   };
+
+   try {
+     await emailjs.send(
+       process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+       process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+       templateParams,
+       process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+     );
+     setIsSubmitted(true);
+   } catch (error) {
+     console.error("EmailJS Error:", error);
+     alert("Something went wrong. Please try again.");
+   }
+ };
+
 
   useEffect(() => { 
     if (allCountries.length <= 0) {
       fetchAllCountries();
     }
   }, []);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSubmitted) {
+      timer = setTimeout(() => {
+        setIsSubmitted(false);
+        onClose();
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [isSubmitted, onClose]);
 
 
 

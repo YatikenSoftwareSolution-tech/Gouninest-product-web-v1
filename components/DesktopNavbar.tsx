@@ -98,7 +98,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
         </div>
 
         {/* Search bar */}
-        {showSearch && (
+        {(showSearch || !isHomePage) && (
           <div className="hidden md:flex flex-1 max-w-2xl mx-8">
             <form onSubmit={handleSearch} className="relative w-full">
               <input
