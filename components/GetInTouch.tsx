@@ -56,7 +56,7 @@ const GetInTouch = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Email Us
             </h3>
-            <p className="text-gray-600">enquiry@gouninest.com</p>
+            <p className="text-gray-600">info@gouninest.com</p>
           </Link>
 
           <Link
