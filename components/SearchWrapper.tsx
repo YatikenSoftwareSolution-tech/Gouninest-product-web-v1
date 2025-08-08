@@ -21,6 +21,7 @@ const SearchWrapper = ({
   countryProperty,
   locations,
   countries,
+  universities,
 }: SearchWrapperProps) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -36,7 +37,7 @@ const SearchWrapper = ({
           countryProperty={countryProperty}
           locations={locations}
           countries={countries}
-          universities={[]}
+          universities={universities}
         />
       </div>
 

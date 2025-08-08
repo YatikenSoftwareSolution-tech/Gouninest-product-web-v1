@@ -4,6 +4,18 @@ import { usePathname, useRouter } from "next/navigation";
 import DesktopNavbar from "./DesktopNavbar";
 import MobileNavbar from "./MobileNavbar";
 import GetInTouchModal from "./modals/GetInTouchModal";
+import {
+  fetchLocationCountInCountries,
+  fetchPropertiesCountInLocations,
+  fetchTopProperties,
+  fetchUniversities,
+} from "@/constants/api";
+import {
+  CountryCityPropertyCount,
+  CountryLocationCount,
+  CountryPropertyCount,
+  Universities,
+} from "@/types/types";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,32 +26,51 @@ const Navbar = () => {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const [isScrolled, setIsScrolled] = useState(!isHomePage);
-  
 
-    // Always start with true for non-home pages, then respect scroll for home page
-  
-    useEffect(() => {
-      if (isHomePage) {
-        setIsScrolled(isScrolled);
-      } else {
-        setIsScrolled(true);
+  // These hold your fetched data
+  const [countryProperty, setCountryProperty] = useState<
+    CountryPropertyCount[]
+  >([]);
+  const [locations, setLocations] = useState<CountryCityPropertyCount[]>([]);
+  const [countries, setCountries] = useState<CountryLocationCount[]>([]);
+  const [universities, setUniversities] = useState<Universities[]>([]);
+
+  useEffect(() => {
+    Promise.all([
+      fetchLocationCountInCountries(),
+      fetchPropertiesCountInLocations(),
+      fetchTopProperties(),
+      fetchUniversities(),
+    ]).then(
+      ([countriesData, locationsData, propertyData, universitiesData]) => {
+        setCountries(countriesData as CountryLocationCount[]);
+        setLocations(locationsData as CountryCityPropertyCount[]);
+        setCountryProperty(propertyData as CountryPropertyCount[]);
+        setUniversities(universitiesData as Universities[]);
       }
-    }, [isScrolled, isHomePage]);
-
-  const handleScroll = useCallback(() => {
-    if (typeof document !== "undefined") {
-      const heroHeight = (document.documentElement.clientHeight || 0) * 0.8;
-      const scrolled = (document.documentElement.scrollTop || document.body.scrollTop) > heroHeight;
-      setIsScrolled(scrolled);
-      setShowSearch(scrolled);
-    }
+    );
   }, []);
 
   useEffect(() => {
-    if (typeof document !== "undefined") {
-      document.addEventListener("scroll", handleScroll);
-      return () => document.removeEventListener("scroll", handleScroll);
+    if (isHomePage) {
+      setIsScrolled(isScrolled);
+    } else {
+      setIsScrolled(true);
     }
+  }, [isScrolled, isHomePage]);
+
+  const handleScroll = useCallback(() => {
+    const heroHeight = (document.documentElement.clientHeight || 0) * 0.8;
+    const scrolled =
+      (document.documentElement.scrollTop || document.body.scrollTop) >
+      heroHeight;
+    setIsScrolled(scrolled);
+    setShowSearch(scrolled);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("scroll", handleScroll);
+    return () => document.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -53,7 +84,8 @@ const Navbar = () => {
 
   return (
     <>
-      <nav style={{ zIndex: 90 }}
+      <nav
+        style={{ zIndex: 90 }}
         className={`fixed top-0 left-0 right-0 transition-all duration-300 ${
           isScrolled
             ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm"
@@ -67,8 +99,11 @@ const Navbar = () => {
               showSearch={showSearch}
               searchValue={searchValue}
               setSearchValue={setSearchValue}
-              handleSearch={handleSearch}
               setShowModal={setShowModal}
+              countryProperty={countryProperty}
+              locations={locations}
+              countries={countries}
+              universities={universities}
             />
           </div>
           <div className="md:hidden">
@@ -80,6 +115,10 @@ const Navbar = () => {
               setSearchValue={setSearchValue}
               handleSearch={handleSearch}
               setShowModal={setShowModal}
+              countryProperty={countryProperty}
+              locations={locations}
+              countries={countries}
+              universities={universities}
             />
           </div>
         </div>

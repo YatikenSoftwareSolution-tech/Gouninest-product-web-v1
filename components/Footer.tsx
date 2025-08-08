@@ -69,7 +69,7 @@ const Footer = () => {
                   href="https://www.facebook.com/profile.php?id=61577828576999#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                  className="text-gray-400 hover:text-blue-600 transition-colors duration-300"
                 >
                   <Facebook className="w-6 h-6" />
                 </Link>
@@ -77,7 +77,7 @@ const Footer = () => {
                   href="https://www.instagram.com/gouninest/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                  className="text-gray-400 hover:text-blue-600 transition-colors duration-300"
                 >
                   <Instagram className="w-6 h-6" />
                 </Link>
@@ -85,7 +85,7 @@ const Footer = () => {
                   href="https://www.linkedin.com/company/gouninest/about/?viewAsMember=true"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                  className="text-gray-400 hover:text-blue-600 transition-colors duration-300"
                 >
                   <Linkedin className="w-6 h-6" />
                 </Link>
@@ -93,7 +93,7 @@ const Footer = () => {
                   href="https://youtube.com/gouninest"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                  className="text-gray-400 hover:text-blue-600 transition-colors duration-300"
                 >
                   <Youtube className="w-6 h-6" />
                 </Link>
@@ -147,7 +147,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/"
-                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    className="text-gray-400 hover:text-blue-500 transition-colors duration-300"
                   >
                     Home
                   </Link>
@@ -155,7 +155,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/about"
-                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    className="text-gray-400 hover:text-blue-500 transition-colors duration-300"
                   >
                     About Us
                   </Link>
@@ -163,7 +163,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/properties"
-                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    className="text-gray-400 hover:text-blue-500 transition-colors duration-300"
                   >
                     Properties
                   </Link>
@@ -171,7 +171,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/reviews"
-                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    className="text-gray-400 hover:text-blue-500 transition-colors duration-300"
                   >
                     Reviews
                   </Link>
@@ -180,7 +180,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/blogs"
-                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    className="text-gray-400 hover:text-blue-500 transition-colors duration-300"
                   >
                     Blogs
                   </Link>
@@ -188,15 +188,13 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/contacts"
-                    className="text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                    className="text-gray-400 hover:text-blue-500 transition-colors duration-300"
                   >
                     Contact
                   </Link>
                 </li>
               </ul>
             </div>
-
-            
 
             <div
               className="animate-fade-in "
@@ -205,12 +203,14 @@ const Footer = () => {
               <h4 className="text-lg font-semibold text-white mb-6">Explore</h4>
               <ul className="space-y-3">
                 {Object.entries(countryNames).map(([code, name]) => (
-                  <Link key={code} href={`/properties?city=${cityMap[code]}&country=${code}`} >
-                  <li
-                    className="cursor-pointer text-gray-400 hover:text-electric-400 transition-colors duration-300"
+                  <Link
+                    key={code}
+                    href={`/properties?city=${cityMap[code]}&country=${code}`}
+                    className="flex flex-col"
                   >
-                    {name}
-                  </li>
+                    <li className="cursor-pointer text-gray-400 hover:text-blue-500 transition-colors duration-300">
+                      {name}
+                    </li>
                   </Link>
                 ))}
               </ul>

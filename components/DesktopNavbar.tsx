@@ -3,7 +3,8 @@ import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search } from "lucide-react";
+import HeaderSearch from "./HeaderSearch";
+import { CountryCityPropertyCount, CountryLocationCount, CountryPropertyCount, Universities } from "@/types/types";
 
 interface Contact {
   code: string;
@@ -14,23 +15,29 @@ interface Contact {
 interface DesktopNavbarProps {
   isScrolled: boolean;
   showSearch: boolean;
+  setShowModal: (value: boolean) => void;
   searchValue: string;
   setSearchValue: (value: string) => void;
-  handleSearch: (e: React.FormEvent) => void;
-  setShowModal: (value: boolean) => void;
+  // Add props needed for HeroSearch
+  countryProperty: CountryPropertyCount[];
+  locations: CountryCityPropertyCount[];
+  countries: CountryLocationCount[];
+  universities: Universities[];
 }
 
 const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
   isScrolled: initialIsScrolled,
   showSearch,
-  searchValue,
-  setSearchValue,
-  handleSearch,
   setShowModal,
+  countries,
+  locations,
+  universities,
+  countryProperty,
 }) => {
   const pathname = usePathname();
   const phoneDropdownRef = useRef<HTMLDivElement>(null);
   const [showPhoneDropdown, setShowPhoneDropdown] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Determine if we should force isScrolled based on pathname
   const isHomePage = pathname === "/";
@@ -83,6 +90,12 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
     },
   ];
 
+  // const handleSearch = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   // Handle search logic here if needed
+  //   setShowSuggestions(false);
+  // };
+
   return (
     <div className="w-full">
       <div className="max-w-7xl mx-auto px-5 flex items-center justify-between py-1 relative">
@@ -99,22 +112,15 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
 
         {/* Search bar */}
         {(showSearch || !isHomePage) && (
-          <div className="hidden md:flex flex-1 max-w-2xl mx-8">
-            <form onSubmit={handleSearch} className="relative w-full">
-              <input
-                type="text"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search City | University | Neighborhood | Property"
-                className="w-full pl-4 pr-12 py-2 bg-white border border-gray-300 rounded-full"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-500 text-white p-2 rounded-full"
-              >
-                <Search size={16} />
-              </button>
-            </form>
+          <div className="flex flex-1 max-w-2xl mx-8 relative">
+            <HeaderSearch
+              showSuggestions={showSuggestions}
+              setShowSuggestions={setShowSuggestions}
+              countries={countries}
+              locations={locations}
+              universities={universities}
+              countryProperty={countryProperty}
+            />
           </div>
         )}
 
@@ -220,7 +226,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
           </button>
 
           {/* Exclusive Offers - redirect to whatsapp*/}
-          <div>
+          <div className="hidden md:flex">
             <Link
               href="https://wa.me/+442079933000"
               target="_blank"

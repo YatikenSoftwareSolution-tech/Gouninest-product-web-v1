@@ -2,7 +2,9 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import HeaderSearch from "./HeaderSearch";
+import { CountryCityPropertyCount, CountryLocationCount, CountryPropertyCount, Universities } from "@/types/types";
 
 interface MobileNavbarProps {
   isScrolled: boolean;
@@ -12,19 +14,24 @@ interface MobileNavbarProps {
   setSearchValue: (value: string) => void;
   handleSearch: (e: React.FormEvent) => void;
   setShowModal: (value: boolean) => void;
+ countryProperty: CountryPropertyCount[];
+   locations: CountryCityPropertyCount[];
+   countries: CountryLocationCount[];
+   universities: Universities[]
 }
 
 const MobileNavbar: React.FC<MobileNavbarProps> = ({
   isScrolled,
   isOpen,
   setIsOpen,
-  searchValue,
-  setSearchValue,
-  handleSearch,
   setShowModal,
+  countries,
+  locations,
+  universities,
+  countryProperty,
 }) => {
-
-
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
   };
@@ -83,27 +90,17 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
         )}
 
         {isScrolled && (
-          <div className="md:hidden flex-1 mx-2">
-            <form onSubmit={handleSearch} className="relative w-full">
-              <input
-                type="text"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search..."
-                className="w-full pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-full"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-500 text-white p-1 rounded-full"
-                aria-label="Search"
-              >
-                <Search size={16} />
-              </button>
-            </form>
-          </div>
+          <HeaderSearch
+            showSuggestions={showSuggestions}
+            setShowSuggestions={setShowSuggestions}
+            countries={countries}
+            locations={locations}
+            universities={universities}
+            countryProperty={countryProperty}
+          />
         )}
 
-        <div className="flex items-center space-x-2 md:hidden ml-auto">
+        <div className="flex items-center space-x-2 md:hidden ml-2">
           <div
             className={`flex items-center gap-1 rounded-full bg-white/20 ${
               isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"

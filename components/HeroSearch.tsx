@@ -382,67 +382,74 @@ const HeroSearch = ({
                       <button
                         key={tab.id}
                         onClick={() => setActiveCountryTab(tab.id)}
-                        className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeCountryTab === tab.id
-                          ? "border-red-500 text-red-600"
-                          : "border-transparent text-gray-500 hover:text-gray-700"
-                          }`}
+                        className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                          activeCountryTab === tab.id
+                            ? "border-red-500 text-red-600"
+                            : "border-transparent text-gray-500 hover:text-gray-700"
+                        }`}
                       >
-
                         {tab.label}
                       </button>
-                    )
+                    );
                   })}
                 </nav>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
-                  <h4 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-blue-500" />
-                    Cities in{" "}
-                    <span className="text-blue-600">
-                      {
-                        countryTabs.find((t) => t.id === activeCountryTab)
-                          ?.label
-                      }
-                    </span>
-                  </h4>
+              <div className="flex flex-col gap-4 mb-2">
+                <div className="flex flex-col md:flex-row gap-4 bg-white">
+                  <div className="border border-gray-200 rounded-2xl shadow p-4">
+                    <h4 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-blue-500" />
+                      Cities in{" "}
+                      <span className="text-blue-600">
+                        {
+                          countryTabs.find((t) => t.id === activeCountryTab)
+                            ?.label
+                        }
+                      </span>
+                    </h4>
 
-                  <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-34 overflow-y-auto custom-scrollbar pr-1">
-                    {getCitiesForCountry(activeCountryTab).map((city) => (
-                      <button
-                        key={`${city.country}-${city.city}`}
-                        onClick={() => handleSuggestionClick(city)}
-                        className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50"
-                      >
-                        <span className="truncate">{city.name}</span>
-                        <span className="text-xs text-gray-400 ml-3 shrink-0">
-                          ({city.propertyCount})
-                        </span>
-                      </button>
-                    ))}
+                    <div className="w-[430px] grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700 max-h-44 overflow-y-auto custom-scrollbar pr-1">
+                      {getCitiesForCountry(activeCountryTab).map((city) => (
+                        <button
+                          key={`${city.country}-${city.city}`}
+                          onClick={() => handleSuggestionClick(city)}
+                          className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50"
+                        >
+                          <span className="truncate">{city.name}</span>
+                          <span className="text-xs text-gray-400 ml-3 shrink-0">
+                            ({city.propertyCount})
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <h4 className="text-base font-semibold text-gray-800 my-4 flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-blue-500" />
-                    Universities in{" "}
-                    <span className="text-blue-600">
-                      {
-                        countryTabs.find((t) => t.id === activeCountryTab)
-                          ?.label
-                      }
-                    </span>
-                  </h4>
+                  <div className="border border-gray-200 rounded-2xl shadow p-4">
+                    <h4 className="text-base font-semibold text-gray-800 my-4 flex items-center gap-2">
+                      <GraduationCap className="w-5 h-5 text-blue-500" />
+                      Universities in{" "}
+                      <span className="text-blue-600">
+                        {
+                          countryTabs.find((t) => t.id === activeCountryTab)
+                            ?.label
+                        }
+                      </span>
+                    </h4>
 
-                  <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 max-h-30 overflow-y-auto custom-scrollbar pr-1">
-                  {
-                      universities.find((t) => t.countryCode === activeCountryTab)?.universities.map(uni =>
-                        <p key={uni} onClick={() => handleInitialUniClick(uni)}  className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50">{uni}</p>
-                      )
-
-                    }
+                    <div className="w-[350px] grid grid-cols-1 gap-3 text-sm text-gray-700 max-h-44 overflow-y-auto custom-scrollbar pr-1">
+                      {universities
+                        .find((t) => t.countryCode === activeCountryTab)
+                        ?.universities.map((uni) => (
+                          <p
+                            key={uni}
+                            onClick={() => handleInitialUniClick(uni)}
+                            className="text-left hover:text-blue-600 transition-colors duration-200 flex justify-between items-center px-2 py-1.5 rounded-md hover:bg-blue-50"
+                          >
+                            {uni}
+                          </p>
+                        ))}
+                    </div>
                   </div>
-
-                 
                 </div>
               </div>
             </div>

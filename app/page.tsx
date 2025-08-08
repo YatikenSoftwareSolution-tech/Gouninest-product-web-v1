@@ -21,12 +21,15 @@ interface CityImageType {
 
 const Home = async () => {
   const MAX_CITIES = 12;
-  const countries = await fetchLocationCountInCountries() as CountryLocationCount[];
-  const locations = await fetchPropertiesCountInLocations() as CountryCityPropertyCount[];
-  const countryProperty = await fetchTopProperties() as CountryPropertyCount[];
-  const cityImages = await fetchImages() as CityImageType[];
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const universities = await fetchUniversities() as Universities[] | [];
+  const [countries, locations, countryProperty, cityImages, universities] =
+    await Promise.all([
+      fetchLocationCountInCountries() as Promise<CountryLocationCount[]>,
+      fetchPropertiesCountInLocations() as Promise<CountryCityPropertyCount[]>,
+      fetchTopProperties() as Promise<CountryPropertyCount[]>,
+      fetchImages() as Promise<CityImageType[]>,
+      fetchUniversities() as Promise<Universities[] | []>,
+    ]);
+
 
 
 
