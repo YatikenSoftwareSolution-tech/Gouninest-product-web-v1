@@ -4,9 +4,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import HeaderSearch from "./HeaderSearch";
-import { CountryCityPropertyCount, CountryLocationCount, CountryPropertyCount, Universities } from "@/types/types";
+import {
+  CountryCityPropertyCount,
+  CountryLocationCount,
+  CountryPropertyCount,
+  Universities,
+} from "@/types/types";
 
 interface Contact {
+  code: string;
+  dial: string;
+  flag: string;
+}
+
+interface Whatsapp {
   code: string;
   dial: string;
   flag: string;
@@ -18,7 +29,6 @@ interface DesktopNavbarProps {
   setShowModal: (value: boolean) => void;
   searchValue: string;
   setSearchValue: (value: string) => void;
-  // Add props needed for HeroSearch
   countryProperty: CountryPropertyCount[];
   locations: CountryCityPropertyCount[];
   countries: CountryLocationCount[];
@@ -36,12 +46,12 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
 }) => {
   const pathname = usePathname();
   const phoneDropdownRef = useRef<HTMLDivElement>(null);
+  const whatsappDropdownRef = useRef<HTMLDivElement>(null);
   const [showPhoneDropdown, setShowPhoneDropdown] = useState(false);
+  const [showWhatsappDropdown, setShowWhatsappDropdown] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Determine if we should force isScrolled based on pathname
   const isHomePage = pathname === "/";
-  // Always start with true for non-home pages, then respect scroll for home page
   const [isScrolled, setIsScrolled] = useState(!isHomePage);
 
   useEffect(() => {
@@ -52,7 +62,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
     }
   }, [initialIsScrolled, isHomePage]);
 
-  // Handle clicks outside phone dropdown
+  // Handle clicks outside dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -61,16 +71,22 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
       ) {
         setShowPhoneDropdown(false);
       }
+      if (
+        whatsappDropdownRef.current &&
+        !whatsappDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowWhatsappDropdown(false);
+      }
     };
 
-    if (showPhoneDropdown) {
+    if (showPhoneDropdown || showWhatsappDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showPhoneDropdown]);
+  }, [showPhoneDropdown, showWhatsappDropdown]);
 
   const contacts: Contact[] = [
     {
@@ -90,11 +106,18 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
     },
   ];
 
-  // const handleSearch = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   // Handle search logic here if needed
-  //   setShowSuggestions(false);
-  // };
+  const whatsappNumbers: Whatsapp[] = [
+    {
+      code: "US",
+      dial: "+14452711271",
+      flag: "us",
+    },
+    {
+      code: "GB",
+      dial: "+442079933000",
+      flag: "gb",
+    },
+  ];
 
   return (
     <div className="w-full">
@@ -152,23 +175,57 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
               isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
             }`}
           >
-            {/* WhatsApp Button */}
-            <Link
-              href="https://wa.me/+442079933000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`rounded-l-full py-2 pr-1 pl-3 ${
-                isScrolled ? "hover:bg-green-200" : "hover:bg-green-600"
-              } transition-colors duration-200`}
-            >
-              <Image
-                src={isScrolled ? "/whatsapp-color.png" : "/whatsapp-white.png"}
-                alt="whatsapp"
-                width={23}
-                height={25}
-                style={{ width: 30, height: "auto" }}
-              />
-            </Link>
+            {/* WhatsApp Dropdown */}
+            <div className="relative" ref={whatsappDropdownRef}>
+              <button
+                onClick={() => setShowWhatsappDropdown(!showWhatsappDropdown)}
+                className={`rounded-l-full py-2 pr-1 pl-3 ${
+                  isScrolled ? "hover:bg-green-200" : "hover:bg-green-600"
+                } transition-colors duration-200`}
+                aria-label="Select WhatsApp number"
+              >
+                <Image
+                  src={
+                    isScrolled ? "/whatsapp-color.png" : "/whatsapp-white.png"
+                  }
+                  alt="whatsapp"
+                  width={23}
+                  height={25}
+                  style={{ width: 30, height: "auto" }}
+                />
+              </button>
+
+              {showWhatsappDropdown && (
+                <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <div className="max-h-60 overflow-y-auto">
+                    {whatsappNumbers.map((contact, index) => (
+                      <Link
+                        key={`whatsapp-${index}`}
+                        href={`https://wa.me/${contact.dial}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setShowWhatsappDropdown(false)}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-lime-100 transition-colors hover:rounded-lg"
+                      >
+                        <Image
+                          src={`https://flagcdn.com/w40/${contact.flag}.jpg`}
+                          alt={contact.code}
+                          width={20}
+                          height={15}
+                          className="h-4 w-6 object-cover rounded-sm"
+                        />
+                        <span className="text-sm text-gray-800 font-medium">
+                          {contact.dial?.replace(
+                            /(\d{2})(\d{4})(\d{4})/,
+                            "$1 $2 $3"
+                          )}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Phone Dropdown */}
             <div className="relative" ref={phoneDropdownRef}>
@@ -197,7 +254,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
                         key={index}
                         href={`tel:${contact.dial.replace(/\s/g, "")}`}
                         onClick={() => setShowPhoneDropdown(false)}
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-lime-100 transition-colors hover:rounded-lg"
                       >
                         <Image
                           src={`https://flagcdn.com/w40/${contact.flag}.jpg`}

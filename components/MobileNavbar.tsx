@@ -4,7 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import HeaderSearch from "./HeaderSearch";
-import { CountryCityPropertyCount, CountryLocationCount, CountryPropertyCount, Universities } from "@/types/types";
+import {
+  CountryCityPropertyCount,
+  CountryLocationCount,
+  CountryPropertyCount,
+  Universities,
+} from "@/types/types";
 
 interface MobileNavbarProps {
   isScrolled: boolean;
@@ -14,10 +19,16 @@ interface MobileNavbarProps {
   setSearchValue: (value: string) => void;
   handleSearch: (e: React.FormEvent) => void;
   setShowModal: (value: boolean) => void;
- countryProperty: CountryPropertyCount[];
-   locations: CountryCityPropertyCount[];
-   countries: CountryLocationCount[];
-   universities: Universities[]
+  countryProperty: CountryPropertyCount[];
+  locations: CountryCityPropertyCount[];
+  countries: CountryLocationCount[];
+  universities: Universities[];
+}
+
+interface ContactNumber {
+  code: string;
+  dial: string;
+  flag: string;
 }
 
 const MobileNavbar: React.FC<MobileNavbarProps> = ({
@@ -31,15 +42,17 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
   countryProperty,
 }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
-  
+
+  // Menu toggle
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
   };
 
-  // 📞 Phone dropdown state and behavior
+  // Phone and WhatsApp dropdown states
   const [showPhoneDropdown, setShowPhoneDropdown] = useState(false);
+  const [showWhatsappDropdown, setShowWhatsappDropdown] = useState(false);
 
-  const phoneNumbers = [
+  const phoneNumbers: ContactNumber[] = [
     {
       code: "IN",
       dial: "+91 9876543210",
@@ -57,12 +70,32 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
     },
   ];
 
+  const whatsappNumbers: ContactNumber[] = [
+    {
+      code: "US",
+      dial: "+14452711271",
+      flag: "us",
+    },
+    {
+      code: "GB",
+      dial: "+442079933000",
+      flag: "gb",
+    },
+  ];
+
+  // Handle clicks outside dropdowns
   const handleClickOutside = (e: MouseEvent) => {
-    if (
-      !(e.target as HTMLElement).closest("#phone-dropdown") &&
-      !(e.target as HTMLElement).closest("#phone-btn")
-    ) {
+    const target = e.target as HTMLElement;
+
+    if (!target.closest("#phone-dropdown") && !target.closest("#phone-btn")) {
       setShowPhoneDropdown(false);
+    }
+
+    if (
+      !target.closest("#whatsapp-dropdown") &&
+      !target.closest("#whatsapp-btn")
+    ) {
+      setShowWhatsappDropdown(false);
     }
   };
 
@@ -106,42 +139,78 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
               isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
             }`}
           >
-            {/* WhatsApp */}
-            <a
-              href="https://wa.me/+442079933000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`rounded-l-full py-2 pr-1 pl-3 ${
-                !isScrolled
-                  ? "hover:bg-green-600 transition-colors duration-200"
-                  : "hover:bg-green-200"
-              }`}
-            >
-              <Image
-                src={isScrolled ? "/whatsapp-color.png" : "/whatsapp-white.png"}
-                alt="whatsapp"
-                width={23}
-                height={25}
-              />
-            </a>
+            {/* WhatsApp Dropdown */}
+            <div className="relative">
+              <button
+                id="whatsapp-btn"
+                onClick={() => setShowWhatsappDropdown(!showWhatsappDropdown)}
+                className={`rounded-l-full py-2 pr-1 pl-3 ${
+                  !isScrolled
+                    ? "hover:bg-green-600 transition-colors duration-200"
+                    : "hover:bg-green-200"
+                }`}
+                aria-label="Select WhatsApp number"
+              >
+                <Image
+                  src={
+                    isScrolled ? "/whatsapp-color.png" : "/whatsapp-white.png"
+                  }
+                  alt="whatsapp"
+                  width={23}
+                  height={25}
+                />
+              </button>
+
+              {showWhatsappDropdown && (
+                <div
+                  id="whatsapp-dropdown"
+                  className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
+                >
+                  {whatsappNumbers.map((item) => (
+                    <Link
+                      key={`whatsapp-${item.code}`}
+                      href={`https://wa.me/${item.dial}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-lime-100 hover:rounded-lg"
+                    >
+                      <Image
+                        src={`https://flagcdn.com/w40/${item.code.toLowerCase()}.jpg`}
+                        alt={item.code}
+                        width={24}
+                        height={16}
+                        className="rounded-sm"
+                      />
+                      <span className="text-sm text-gray-800">
+                        {item.dial.replace(/(\d{2})(\d{4})(\d{4})/, "$1 $2 $3")}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Phone Dropdown */}
-            <button
-              id="phone-btn"
-              onClick={() => setShowPhoneDropdown(!showPhoneDropdown)}
-              className={`relative rounded-r-full py-2 pl-1 pr-3 ${
-                !isScrolled
-                  ? "hover:bg-red-400 transition-colors duration-200"
-                  : "hover:bg-red-200"
-              }`}
-              aria-label="Select phone number"
-            >
-              <Image
-                src={isScrolled ? "/telephone-red.png" : "/telephone-white.png"}
-                alt="telephone"
-                width={23}
-                height={25}
-              />
+            <div className="relative">
+              <button
+                id="phone-btn"
+                onClick={() => setShowPhoneDropdown(!showPhoneDropdown)}
+                className={`rounded-r-full py-2 pl-1 pr-3 ${
+                  !isScrolled
+                    ? "hover:bg-red-400 transition-colors duration-200"
+                    : "hover:bg-red-200"
+                }`}
+                aria-label="Select phone number"
+              >
+                <Image
+                  src={
+                    isScrolled ? "/telephone-red.png" : "/telephone-white.png"
+                  }
+                  alt="telephone"
+                  width={23}
+                  height={25}
+                />
+              </button>
 
               {showPhoneDropdown && (
                 <div
@@ -152,7 +221,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
                     <a
                       key={item.code}
                       href={`tel:${item.dial.replace(/\s/g, "")}`}
-                      className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-lime-100 hover:rounded-lg"
                     >
                       <Image
                         src={`https://flagcdn.com/w40/${item.code.toLowerCase()}.jpg`}
@@ -166,7 +235,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
                   ))}
                 </div>
               )}
-            </button>
+            </div>
           </div>
 
           <button

@@ -10,7 +10,10 @@ const FloatingHelpButton = () => {
   >(null);
 
   const [showPhoneDropdown, setShowPhoneDropdown] = useState(false);
+  const [showWhatsappDropdown, setShowWhatsappDropdown] = useState(false);
+
   const phoneDropdownRef = useRef<HTMLDivElement>(null);
+  const whatsappDropdownRef = useRef<HTMLDivElement>(null);
 
   const phoneNumbers = [
     {
@@ -30,6 +33,19 @@ const FloatingHelpButton = () => {
     },
   ];
 
+  const whatsappNumbers = [
+    {
+      code: "US",
+      number: "+14452711271",
+      flag: "us",
+    },
+    {
+      code: "GB",
+      number: "+442079933000",
+      flag: "gb",
+    },
+  ];
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -38,13 +54,17 @@ const FloatingHelpButton = () => {
       ) {
         setShowPhoneDropdown(false);
       }
+      if (
+        whatsappDropdownRef.current &&
+        !whatsappDropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowWhatsappDropdown(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-
 
   return (
     <div className="fixed left-3 bottom-20 z-40 flex flex-col items-end gap-3">
@@ -54,14 +74,18 @@ const FloatingHelpButton = () => {
         onMouseEnter={() => setHoveredButton("email")}
         onMouseLeave={() => setHoveredButton(null)}
       >
-        <Link href="https://mail.google.com/mail/?view=cm&to=enquiry@gouninest.com" target="_blank" rel="noopener noreferrer">
-        <button
-          className="rounded-full p-1.5 shadow-sm transition-all duration-300
-                   border border-red-400 text-red-500 bg-white hover:text-red-100 hover:bg-red-500"
-          aria-label="Get help via email"
+        <Link
+          href="https://mail.google.com/mail/?view=cm&to=enquiry@gouninest.com"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <Mail size={23} />
-        </button>
+          <button
+            className="rounded-full p-1.5 shadow-sm transition-all duration-300
+                   border border-red-400 text-red-500 bg-white hover:text-red-100 hover:bg-red-500"
+            aria-label="Get help via email"
+          >
+            <Mail size={23} />
+          </button>
         </Link>
         {hoveredButton === "email" && (
           <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-10">
@@ -97,7 +121,7 @@ const FloatingHelpButton = () => {
               <a
                 key={item.code}
                 href={`tel:${item.dial.replace(/\s/g, "")}`}
-                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                className="flex items-center gap-2 px-4 py-2 hover:bg-lime-100 hover:rounded-lg"
               >
                 <Image
                   src={`https://flagcdn.com/w40/${item.code.toLowerCase()}.jpg`}
@@ -113,16 +137,12 @@ const FloatingHelpButton = () => {
         )}
       </div>
 
-      {/* WhatsApp Button */}
-      <div
-        className="relative"
-        onMouseEnter={() => setHoveredButton("whatsapp")}
-        onMouseLeave={() => setHoveredButton(null)}
-      >
-        <Link
-          href="https://wa.me/+442079933000"
-          target="_blank"
-          rel="noopener noreferrer"
+      {/* WhatsApp Button with Dropdown */}
+      <div className="relative" ref={whatsappDropdownRef}>
+        <button
+          onClick={() => setShowWhatsappDropdown((prev) => !prev)}
+          onMouseEnter={() => setHoveredButton("whatsapp")}
+          onMouseLeave={() => setHoveredButton(null)}
           className="flex items-center justify-center rounded-full transition-all duration-300 hover:border-green-400"
           aria-label="Chat on WhatsApp"
         >
@@ -135,11 +155,37 @@ const FloatingHelpButton = () => {
               priority
             />
           </div>
-        </Link>
-        {hoveredButton === "whatsapp" && (
+        </button>
+
+        {hoveredButton === "whatsapp" && !showWhatsappDropdown && (
           <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-10">
             <span className="text-sm font-medium">Chat on WhatsApp</span>
             <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-l-4 border-l-gray-800 border-t-4 border-t-transparent border-b-4 border-b-transparent"></div>
+          </div>
+        )}
+
+        {showWhatsappDropdown && (
+          <div className="w-[185px] absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
+            {whatsappNumbers.map((item) => (
+              <Link
+                key={item.code}
+                href={`https://wa.me/${item.number}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 hover:bg-lime-100 hover:rounded-lg"
+              >
+                <Image
+                  src={`https://flagcdn.com/w40/${item.code.toLowerCase()}.jpg`}
+                  alt={item.code}
+                  width={25}
+                  height={25}
+                  className="rounded-sm w-8 h-5"
+                />
+                <span className="text-sm text-gray-800">
+                  {item.number.replace(/(\d{2})(\d{4})(\d{4})/, "$1 $2 $3")}
+                </span>
+              </Link>
+            ))}
           </div>
         )}
       </div>

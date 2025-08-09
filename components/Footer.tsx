@@ -1,4 +1,4 @@
-
+'use client';
 import {
   MapPin,
   Mail,
@@ -9,8 +9,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import GetInTouchModal from "./modals/GetInTouchModal";
 
 const Footer = () => {
+  const [showModal, setShowModal] = useState(false);
 
   const phoneNumbers = [
     { code: "+91", number: "9870468034", countryCode: "IN" },
@@ -108,10 +111,16 @@ const Footer = () => {
                 Services
               </h4>
               <ul className="space-y-3">
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li
+                  onClick={() => setShowModal(true)}
+                  className="text-gray-400 hover:text-blue-500 transition-colors duration-300 cursor-pointer"
+                >
                   Become a Partner
                 </li>
-                <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
+                <li
+                  onClick={() => setShowModal(true)}
+                  className="text-gray-400 hover:text-blue-500 transition-colors duration-300 cursor-pointer"
+                >
                   List your properties
                 </li>
                 <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
@@ -299,6 +308,13 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {showModal && (
+        <GetInTouchModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </footer>
   );
 };

@@ -146,8 +146,8 @@ const GetInTouchModal: React.FC<GetInTouchModalProps> = ({
 
       {/* Main Form Modal */}
       {!isSubmitted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-65 backdrop-blur-xs px-4">
-          <div className="bg-white w-full max-w-lg rounded-xl shadow-xl p-6 relative">
+        <div className="fixed inset-0 z-[99] flex items-center justify-center backdrop-brightness-65 backdrop-blur-xs px-4">
+          <div className="bg-white text-black w-full max-w-lg rounded-xl shadow-xl p-6 relative">
             <button
               onClick={onClose}
               className="absolute top-4 right-4 text-gray-500 hover:text-black transition-colors"
