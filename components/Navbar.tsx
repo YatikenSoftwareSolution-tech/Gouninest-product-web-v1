@@ -24,8 +24,10 @@ const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const isHomePage = pathname === "/";
-  const [isScrolled, setIsScrolled] = useState(!isHomePage);
+ const normalizedPath = pathname.replace(/\/$/, ""); // remove trailing slash if exists
+ const isHomePage = normalizedPath === "";
+ const isReferPage = normalizedPath === "/refer-earn";
+ const [isScrolled, setIsScrolled] = useState(false);
 
   // These hold your fetched data
   const [countryProperty, setCountryProperty] = useState<
@@ -52,12 +54,19 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (isHomePage) {
-      setIsScrolled(isScrolled);
+    if (isHomePage || isReferPage) {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 0);
+      };
+
+      handleScroll(); // check immediately on mount
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
     } else {
       setIsScrolled(true);
     }
-  }, [isScrolled, isHomePage]);
+  }, [isHomePage, isReferPage]);
+
 
   const handleScroll = useCallback(() => {
     const heroHeight = (document.documentElement.clientHeight || 0) * 0.8;
@@ -95,7 +104,6 @@ const Navbar = () => {
         <div>
           <div className="hidden md:flex">
             <DesktopNavbar
-              isScrolled={isScrolled}
               showSearch={showSearch}
               searchValue={searchValue}
               setSearchValue={setSearchValue}

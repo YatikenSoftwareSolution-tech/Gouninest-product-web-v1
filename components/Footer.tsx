@@ -111,18 +111,6 @@ const Footer = () => {
                 Services
               </h4>
               <ul className="space-y-3">
-                <li
-                  onClick={() => setShowModal(true)}
-                  className="text-gray-400 hover:text-blue-500 transition-colors duration-300 cursor-pointer"
-                >
-                  Become a Partner
-                </li>
-                <li
-                  onClick={() => setShowModal(true)}
-                  className="text-gray-400 hover:text-blue-500 transition-colors duration-300 cursor-pointer"
-                >
-                  List your properties
-                </li>
                 <li className="text-gray-400 hover:text-electric-400 transition-colors duration-300">
                   Property Search
                 </li>
@@ -201,6 +189,18 @@ const Footer = () => {
                   >
                     Contact
                   </Link>
+                </li>
+                <li
+                  onClick={() => setShowModal(true)}
+                  className="text-gray-400 hover:text-blue-500 transition-colors duration-300 cursor-pointer"
+                >
+                  Become a Partner
+                </li>
+                <li
+                  onClick={() => setShowModal(true)}
+                  className="text-gray-400 hover:text-blue-500 transition-colors duration-300 cursor-pointer"
+                >
+                  List your properties
                 </li>
               </ul>
             </div>

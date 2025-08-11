@@ -24,7 +24,6 @@ interface Whatsapp {
 }
 
 interface DesktopNavbarProps {
-  isScrolled: boolean;
   showSearch: boolean;
   setShowModal: (value: boolean) => void;
   searchValue: string;
@@ -36,7 +35,6 @@ interface DesktopNavbarProps {
 }
 
 const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
-  isScrolled: initialIsScrolled,
   showSearch,
   setShowModal,
   countries,
@@ -51,16 +49,27 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
   const [showWhatsappDropdown, setShowWhatsappDropdown] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const isHomePage = pathname === "/";
-  const [isScrolled, setIsScrolled] = useState(!isHomePage);
+  const normalizedPath = pathname.replace(/\/$/, ""); // remove trailing slash if exists
+  const isHomePage = normalizedPath === "";
+  const isReferPage = normalizedPath === "/refer-earn";
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    if (isHomePage) {
-      setIsScrolled(initialIsScrolled);
+    if (isHomePage || isReferPage) {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 0);
+      };
+
+      handleScroll(); // check immediately on mount
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
     } else {
       setIsScrolled(true);
     }
-  }, [initialIsScrolled, isHomePage]);
+  }, [isHomePage, isReferPage]);
+
+
+
 
   // Handle clicks outside dropdowns
   useEffect(() => {
@@ -134,7 +143,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
         </div>
 
         {/* Search bar */}
-        {(showSearch || !isHomePage) && (
+        {(showSearch || (!isHomePage && !isReferPage)) && (
           <div className="flex flex-1 max-w-2xl mx-8 relative">
             <HeaderSearch
               showSuggestions={showSuggestions}
@@ -151,7 +160,8 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
         <div className="flex items-center space-x-4">
           {/* Refer to Earn */}
           <div className="hidden md:flex items-center space-x-6">
-            <button
+            <Link
+              href="/refer-earn" 
               className={`flex items-center space-x-1 bg-gray-200/20 py-2 px-4 rounded-full ${
                 isScrolled ? "border border-gray-300 shadow-none" : "shadow-sm"
               }`}
@@ -166,7 +176,7 @@ const DesktopNavbar: React.FC<DesktopNavbarProps> = ({
               <span className="bg-[#0279d4] text-white text-xs px-2 py-1 rounded-full">
                 £50
               </span>
-            </button>
+            </Link>
           </div>
 
           {/* Contact Icons */}

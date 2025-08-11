@@ -257,12 +257,12 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
             }`}
           >
             <div className="bg-black/90 backdrop-blur-md rounded-2xl py-6 px-4 space-y-6 mt-2 mx-6">
-              <div className="flex justify-between items-center">
+              <Link href="/refer-earn" className="flex justify-between items-center">
                 <span className="text-white font-medium">Refer to Earn</span>
                 <span className="bg-[#0279d4] text-white text-xs px-2 py-1 rounded-full">
                   £50
                 </span>
-              </div>
+              </Link>
 
               <button
                 onClick={() => setShowModal(true)}
