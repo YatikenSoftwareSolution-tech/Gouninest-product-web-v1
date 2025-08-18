@@ -7,40 +7,23 @@ import SearchWrapper from "@/components/SearchWrapper";
 import ScrollTransition from "@/components/ScrollTransition";
 import Testimonials from "@/components/Testimonials";
 import React from "react";
-import { fetchImages, fetchLocationCountInCountries, fetchPropertiesCountInLocations, fetchTopProperties, fetchUniversities } from "@/constants/api";
+import { fetchLocationCountInCountries, fetchPropertiesCountInLocations, fetchTopProperties, fetchUniversities } from "@/constants/api";
 import { CountryCityPropertyCount, CountryLocationCount, CountryPropertyCount, Universities } from "@/types/types";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PropertyTabs from "@/components/PropertyTabs";
-
-interface CityImageType {
-  country: string;
-  cities: []
-}
+import CityCard from "@/components/CityCard";
 
 
 const Home = async () => {
   const MAX_CITIES = 12;
-  const [countries, locations, countryProperty, cityImages, universities] =
+  const [countries, locations, countryProperty, universities] =
     await Promise.all([
       fetchLocationCountInCountries() as Promise<CountryLocationCount[]>,
       fetchPropertiesCountInLocations() as Promise<CountryCityPropertyCount[]>,
       fetchTopProperties() as Promise<CountryPropertyCount[]>,
-      fetchImages() as Promise<CityImageType[]>,
       fetchUniversities() as Promise<Universities[] | []>,
     ]);
-
-
-
-
-  const getCityImage = (country: string, city: string) => {
-    if (!Array.isArray(cityImages)) return "/placeholder.jpg";
-    const countryObj = cityImages?.find((c: CityImageType) => c.country === country);
-    if (!countryObj) return "/placeholder.jpg"; // fallback
-    const cities = countryObj.cities as { _id: string; imageUrl: string }[];
-    const cityObj = cities.find((c) => c._id === city);
-    return cityObj?.imageUrl || "/placeholder.jpg";
-  };
 
   return (
     <div>
@@ -160,29 +143,11 @@ const Home = async () => {
                 </TabsTrigger>
               ))}
             </TabsList>
-            {Array.isArray(locations) && locations?.map((country: CountryCityPropertyCount) => (
+            {locations?.map((country: CountryCityPropertyCount) => (
               <TabsContent key={country.country} value={country.country}>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-                  {country.cities.slice(0, MAX_CITIES).map((loc, idx) => (
-                    <Link
-                      className="relative rounded-lg overflow-hidden shadow group"
-                      key={idx}
-                      href={`/properties?city=${loc.name}&country=${country.country}`}
-                    >
-                      <Image
-                        src={getCityImage(country.country, loc.name)}
-                        alt={`${loc.name} Location ${idx + 1}`}
-                        width={200}
-                        height={200}
-                        className="object-cover w-full h-40 transition-transform duration-300 group-hover:scale-105"
-                        priority
-                      />
-                      <div className=" absolute left-2 bottom-2 bg-black/60 rounded px-2 py-1">
-                        <span className="text-white text-base font-medium">
-                          {loc.name} ({loc.count})
-                        </span>
-                      </div>
-                    </Link>
+                  {country.cities.slice(0, MAX_CITIES).map((loc, idx) =>(
+                    <CityCard key={idx} loc={loc} idx={idx} country={country}/>
                   ))}
                 </div>
                 {country.cities.length > MAX_CITIES && (

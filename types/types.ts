@@ -139,6 +139,7 @@ interface video{
 export interface City {
   name: string;
   count: number;
+  imageUrl: string
 }
 
 export interface User {

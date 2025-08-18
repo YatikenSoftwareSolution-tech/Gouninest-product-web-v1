@@ -3,16 +3,10 @@ import { ArrowLeft } from "lucide-react";
 import DetailedPropertyCard from "@/components/DetailedPropertyCard";
 import Link from "next/link";
 import {
-  fetchImages,
   fetchPropertiesCountInLocations,
   fetchTopProperties,
 } from "@/constants/api";
 import { CountryCityPropertyCount, CountryPropertyCount } from "@/types/types";
-
-interface CityImageType {
-  country: string;
-  cities: { _id: string; imageUrl: string }[];
-}
 
 const countryNameMap: Record<string, string> = {
   GB: "UK",
@@ -33,10 +27,9 @@ const Page = async ({
 }) => {
   const { country } = await searchParams;
 
-  const [locations, countryProperty, cityImages] = await Promise.all([
+  const [locations, countryProperty] = await Promise.all([
     fetchPropertiesCountInLocations() as Promise<CountryCityPropertyCount[]>,
     fetchTopProperties() as Promise<CountryPropertyCount[]>,
-    fetchImages() as Promise<CityImageType[]>,
   ]);
 
   const countryData = locations.find((loc) => loc.country === country);
@@ -51,13 +44,6 @@ const Page = async ({
       </div>
     );
   }
-
-  const getCityImage = (country: string, city: string) => {
-    const countryObj = cityImages.find((c) => c.country === country);
-    if (!countryObj) return "/placeholder.jpg";
-    const cityObj = countryObj.cities.find((c) => c._id === city);
-    return cityObj?.imageUrl || "/placeholder.jpg";
-  };
 
   return (
     <section className="py-20 bg-white">
@@ -93,7 +79,7 @@ const Page = async ({
               href={`/properties?city=${city.name}&country=${countryData.country}`}
             >
               <Image
-                src={getCityImage(countryData.country, city.name)}
+                src={city.imageUrl}
                 alt={`${city.name} Location`}
                 width={300}
                 height={200}
