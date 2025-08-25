@@ -1,0 +1,62 @@
+# GoUniNest Robots.txt
+# Student Accommodation Platform
+
+User-agent: *
+Allow: /
+
+# Allow crawling of main pages
+Allow: /about
+Allow: /properties
+Allow: /properties/all-city
+Allow: /blogs
+Allow: /booking
+Allow: /contacts
+Allow: /reviews
+Allow: /refer-earn
+Allow: /terms
+Allow: /policies
+Allow: /cookie-policy
+
+# Allow crawling of individual properties
+Allow: /properties/uk*
+Allow: /properties/au*
+Allow: /properties/us*
+
+# Allow crawling of blog posts
+Allow: /blogs/*
+
+# Disallow sensitive areas
+Disallow: /login
+Disallow: /signup
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /images/
+Disallow: /uploads/
+
+# Disallow search and filter pages to avoid duplicate content
+Disallow: /search?
+Disallow: /properties?*
+Disallow: /blogs?*
+
+# Disallow temporary and development files
+Disallow: /temp/
+Disallow: /dev/
+Disallow: /test/
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.txt$
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://gouninest.com/sitemap.xml
+
+# Additional sitemaps if needed
+# Sitemap: https://gouninest.com/sitemap-properties.xml
+# Sitemap: https://gouninest.com/sitemap-blogs.xml
+
+# Host directive
+Host: https://gouninest.com
